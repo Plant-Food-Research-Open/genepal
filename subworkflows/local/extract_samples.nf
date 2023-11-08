@@ -7,6 +7,8 @@ nextflow.enable.dsl=2
 // Added channel permissible_target_assemblies
 // Changed file name from input_check.nf to extract_samples.nf
 // Removed strandedness
+// Nowing emitting an extra channel 'assemblies' which indicates the
+// assemblies targeted by each read
 //
 // Check input samplesheet and get read channels
 //
@@ -20,14 +22,23 @@ workflow EXTRACT_SAMPLES {
 
     main:
     SAMPLESHEET_CHECK ( samplesheet, permissible_target_assemblies )
-        .csv
-        .splitCsv ( header:true, sep:',' )
-        .map { create_fastq_channel(it) }
-        .set { reads }
+    .csv
+    | splitCsv ( header:true, sep:',' )
+    | map { create_fastq_channel(it) }
+    | set { ch_reads }
 
+    reads = ch_reads.map { meta, fastq -> [[id:meta.id, single_end:meta.single_end], fastq]}
+    
+    ch_reads
+    | flatMap { meta, fastq ->
+        meta.target_assemblies.collect { assembly -> [[id:meta.id, single_end:meta.single_end], assembly] }
+    }
+    | set { assemblies }
+    
     emit:
-    reads                                     // channel: [ val(meta), [ reads ] ]
-    versions = SAMPLESHEET_CHECK.out.versions // channel: [ versions.yml ]
+    reads                                       // channel: [ val(meta), [ reads ] ]
+    assemblies                                  // channel: [ val(meta), val(assembly) ]
+    versions = SAMPLESHEET_CHECK.out.versions   // channel: [ versions.yml ]
 }
 
 // Function to get list of [ meta, [ fastq_1, fastq_2 ] ]

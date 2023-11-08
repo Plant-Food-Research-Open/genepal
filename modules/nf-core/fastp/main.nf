@@ -101,12 +101,16 @@ process FASTP {
     }
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix              = task.ext.prefix ?: "${meta.id}"
+    def isSingleOutput      = task.ext.args?.contains('--interleaved_in') || meta.single_end
+    def outputFiles         = isSingleOutput ? "${prefix}.fastp.fastq.gz" : "${prefix}_1.fastp.fastq.gz ${prefix}_2.fastp.fastq.gz"
+    def mergedFileCommand   = (!isSingleOutput && save_merged) ? "touch ${prefix}.merged.fastq.gz" : ""
     """
-    touch "${prefix}.fastp.fastq.gz"
+    touch $outputFiles
     touch "${prefix}.json"
     touch "${prefix}.html"
     touch "${prefix}.log"
+    $mergedFileCommand
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

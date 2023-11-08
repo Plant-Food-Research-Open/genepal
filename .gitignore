@@ -1,24 +1,9 @@
 .DS_Store
-
 *.pyc
 __pycahce__
-
-nextflow
 .nextflow*
 work/
-*.dot
-
-Results/
 results/
-report/
-Report/
-
-*.log
-.nfs*
-
-*.sif
-
-pan_gene_slurm.sh
 *.stdout
 *.stderr
 

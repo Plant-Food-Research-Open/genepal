@@ -31,10 +31,9 @@ if (params.sample_prep.remove_ribo_rna) {
 workflow PAN_GENE {
 
     // Versions
-    Channel.empty()
-    | set { ch_versions }
+    ch_versions = Channel.empty()
     
-    // GUNZIP: target_assemblies
+    // MODULE: GUNZIP_TARGET_ASSEMBLY
     Channel.fromList(params.target_assemblies)
     | map { tag, filePath ->
         [[id:tag], file(filePath, checkIfExists: true)]
@@ -54,20 +53,16 @@ workflow PAN_GENE {
     )
     | set { ch_gunzip_target_assemblies }
 
-    ch_versions
-    | mix(GUNZIP_TARGET_ASSEMBLY.out.versions.first())
-    | set { ch_versions }
+    ch_versions = ch_versions.mix(GUNZIP_TARGET_ASSEMBLY.out.versions.first())
 
-    // FASTA_VALIDATE
+    // MODULE: FASTA_VALIDATE
     FASTA_VALIDATE(ch_gunzip_target_assemblies)
     .valid_fasta
     | set { ch_validated_target_assemblies }
 
-    ch_versions
-    | mix(FASTA_VALIDATE.out.versions.first())
-    | set { ch_versions }
+    ch_versions = ch_versions.mix(FASTA_VALIDATE.out.versions.first())
 
-    // GUNZIP: te_libraries
+    // MODULE: GUNZIP_TE_LIBRARY
     Channel.fromList(params.te_libraries)
     | map { tag, filePath ->
         [[id:tag], file(filePath, checkIfExists: true)]
@@ -87,11 +82,9 @@ workflow PAN_GENE {
     )
     | set { ch_gunzip_te_libraries }
 
-    ch_versions
-    | mix(GUNZIP_TE_LIBRARY.out.versions.first())
-    | set { ch_versions }
+    ch_versions = ch_versions.mix(GUNZIP_TE_LIBRARY.out.versions.first())
 
-    // PERFORM_EDTA_ANNOTATION
+    // SUBWORKFLOW: PERFORM_EDTA_ANNOTATION
     ch_validated_target_assemblies
     | join(
         ch_gunzip_te_libraries, remainder: true
@@ -102,11 +95,9 @@ workflow PAN_GENE {
     | map {meta, assembly, teLib -> [meta, assembly]}
     | PERFORM_EDTA_ANNOTATION
 
-    ch_versions
-    | mix(PERFORM_EDTA_ANNOTATION.out.versions)
-    | set { ch_versions }
+    ch_versions = ch_versions.mix(PERFORM_EDTA_ANNOTATION.out.versions)
     
-    // REPEATMASKER
+    // MODULE: REPEATMASKER
     ch_validated_target_assemblies
     | join(
         PERFORM_EDTA_ANNOTATION.out.te_lib_fasta.mix(ch_gunzip_te_libraries)
@@ -118,11 +109,9 @@ workflow PAN_GENE {
         ch_assemblies_n_te_libs.map {meta, assembly, teLib -> teLib},
     )
 
-    ch_versions
-    | mix(REPEATMASKER.out.versions.first())
-    | set { ch_versions }
+    ch_versions = ch_versions.mix(REPEATMASKER.out.versions.first())
 
-    // STAR_GENOMEGENERATE
+    // MODULE: STAR_GENOMEGENERATE
     def star_ignore_sjdbgtf = true
     STAR_GENOMEGENERATE(
         REPEATMASKER.out.fasta_masked,
@@ -132,15 +121,9 @@ workflow PAN_GENE {
     .index
     | set { ch_assembly_index }
 
-    ch_versions
-    | mix(STAR_GENOMEGENERATE.out.versions.first())
-    | set { ch_versions }
+    ch_versions = ch_versions.mix(STAR_GENOMEGENERATE.out.versions.first())
 
-    // EXTRACT_SAMPLES
-    // https://github.com/nf-core/rnaseq
-    // MIT: https://github.com/nf-core/rnaseq/blob/master/LICENSE
-    // Changes
-    // Use meta.id as key for groupTuple as groupTuple does not work when there is a sublist in the key list
+    // SUBWORKFLOW: EXTRACT_SAMPLES
     ch_samplesheet_path = Channel.empty()
     if(params.samplesheet != null) {
         ch_samplesheet_path = Channel.fromPath(params.samplesheet)
@@ -152,25 +135,22 @@ workflow PAN_GENE {
     )
     .reads
     | map { meta, fastq ->
-        new_id = meta.id - ~/_T\d+/
-        [ new_id, meta + [id: new_id], fastq ]
+        groupID = meta.id - ~/_T\d+/
+        [ meta + [id: groupID], fastq ]
     }
     | groupTuple()
-    | branch { meta_id, meta, fastq ->
+    | branch { meta, fastq ->
         single  : fastq.size() == 1
-            return [ meta.first(), fastq.flatten() ]
+            return [ meta, fastq.flatten() ]
         multiple: fastq.size() > 1
-            return [ meta.first(), fastq.flatten() ]
+            return [ meta, fastq.flatten() ]
     }
     | set { ch_fastq }
 
-    ch_versions
-    | mix(EXTRACT_SAMPLES.out.versions)
-    | set { ch_versions }
+    ch_read_target_assemblies = EXTRACT_SAMPLES.out.assemblies
+    ch_versions = ch_versions.mix(EXTRACT_SAMPLES.out.versions)
 
-    // CAT_FASTQ
-    // https://github.com/nf-core/rnaseq
-    // MIT: https://github.com/nf-core/rnaseq/blob/master/LICENSE
+    // MODULES: CAT_FASTQ
     CAT_FASTQ (
         ch_fastq.multiple
     )
@@ -178,13 +158,9 @@ workflow PAN_GENE {
     | mix(ch_fastq.single)
     | set { ch_cat_fastq }
     
-    ch_versions
-    | mix(CAT_FASTQ.out.versions.first())
-    | set { ch_versions }
+    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
-    // FASTQ_FASTQC_UMITOOLS_FASTP
-    // https://github.com/nf-core/rnaseq
-    // MIT: https://github.com/nf-core/rnaseq/blob/master/LICENSE
+    // SUBWORKFLOW: FASTQ_FASTQC_UMITOOLS_FASTP
     def with_umi            = false
     def skip_umi_extract    = true
     def umi_discard_read    = false
@@ -203,7 +179,9 @@ workflow PAN_GENE {
     .reads
     | set { ch_trim_reads }
 
-    // SORTMERNA
+    ch_versions = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
+
+    // MODULE: SORTMERNA
     if (params.sample_prep.remove_ribo_rna) {
         Channel.from(ch_ribo_db.readLines())
         | map { row -> file(row, checkIfExists: true) }
@@ -217,110 +195,75 @@ workflow PAN_GENE {
         .reads
         | set { ch_trim_reads }
 
-        ch_versions
-        | mix(SORTMERNA.out.versions.first())
-        | set { ch_versions }
+        ch_versions = ch_versions.mix(SORTMERNA.out.versions.first())
     }
 
-    ch_trim_reads
-    | flatMap { meta, reads ->
-        def targetAssemblies = meta["target_assemblies"]
-
-        readsByAssembly = []
-
-        for(assembly in targetAssemblies) {
-            readsByAssembly += [[[id: "${meta.id}.on.${assembly}", single_end: meta.single_end, target_assembly: assembly], reads]]
-        }
-
-        return readsByAssembly
+    // MODULE: STAR_ALIGN
+    ch_read_target_assemblies
+    | map { meta, assembly ->
+        groupID = meta.id - ~/_T\d+/
+        [ meta + [id: groupID], assembly ]
     }
-    | set { ch_trim_reads_by_assembly }
-
-    ch_versions
-    | mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
-    | set { ch_versions }
-
-    // STAR_ALIGN
-    ch_assembly_index
-    | map { meta, index ->
-        [meta.id, index]
+    | unique
+    | combine(ch_trim_reads, by:0)
+    | map { meta, assembly, fastq ->
+        [assembly, [id:"${meta.id}.on.${assembly}", single_end:meta.single_end, target_assembly:assembly], fastq]
     }
-    | cross(
-        ch_trim_reads_by_assembly.map{meta, reads -> [meta.target_assembly, meta, reads]}
+    | combine(
+        ch_assembly_index.map { meta, index -> [meta.id, index] },
+        by:0
     )
-    | map { indexWithExt, readsWithExt ->
-        def index = indexWithExt[1]
-
-        def readsMeta = readsWithExt[1]
-        def reads = readsWithExt[2]
-
-        [
-            readsMeta,
-            reads,
-            index
-        ]
-    }
-    | set { ch_trim_reads_by_assembly_with_index }
+    | map { assembly, meta, fastq, index -> [meta, fastq, index] }
+    | set { ch_star_inputs }
 
     def seq_platform = false
     def seq_center = false
     STAR_ALIGN(
-        ch_trim_reads_by_assembly_with_index.map{meta, reads, index -> [meta, reads]},
-        ch_trim_reads_by_assembly_with_index.map{meta, reads, index -> [[id: meta.target_assembly], index]},
-        ch_trim_reads_by_assembly_with_index.map{meta, reads, index -> [[id: meta.target_assembly], []]},
+        ch_star_inputs.map{meta, fastq, index -> [meta, fastq]},
+        ch_star_inputs.map{meta, fastq, index -> [[id: meta.target_assembly], index]},
+        ch_star_inputs.map{meta, fastq, index -> [[id: meta.target_assembly], []]},
         star_ignore_sjdbgtf,
         seq_platform,
         seq_center
     )
     .bam_sorted
-    .tap { ch_mapped_reads }
-    .map { meta, bam ->
+    | set { ch_star_bam }
+
+    ch_versions = ch_versions.mix(STAR_ALIGN.out.versions.first())
+
+    // MODULE: SAMTOOLS_CAT
+    ch_star_bam
+    | map { meta, bam ->
         [
             [id: meta.target_assembly],
             bam instanceof List ? bam.find {it =~ /Aligned/} : bam
         ]
     }
     | groupTuple
-    | set { ch_mapped_reads_by_assembly }
-
-    ch_versions
-    | mix(STAR_ALIGN.out.versions.first())
-    | set { ch_versions }
-
-    // SAMTOOLS_CAT
-    ch_mapped_reads_by_assembly
     | branch { meta, bamList ->
         bams: bamList.size() > 1
         bam: bamList.size() <= 1
     }
-    | set { ch_samtools_cat_inputs_branches }
+    | set { ch_star_bam_branch }
 
     SAMTOOLS_CAT(
-        ch_samtools_cat_inputs_branches.bams
+        ch_star_bam_branch.bams
     )
-    .bam
-    | map { meta, bam ->
-        [
-            meta,
-            [bam]
-        ]
-    }
+    .bam.map { meta, bam -> [meta, [bam]] }
     | mix(
-        ch_samtools_cat_inputs_branches.bam
+        ch_star_bam_branch.bam
     )
-    | set { ch_cat_bam_by_assembly }
+    | set { ch_samtools_bam }
 
-    ch_versions
-    | mix(SAMTOOLS_CAT.out.versions.first())
-    | set { ch_versions }
+    ch_versions = ch_versions.mix(SAMTOOLS_CAT.out.versions.first())
 
-    // GUNZIP: external_protein_seqs
-    ch_external_protein_seqs = Channel.empty()
+    // MODULE: GUNZIP_EXTERNAL_PROTEIN_SEQ
+    ch_ext_prot_seqs = Channel.empty()
     if(params.external_protein_seqs != null) {
-        ch_external_protein_seqs = Channel.fromList(params.external_protein_seqs)
+        ch_ext_prot_seqs = Channel.fromList(params.external_protein_seqs)
     }
     
-    ch_external_protein_seqs
+    ch_ext_prot_seqs
     | map { filePath ->
         def fileHandle = file(filePath, checkIfExists: true)
         [[id:fileHandle.getSimpleName()], fileHandle]
@@ -329,38 +272,32 @@ workflow PAN_GENE {
         gz: "$file".endsWith(".gz")
         rest: !"$file".endsWith(".gz")
     }
-    | set { ch_external_protein_seqs_branch }
+    | set { ch_ext_prot_seqs_branch }
 
     GUNZIP_EXTERNAL_PROTEIN_SEQ(
-        ch_external_protein_seqs_branch.gz
+        ch_ext_prot_seqs_branch.gz
     )
     .gunzip
     | mix(
-        ch_external_protein_seqs_branch.rest
+        ch_ext_prot_seqs_branch.rest
     )
-    | set { ch_gunzip_external_protein_seqs }
+    | set { ch_ext_prot_seqs }
 
-    ch_versions
-    | mix(GUNZIP_EXTERNAL_PROTEIN_SEQ.out.versions.first())
-    | set { ch_versions }
+    ch_versions = ch_versions.mix(GUNZIP_EXTERNAL_PROTEIN_SEQ.out.versions.first())
 
-    // CAT_PROTEIN_SEQS
-    ch_gunzip_external_protein_seqs
-    | map{meta, filePath -> filePath}
+    // MODULE: CAT_PROTEIN_SEQS
+    ch_ext_prot_seqs
+    | map{ meta, filePath -> filePath }
     | collect
-    | map{fileList -> [[id:"protein_seqs"], fileList]}
+    | map{ fileList -> [[id:"protein_seqs"], fileList] }
     | CAT_PROTEIN_SEQS
     
-    CAT_PROTEIN_SEQS.out.file_out
-    | set { ch_protein_seq }
+    ch_ext_prot_seqs = CAT_PROTEIN_SEQS.out.file_out
+    ch_versions = ch_versions.mix(CAT_PROTEIN_SEQS.out.versions)
 
-    ch_versions
-    | mix(CAT_PROTEIN_SEQS.out.versions)
-    | set { ch_versions }
-
-    // BRAKER3
+    // MODULE: BRAKER3
     REPEATMASKER.out.fasta_masked
-    | mix(ch_cat_bam_by_assembly)
+    | mix(ch_samtools_bam)
     | groupTuple(size: 2, remainder: true)
     | map { meta, groupedItems ->
         def maskedFasta = groupedItems[0]
@@ -376,20 +313,20 @@ workflow PAN_GENE {
     
     if(params.external_protein_seqs) {
         ch_braker_inputs
-        | combine(ch_protein_seq.map{meta, filePath -> filePath})
+        | combine(ch_ext_prot_seqs.map{meta, filePath -> filePath})
         | set { ch_braker_inputs }
     } else {
         ch_braker_inputs
-        | map{meta, assembly, bams -> [meta, assembly, bams, []]}
+        | map{meta, assembly, bam -> [meta, assembly, bam, []]}
         | set { ch_braker_inputs }
     }
     
-    ch_fasta            = ch_braker_inputs.map{meta, assembly, bams, proteinSeq -> [meta, assembly]}
-    ch_bam              = ch_braker_inputs.map{meta, assembly, bams, proteinSeq -> bams}
-    ch_rnaseq_sets_dirs = ch_braker_inputs.map{meta, assembly, bams, proteinSeq -> []}
-    ch_rnaseq_sets_ids  = ch_braker_inputs.map{meta, assembly, bams, proteinSeq -> []}
-    ch_proteins         = ch_braker_inputs.map{meta, assembly, bams, proteinSeq -> proteinSeq}
-    ch_hintsfile        = ch_braker_inputs.map{meta, assembly, bams, proteinSeq -> []}
+    ch_fasta            = ch_braker_inputs.map{ meta, assembly, bam, proteinSeq -> [meta, assembly] }
+    ch_bam              = ch_braker_inputs.map{ meta, assembly, bam, proteinSeq -> bam }
+    ch_proteins         = ch_braker_inputs.map{ meta, assembly, bam, proteinSeq -> proteinSeq }
+    ch_rnaseq_sets_dirs = []
+    ch_rnaseq_sets_ids  = []
+    ch_hintsfile        = []
 
     BRAKER3(
         ch_fasta,
@@ -400,7 +337,5 @@ workflow PAN_GENE {
         ch_hintsfile
     )
 
-    ch_versions
-    | mix(BRAKER3.out.versions.first())
-    | set { ch_versions }
+    ch_versions = ch_versions.mix(BRAKER3.out.versions.first())
 }
