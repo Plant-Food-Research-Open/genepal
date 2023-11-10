@@ -3,7 +3,7 @@ process EDTA {
     label "process_high"
     label "process_week_long"
     
-    container 'quay.io/biocontainers/edta:2.1.0--hdfd78af_1'
+    container 'https://depot.galaxyproject.org/singularity/edta:2.1.0--hdfd78af_1'
     containerOptions "-B $TMPDIR:$TMPDIR"
 
     input:
