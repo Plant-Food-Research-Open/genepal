@@ -1,7 +1,3 @@
-nextflow.enable.dsl=2
-
-// https://github.com/Plant-Food-Research-Open/assembly_qc
-// GPL-3.0: https://github.com/Plant-Food-Research-Open/assembly_qc/blob/main/LICENSE
 def validateParams(params) {
     validateFastaTags(params)
     validateTETags(params)

@@ -1,7 +1,8 @@
-nextflow.enable.dsl=2
-
+// Source:
 // https://github.com/nf-core/rnaseq
 // MIT: https://github.com/nf-core/rnaseq/blob/master/LICENSE
+//
+// Check input samplesheet and get read channels
 //
 // Changes:
 // Added channel permissible_target_assemblies
@@ -9,9 +10,6 @@ nextflow.enable.dsl=2
 // Removed strandedness
 // Nowing emitting an extra channel 'assemblies' which indicates the
 // assemblies targeted by each read
-//
-// Check input samplesheet and get read channels
-//
 
 include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
 

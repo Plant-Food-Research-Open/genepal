@@ -1,12 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import re
 import sys
 
 from Bio import SeqIO
-
-# https://github.com/Plant-Food-Research-Open/assembly_qc
-# GPL-3.0: https://github.com/Plant-Food-Research-Open/assembly_qc/blob/main/LICENSE
 
 # The input fasta file path
 fasta_file_path = sys.argv[1]
@@ -153,10 +150,10 @@ if __name__ == "__main__":
 
     if not do_ids_need_to_change(input_ids):
         print("IDs have acceptable length and character. No change required.")
-        
+
         with open(f"{output_files_prefix}.renamed.ids.tsv", "w") as f:
             f.write("IDs have acceptable length and character. No change required.")
-        
+
         write_fasta_without_comments(fasta_file_path, output_files_prefix)
 
         exit(0)

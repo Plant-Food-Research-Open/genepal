@@ -1,5 +1,4 @@
-nextflow.enable.dsl=2
-
+// Source:
 // https://github.com/nf-core/rnaseq
 // MIT: https://github.com/nf-core/rnaseq/blob/master/LICENSE
 //
