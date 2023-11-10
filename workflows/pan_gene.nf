@@ -12,6 +12,8 @@ include { STAR_ALIGN                            } from '../modules/nf-core/star/
 include { SAMTOOLS_CAT                          } from '../modules/nf-core/samtools/cat'
 include { CAT_CAT as CAT_PROTEIN_SEQS           } from '../modules/nf-core/cat/cat'
 include { BRAKER3                               } from '../modules/kherronism/braker3'
+include { GUNZIP as GUNZIP_XREF_FASTA           } from '../modules/nf-core/gunzip'
+include { GUNZIP as GUNZIP_XREF_GFF             } from '../modules/nf-core/gunzip'
 
 include { PERFORM_EDTA_ANNOTATION               } from '../subworkflows/local/perform_edta_annotation'
 include { EXTRACT_SAMPLES                       } from '../subworkflows/local/extract_samples'
@@ -105,8 +107,8 @@ workflow PAN_GENE {
     | set { ch_assemblies_n_te_libs }
 
     REPEATMASKER(
-        ch_assemblies_n_te_libs.map {meta, assembly, teLib -> [meta, assembly]},
-        ch_assemblies_n_te_libs.map {meta, assembly, teLib -> teLib},
+        ch_assemblies_n_te_libs.map { meta, assembly, teLib -> [meta, assembly] },
+        ch_assemblies_n_te_libs.map { meta, assembly, teLib -> teLib },
     )
 
     ch_versions = ch_versions.mix(REPEATMASKER.out.versions.first())
@@ -115,7 +117,7 @@ workflow PAN_GENE {
     def star_ignore_sjdbgtf = true
     STAR_GENOMEGENERATE(
         REPEATMASKER.out.fasta_masked,
-        REPEATMASKER.out.fasta_masked.map{meta, maskedFasta -> [meta, []]},
+        REPEATMASKER.out.fasta_masked.map { meta, maskedFasta -> [meta, []] },
         star_ignore_sjdbgtf
     )
     .index
@@ -131,7 +133,7 @@ workflow PAN_GENE {
     
     EXTRACT_SAMPLES(
         ch_samplesheet_path,
-        Channel.of(params.target_assemblies.collect{tag, fastaPath -> tag.strip()}.join(","))
+        Channel.of(params.target_assemblies.collect { tag, fastaPath -> tag.strip() }.join(","))
     )
     .reads
     | map { meta, fastq ->
@@ -219,9 +221,9 @@ workflow PAN_GENE {
     def seq_platform = false
     def seq_center = false
     STAR_ALIGN(
-        ch_star_inputs.map{meta, fastq, index -> [meta, fastq]},
-        ch_star_inputs.map{meta, fastq, index -> [[id: meta.target_assembly], index]},
-        ch_star_inputs.map{meta, fastq, index -> [[id: meta.target_assembly], []]},
+        ch_star_inputs.map { meta, fastq, index -> [meta, fastq] },
+        ch_star_inputs.map { meta, fastq, index -> [[id: meta.target_assembly], index] },
+        ch_star_inputs.map { meta, fastq, index -> [[id: meta.target_assembly], []] },
         star_ignore_sjdbgtf,
         seq_platform,
         seq_center
@@ -259,7 +261,7 @@ workflow PAN_GENE {
 
     // MODULE: GUNZIP_EXTERNAL_PROTEIN_SEQ
     ch_ext_prot_seqs = Channel.empty()
-    if(params.external_protein_seqs != null) {
+    if(params.external_protein_seqs) {
         ch_ext_prot_seqs = Channel.fromList(params.external_protein_seqs)
     }
     
@@ -287,9 +289,9 @@ workflow PAN_GENE {
 
     // MODULE: CAT_PROTEIN_SEQS
     ch_ext_prot_seqs
-    | map{ meta, filePath -> filePath }
+    | map { meta, filePath -> filePath }
     | collect
-    | map{ fileList -> [[id:"protein_seqs"], fileList] }
+    | map { fileList -> [[id:"protein_seqs"], fileList] }
     | CAT_PROTEIN_SEQS
     
     ch_ext_prot_seqs = CAT_PROTEIN_SEQS.out.file_out
@@ -321,9 +323,9 @@ workflow PAN_GENE {
         | set { ch_braker_inputs }
     }
     
-    ch_fasta            = ch_braker_inputs.map{ meta, assembly, bam, proteinSeq -> [meta, assembly] }
-    ch_bam              = ch_braker_inputs.map{ meta, assembly, bam, proteinSeq -> bam }
-    ch_proteins         = ch_braker_inputs.map{ meta, assembly, bam, proteinSeq -> proteinSeq }
+    ch_fasta            = ch_braker_inputs.map { meta, assembly, bam, proteinSeq -> [meta, assembly] }
+    ch_bam              = ch_braker_inputs.map { meta, assembly, bam, proteinSeq -> bam }
+    ch_proteins         = ch_braker_inputs.map { meta, assembly, bam, proteinSeq -> proteinSeq }
     ch_rnaseq_sets_dirs = []
     ch_rnaseq_sets_ids  = []
     ch_hintsfile        = []
@@ -338,4 +340,65 @@ workflow PAN_GENE {
     )
 
     ch_versions = ch_versions.mix(BRAKER3.out.versions.first())
+
+    // MODULE: GUNZIP_XREF_FASTA
+    ch_xref_annotations = Channel.empty()
+    if(params.liftoff.xref_annotations) {
+        Channel.fromList(params.liftoff.xref_annotations)
+        | multiMap { fasta, gff ->
+            def fastaFile = file(fasta, checkIfExists:true)
+            def meta = [id:fastaFile.getSimpleName()]
+
+            fasta: [meta, fastaFile]
+            gff: [meta, file(gff, checkIfExists:true)]
+        }
+        | set { ch_xref_annotations }
+    }
+
+    ch_xref_annotations.fasta
+    | branch { meta, file ->
+        gz: "$file".endsWith(".gz")
+        rest: !"$file".endsWith(".gz")
+    }
+    | set { ch_xref_annotations_branch }
+
+    GUNZIP_XREF_FASTA(
+        ch_xref_annotations_branch.gz
+    )
+    .gunzip
+    | mix(
+        ch_xref_annotations_branch.rest
+    )
+    | set { ch_xref_annotations_fasta }
+
+    // MODULE: GUNZIP_XREF_GFF
+    ch_xref_annotations.gff
+    | branch { meta, file ->
+        gz: "$file".endsWith(".gz")
+        rest: !"$file".endsWith(".gz")
+    }
+    | set { ch_xref_annotations_gff_branch }
+
+    GUNZIP_XREF_GFF(
+        ch_xref_annotations_gff_branch.gff.map { meta, fasta, gff -> [meta, gff] }
+    )
+    .gunzip
+    | mix(
+        ch_xref_annotations_gff_branch.rest.map { meta, fasta, gff -> [meta, gff] }
+    )
+    | set { ch_xref_annotations_gff }
+
+    ch_xref_annotations_fasta
+    | join(
+        ch_xref_annotations_gff
+    )
+    | set { ch_xref_annotations }
+
+    // // MODULE: LIFTOFF
+    // ch_xref_annotations
+    // | combine(
+    //     ch_validated_target_assemblies
+    // )
+    // | map { meta, ref_fasta, refGFF, targetMeta, targetFasta -> [[id:"${targetMeta.id}.from.${meta.id}"], ref_fasta, refGFF, targetFasta] }
+    // | set { ch_liftoff_inputs }
 }
