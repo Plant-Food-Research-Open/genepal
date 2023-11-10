@@ -4,7 +4,7 @@ include { RESTORE_EDTA_IDS  } from '../../modules/local/edta/restore_edta_ids'
 
 workflow FASTA_EDTA {
     take:
-    genome_fasta    // channel: [ meta, /path/fasta ]
+    genome_fasta    // channel: [ meta, fasta ]
     
     main:
     SHORTEN_EDTA_IDS(genome_fasta)
@@ -33,11 +33,11 @@ workflow FASTA_EDTA {
     | set { ch_versions }
     
     emit:
-    te_lib_fasta    = RESTORE_EDTA_IDS.out.te_lib_fasta     // channel: [ meta, /path/fasta ]
-    intact_gff3     = RESTORE_EDTA_IDS.out.intact_gff3      // channel: [ meta, /path/gff3 ]
-    pass_list       = RESTORE_EDTA_IDS.out.pass_list        // channel: [ meta, /path/pass.list ]
-    out_file        = RESTORE_EDTA_IDS.out.out_file         // channel: [ meta, /path/out.file ]
-    te_anno_gff3    = RESTORE_EDTA_IDS.out.te_anno_gff3     // channel: [ meta, /path/gff3 ]
-    renamed_ids_tsv = RESTORE_EDTA_IDS.out.renamed_ids_tsv  // channel: [ meta, /path/tsv ]
+    te_lib_fasta    = RESTORE_EDTA_IDS.out.te_lib_fasta     // channel: [ meta, fasta ]
+    intact_gff3     = RESTORE_EDTA_IDS.out.intact_gff3      // channel: [ meta, gff3 ]
+    pass_list       = RESTORE_EDTA_IDS.out.pass_list        // channel: [ meta, pass.list ]
+    out_file        = RESTORE_EDTA_IDS.out.out_file         // channel: [ meta, out.file ]
+    te_anno_gff3    = RESTORE_EDTA_IDS.out.te_anno_gff3     // channel: [ meta, gff3 ]
+    renamed_ids_tsv = RESTORE_EDTA_IDS.out.renamed_ids_tsv  // channel: [ meta, tsv ]
     versions        = ch_versions                           // channel: [ versions.yml ]
 }
