@@ -21,8 +21,9 @@ workflow ALIGN_RNASEQ {
     | map { assembly, meta, fastq, index -> [meta, fastq, index] }
     | set { ch_star_inputs }
 
-    def seq_platform = false
-    def seq_center = false
+    def star_ignore_sjdbgtf = true
+    def seq_platform        = false
+    def seq_center          = false
     STAR_ALIGN(
         ch_star_inputs.map { meta, fastq, index -> [meta, fastq] },
         ch_star_inputs.map { meta, fastq, index -> [[id: meta.target_assembly], index] },

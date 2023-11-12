@@ -19,7 +19,7 @@ workflow PREPROCESS_RNASEQ {
     // SUBWORKFLOW: EXTRACT_SAMPLES
     EXTRACT_SAMPLES(
         samplesheet,
-        ch_permissible_target_assemblies
+        permissible_target_assemblies
     )
     .reads
     | map { meta, fastq ->

@@ -4,7 +4,7 @@ include { FASTA_VALIDATE                        } from '../../modules/local/fast
 include { REPEATMASKER                          } from '../../modules/kherronism/repeatmasker'
 include { STAR_GENOMEGENERATE                   } from '../../modules/nf-core/star/genomegenerate'
 
-include { FASTA_EDTA                            } from '../subworkflows/local/fasta_edta'
+include { FASTA_EDTA                            } from '../../subworkflows/local/fasta_edta'
 
 workflow PREPARE_ASSEMBLY {
     take:
@@ -77,8 +77,8 @@ workflow PREPARE_ASSEMBLY {
     // MODULE: STAR_GENOMEGENERATE
     def star_ignore_sjdbgtf = true
     STAR_GENOMEGENERATE(
-        REPEATMASKER.out.fasta_masked,
-        REPEATMASKER.out.fasta_masked.map { meta, maskedFasta -> [meta, []] },
+        ch_validated_target_assembly,
+        ch_validated_target_assembly.map { meta, maskedFasta -> [meta, []] },
         star_ignore_sjdbgtf
     )
     .index
@@ -94,7 +94,7 @@ workflow PREPARE_ASSEMBLY {
     | set { ch_versions }
     
     emit:
-    target_assemby                                          // channel: [ meta, fasta ]
+    target_assemby          = ch_validated_target_assembly  // channel: [ meta, fasta ]
     masked_target_assembly  = REPEATMASKER.out.fasta_masked // channel: [ meta, fasta ]
     target_assemby_index    = ch_assembly_index             // channel: [ meta, star_index ]
     versions                = ch_versions                   // channel: [ versions.yml ]

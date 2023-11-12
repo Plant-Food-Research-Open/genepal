@@ -3,6 +3,12 @@ def validateParams(params) {
     validateTETags(params)
 
     validateTEFastaCorrespondence(params)
+
+    if (params.remove_ribo_rna) {
+        ch_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
+        
+        if (ch_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!"}
+    }
 }
 
 def validateFastaTags(params) {

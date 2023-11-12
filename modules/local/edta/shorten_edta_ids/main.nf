@@ -27,18 +27,4 @@ process SHORTEN_EDTA_IDS {
         shorten_fasta_ids: \$(md5sum \$(which shorten_fasta_ids.py) | cut -d' ' -f1)
     END_VERSIONS
     """
-    
-    stub:
-    """
-    FILE="$fasta_file"
-    output_prefix="\${FILE%.*}"
-
-    touch "\${output_prefix}.renamed.ids.fa"
-    touch "\${output_prefix}.renamed.ids.tsv"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        shorten_fasta_ids: \$(md5sum \$(which shorten_fasta_ids.py) | cut -d' ' -f1)
-    END_VERSIONS
-    """
 }
