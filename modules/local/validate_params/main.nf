@@ -1,14 +1,12 @@
 def validateParams(params) {
     validateFastaTags(params)
+    
     validateTETags(params)
-
     validateTEFastaCorrespondence(params)
 
-    if (params.remove_ribo_rna) {
-        file_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
-        
-        if (file_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${file_ribo_db.getName()}!"}
-    }
+    validateRiboDBManifest(params)
+
+    validateLiftoffXrefs(params)
 }
 
 def validateFastaTags(params) {
@@ -72,6 +70,24 @@ def validateTEFastaCorrespondence(params) {
         if(!fastaTags.contains(it)) {
             error "Error: $it in te_libraries does not have a corresponding tag in target_assemblies"
         }
+    }
+}
+
+def validateRiboDBManifest(params) {
+    if (params.remove_ribo_rna) {
+        file_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
+        
+        if (file_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${file_ribo_db.getName()}!"}
+    }
+}
+
+def validateLiftoffXrefs(params) {
+    if(!params["liftoff_xref_annotations"]) {
+        return
+    }
+
+    if(isNotListOfLists(params["liftoff_xref_annotations"]), 2) {
+        error "Error: liftoff_xref_annotations must be a list of sublists, with each sublist containing 2 elements"
     }
 }
 

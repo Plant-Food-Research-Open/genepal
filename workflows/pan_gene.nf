@@ -1,14 +1,15 @@
-nextflow.enable.dsl=2
+include { validateParams                } from '../modules/local/validate_params'
 
-include { BRAKER3                               } from '../modules/kherronism/braker3'
-include { GUNZIP as GUNZIP_XREF_FASTA           } from '../modules/nf-core/gunzip'
-include { GUNZIP as GUNZIP_XREF_GFF             } from '../modules/nf-core/gunzip'
-include { validateParams                        } from '../modules/local/validate_params'
+include { PREPARE_ASSEMBLY              } from '../subworkflows/local/prepare_assembly'
+include { PREPROCESS_RNASEQ             } from '../subworkflows/local/preprocess_rnaseq'
+include { ALIGN_RNASEQ                  } from '../subworkflows/local/align_rnaseq'
+include { PREPARE_EXT_PROTS             } from '../subworkflows/local/prepare_ext_prots'
 
-include { PREPARE_ASSEMBLY                      } from '../subworkflows/local/prepare_assembly'
-include { PREPROCESS_RNASEQ                     } from '../subworkflows/local/preprocess_rnaseq'
-include { ALIGN_RNASEQ                          } from '../subworkflows/local/align_rnaseq'
-include { PREPARE_EXT_PROTS                     } from '../subworkflows/local/prepare_ext_prots'
+include { BRAKER3                       } from '../modules/kherronism/braker3'
+
+include { FASTA_LIFTOFF                 } from '../subworkflows/local/fasta_liftoff'
+
+include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions'
 
 validateParams(params)
 
@@ -39,17 +40,32 @@ workflow PAN_GENE {
                                 ? file(params.ribo_database_manifest, checkIfExists: true)
                                 : null
 
-    ch_sortmerna_fastas         = Channel.from(ch_ribo_db ? ch_ribo_db.readLines() : null)
+    ch_sortmerna_fastas         = ch_ribo_db
+                                ? Channel.from(ch_ribo_db ? ch_ribo_db.readLines() : null)
                                 | map { row -> file(row, checkIfExists: true) }
                                 | collect
+                                : Channel.empty()
 
-    ch_ext_prot_fastas          = (params.external_protein_fastas
+    ch_ext_prot_fastas          = params.external_protein_fastas
                                 ? Channel.fromList(params.external_protein_fastas)
-                                : Channel.empty())
                                 | map { filePath ->
                                     def fileHandle = file(filePath, checkIfExists: true)
                                     [[id:fileHandle.getSimpleName()], fileHandle]
                                 }
+                                : Channel.empty()
+    
+    ch_xref_annotations_mm      = params.liftoff_xref_annotations
+                                ? Channel.fromList(params.liftoff_xref_annotations)
+                                | multiMap { fasta, gff ->
+                                    def fastaFile = file(fasta, checkIfExists:true)
+
+                                    fasta: [[id:fastaFile.getSimpleName()], fastaFile]
+                                    gff: [[id:fastaFile.getSimpleName()], file(gff, checkIfExists:true)]
+                                }
+                                : Channel.empty()
+
+    ch_xref_annotations_fasta   = ch_xref_annotations_mm.fasta
+    ch_xref_annotations_gff     = ch_xref_annotations_mm.gff
 
     // SUBWORKFLOW: PREPARE_ASSEMBLY
     PREPARE_ASSEMBLY(
@@ -120,64 +136,18 @@ workflow PAN_GENE {
     ch_braker_gff3              = BRAKER3.out.gff3
     ch_versions                 = ch_versions.mix(BRAKER3.out.versions.first())
 
-    // // MODULE: GUNZIP_XREF_FASTA
-    // ch_xref_annotations = Channel.empty()
-    // if(params.liftoff_xref_annotations) {
-    //     Channel.fromList(params.liftoff_xref_annotations)
-    //     | multiMap { fasta, gff ->
-    //         def fastaFile = file(fasta, checkIfExists:true)
-    //         def meta = [id:fastaFile.getSimpleName()]
+    // SUBWORKFLOW: FASTA_LIFTOFF
+    FASTA_LIFTOFF(
+        ch_valid_target_assembly,
+        ch_xref_annotations_fasta,
+        ch_xref_annotations_gff
+    )
 
-    //         fasta: [meta, fastaFile]
-    //         gff: [meta, file(gff, checkIfExists:true)]
-    //     }
-    //     | set { ch_xref_annotations }
-    // }
+    ch_liftoff_gff3             = FASTA_LIFTOFF.out.gff3
+    ch_versions                 = ch_versions.mix(FASTA_LIFTOFF.out.versions)
 
-    // ch_xref_annotations.fasta
-    // | branch { meta, file ->
-    //     gz: "$file".endsWith(".gz")
-    //     rest: !"$file".endsWith(".gz")
-    // }
-    // | set { ch_xref_annotations_branch }
-
-    // GUNZIP_XREF_FASTA(
-    //     ch_xref_annotations_branch.gz
-    // )
-    // .gunzip
-    // | mix(
-    //     ch_xref_annotations_branch.rest
-    // )
-    // | set { ch_xref_annotations_fasta }
-
-    // // MODULE: GUNZIP_XREF_GFF
-    // ch_xref_annotations.gff
-    // | branch { meta, file ->
-    //     gz: "$file".endsWith(".gz")
-    //     rest: !"$file".endsWith(".gz")
-    // }
-    // | set { ch_xref_annotations_gff_branch }
-
-    // GUNZIP_XREF_GFF(
-    //     ch_xref_annotations_gff_branch.gff.map { meta, fasta, gff -> [meta, gff] }
-    // )
-    // .gunzip
-    // | mix(
-    //     ch_xref_annotations_gff_branch.rest.map { meta, fasta, gff -> [meta, gff] }
-    // )
-    // | set { ch_xref_annotations_gff }
-
-    // ch_xref_annotations_fasta
-    // | join(
-    //     ch_xref_annotations_gff
-    // )
-    // | set { ch_xref_annotations }
-
-    // // MODULE: LIFTOFF
-    // ch_xref_annotations
-    // | combine(
-    //     ch_validated_target_assemblies
-    // )
-    // | map { meta, ref_fasta, refGFF, targetMeta, targetFasta -> [[id:"${targetMeta.id}.from.${meta.id}"], ref_fasta, refGFF, targetFasta] }
-    // | set { ch_liftoff_inputs }
+    // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    )
 }

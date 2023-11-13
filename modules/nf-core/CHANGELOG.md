@@ -25,4 +25,4 @@
 1. Added stub
 2. Added author in meta.yml
 
-- Repo: https://github.com/nf-core/modules/tree/18cd2206622dc606bbceea533c7823feb2a251db
+- Repo: https://github.com/nf-core/modules/tree/71dbe24bee9ad6c013d4dd400d92612f6bf01ab8

@@ -5,7 +5,7 @@
 #SBATCH --time=1-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=1
 #SBATCH --output pan_gene_pfr.stdout
 #SBATCH --error pan_gene_pfr.stderr
 #SBATCH --mem=4G

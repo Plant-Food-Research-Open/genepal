@@ -2,7 +2,7 @@ process LIFTOFF {
     tag "$meta.id"
     label "process_high"
 
-    container "https://depot.galaxyproject.org/singularity/liftoff:1.6.3--pyhdfd78af_0"
+    container 'https://depot.galaxyproject.org/singularity/liftoff:1.6.3--pyhdfd78af_0'
 
     input:
     tuple val(meta), path(target_fa)
@@ -10,8 +10,8 @@ process LIFTOFF {
     path ref_gff
     
     output:
-    tuple val(meta), path("*.liftoff.gff3")         , emit: gff3
-    tuple val(meta), path("unmapped_features.txt")  , emit: unmapped
+    tuple val(meta), path("*.gff3")                 , emit: gff3
+    tuple val(meta), path("*.unmapped.txt")         , emit: unmapped
     path "versions.yml"                             , emit: versions
 
     when:
@@ -24,25 +24,28 @@ process LIFTOFF {
     liftoff \\
     -g $ref_gff \\
     -p $task.cpus \\
+    -o "${prefix}.gff3" \\
+    -u "${prefix}.unmapped.txt" \\
     $args \\
     $target_fa \\
     $ref_fa \\
-    > "${prefix}.liftoff.gff3"
+    2> liftoff.stderr
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        liftoff: \$(liftoff --version)
+        liftoff: \$(liftoff --version 2> /dev/null)
     END_VERSIONS
     """
     
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch "${prefix}.liftoff.gff3"
+    touch "${prefix}.gff3"
+    touch "${prefix}.unmapped.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        liftoff: \$(liftoff --version)
+        liftoff: \$(liftoff --version 2> /dev/null)
     END_VERSIONS
     """
 }
