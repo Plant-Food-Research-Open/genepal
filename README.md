@@ -5,90 +5,70 @@ A NextFlow pipeline for pan-genome annotation.
 
 ```mermaid
 flowchart TD
-    ribo_db((ribo_db))
-    SAMPLESHEET((samples))
-    TE_LIBRARIES(("[te_libs]"))
-    TARGET_ASSEMBLIES(("[assemblies]"))
-    EXTERNAL_PROTEIN_SEQS(("[ext_prots]"))
-    
-    GUNZIP_PROT[GUNZIP]
-    GUNZIP_TE[GUNZIP]
-    SKIP_EDTA{Skip EDTA}
-    pend((dev))
-    
-    TE_LIBRARIES --> GUNZIP_TE
-    GUNZIP_TE --> SKIP_EDTA
-    
-    TARGET_ASSEMBLIES --> GUNZIP
-    GUNZIP --> FASTA_VALIDATE
-    FASTA_VALIDATE --> FASTA_PERFORM_EDTA
-    FASTA_VALIDATE --> SKIP_EDTA
-    
-    SKIP_EDTA --> REPEATMASKER
-    FASTA_PERFORM_EDTA --> REPEATMASKER
-    REPEATMASKER --> STAR_GENOMEGENERATE
-
-    SAMPLESHEET --> SAMPLESHEET_CHECK
-    SAMPLESHEET_CHECK --> |Technical replicates|CAT_FASTQ
-    CAT_FASTQ --> FASTQC
-    SAMPLESHEET_CHECK --> FASTQC
-    FASTQC --> FASTP
-    
-    ribo_db --> SORTMERNA
-    FASTP --> SORTMERNA
-    SORTMERNA --> STAR_ALIGN
-    STAR_GENOMEGENERATE --> STAR_ALIGN
-    STAR_ALIGN --> GROUP_BY_ASSEMBLY([Group by assembly])
-    GROUP_BY_ASSEMBLY --> SAMTOOLS_CAT
-    SAMTOOLS_CAT --> |RNASeq bam|BRAKER3
-
-    REPEATMASKER --> BRAKER3
-
-    EXTERNAL_PROTEIN_SEQS --> GUNZIP_PROT
-    GUNZIP_PROT --> CAT
-    CAT --> BRAKER3
-    
-    BRAKER3 --> pend
-
-    subgraph Params
+    subgraph PrepareAssembly [ ]
     TARGET_ASSEMBLIES
     TE_LIBRARIES
-    SAMPLESHEET
-    ribo_db
-    EXTERNAL_PROTEIN_SEQS
-    end
-
-    subgraph GenomePrep
-    GUNZIP
     FASTA_VALIDATE
-    GUNZIP_TE
-    FASTA_PERFORM_EDTA
-    SKIP_EDTA
+    EDTA
     REPEATMASKER
-    STAR_GENOMEGENERATE
     end
+    
+    TARGET_ASSEMBLIES(["[target_assemblies]"])
+    TE_LIBRARIES(["[te_libs]"])
+    TARGET_ASSEMBLIES --> FASTA_VALIDATE
+    FASTA_VALIDATE --> EDTA
+    TE_LIBRARIES --> REPEATMASKER
+    EDTA --> |te_lib absent|REPEATMASKER
 
-    subgraph Braker
-    CAT
-    GUNZIP_PROT
-    BRAKER3
-    end
-
-    subgraph SamplePrep
-    SAMPLESHEET_CHECK
+    subgraph Samplesheet [ ]
+    SAMPLESHEET
     CAT_FASTQ
     FASTQC
     FASTP
+    FASTP_FASTQC
     SORTMERNA
-    STAR_ALIGN
-    GROUP_BY_ASSEMBLY
+    STAR
     SAMTOOLS_CAT
     end
+    
+    SAMPLESHEET([samplesheet])
+    SAMPLESHEET --> |Tech. reps|CAT_FASTQ
+    CAT_FASTQ --> FASTQC
+    SAMPLESHEET --> FASTQC
+    FASTQC --> FASTP
+    FASTP --> FASTP_FASTQC[FASTQC]
+    FASTP_FASTQC --> SORTMERNA
+    SORTMERNA --> STAR
+    STAR --> SAMTOOLS_CAT
 
-    style Params fill:#00FFFF21,stroke:#00FFFF21
-    style GenomePrep fill:#00FFFF21,stroke:#00FFFF21
-    style SamplePrep fill:#00FFFF21,stroke:#00FFFF21
-    style Braker fill:#00FFFF21,stroke:#00FFFF21
+    subgraph Annotation [ ]
+    anno_fasta(( ))
+    anno_masked_fasta(( ))
+    anno_bam(( ))
+    EXTERNAL_PROTEIN_SEQS(["[ext_prots]"])
+    XREF_ANNOTATIONS(["[xref_annotations]"])
+    CAT
+    BRAKER3
+    GFFREAD
+    LIFTOFF
+    end
+
+    PrepareAssembly --> |Fasta, Masked fasta|Annotation
+    Samplesheet --> |RNASeq bam|Annotation
+
+    XREF_ANNOTATIONS --> |xref_gff|GFFREAD
+    XREF_ANNOTATIONS --> |xref_fasta|LIFTOFF
+    GFFREAD --> LIFTOFF
+    anno_fasta --> |Fasta|LIFTOFF
+    
+    EXTERNAL_PROTEIN_SEQS --> CAT
+    anno_masked_fasta --> |Masked fasta|BRAKER3
+    anno_bam --> |RNASeq bam|BRAKER3
+    CAT --> BRAKER3
+
+    style Samplesheet fill:#00FFFF21,stroke:#00FFFF21
+    style PrepareAssembly fill:#00FFFF21,stroke:#00FFFF21
+    style Annotation fill:#00FFFF21,stroke:#00FFFF21
 ```
 
 ## Plant&Food Users
