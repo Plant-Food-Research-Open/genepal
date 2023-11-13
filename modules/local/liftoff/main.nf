@@ -10,9 +10,10 @@ process LIFTOFF {
     path ref_gff
     
     output:
-    tuple val(meta), path("*.gff3")                 , emit: gff3
-    tuple val(meta), path("*.unmapped.txt")         , emit: unmapped
-    path "versions.yml"                             , emit: versions
+    tuple val(meta), path("*.gff3")             , emit: gff3
+    tuple val(meta), path("*.polished.gff3")    , emit: polished_gff3, optional: true
+    tuple val(meta), path("*.unmapped.txt")     , emit: unmapped_txt
+    path "versions.yml"                         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -30,6 +31,10 @@ process LIFTOFF {
     $target_fa \\
     $ref_fa \\
     2> liftoff.stderr
+
+    [ -f "${prefix}.gff3_polished" ] \\
+    && mv "${prefix}.gff3_polished" "${prefix}.polished.gff3" \\
+    || echo "-polish is absent"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

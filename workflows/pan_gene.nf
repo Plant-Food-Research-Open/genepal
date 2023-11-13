@@ -143,7 +143,7 @@ workflow PAN_GENE {
         ch_xref_annotations_gff
     )
 
-    ch_liftoff_gff3             = FASTA_LIFTOFF.out.gff3
+    ch_liftoff_gff3             = FASTA_LIFTOFF.out.polished_gff3
     ch_versions                 = ch_versions.mix(FASTA_LIFTOFF.out.versions)
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
