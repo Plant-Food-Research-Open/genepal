@@ -26,3 +26,9 @@
 2. Added author in meta.yml
 
 - Repo: https://github.com/nf-core/modules/tree/71dbe24bee9ad6c013d4dd400d92612f6bf01ab8
+
+### gffread
+
+1. Added gff3 channel
+2. Made output channels optional
+3. Added author in meta.yml

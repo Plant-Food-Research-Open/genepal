@@ -1,7 +1,7 @@
 include { GUNZIP as GUNZIP_FASTA    } from '../../modules/nf-core/gunzip'
 include { GUNZIP as GUNZIP_GFF      } from '../../modules/nf-core/gunzip'
+include { GFFREAD                   } from '../../modules/nf-core/gffread'
 include { LIFTOFF                   } from '../../modules/local/liftoff'
-
 
 workflow FASTA_LIFTOFF {
     take:
@@ -44,12 +44,19 @@ workflow FASTA_LIFTOFF {
     )
     | set { ch_xref_annotations_gunzip_gff }
 
+    // MODULE: GFFREAD
+    GFFREAD(
+        ch_xref_annotations_gunzip_gff
+    )
+    .gff
+    | set { ch_gffread_gff }
+
     // MODULE: LIFTOFF
     target_assemby
     | combine(
         ch_xref_annotations_gunzip_fasta
         | join(
-            ch_xref_annotations_gunzip_gff
+            ch_gffread_gff
         )
     )
     | map { meta, targetFasta, refMeta, refFasta, refGFF  ->
@@ -70,6 +77,7 @@ workflow FASTA_LIFTOFF {
     Channel.empty()
     | mix(GUNZIP_FASTA.out.versions.first())
     | mix(GUNZIP_GFF.out.versions.first())
+    | mix(GFFREAD.out.versions.first())
     | mix(LIFTOFF.out.versions.first())
     | set { ch_versions }
 
