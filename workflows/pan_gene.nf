@@ -37,9 +37,9 @@ workflow PAN_GENE {
 
     ch_ribo_db                  = params.remove_ribo_rna
                                 ? file(params.ribo_database_manifest, checkIfExists: true)
-                                : Channel.empty()
+                                : null
 
-    ch_sortmerna_fastas         = Channel.from(ch_ribo_db.readLines())
+    ch_sortmerna_fastas         = Channel.from(ch_ribo_db ? ch_ribo_db.readLines() : null)
                                 | map { row -> file(row, checkIfExists: true) }
                                 | collect
 
@@ -97,43 +97,28 @@ workflow PAN_GENE {
     ch_versions                 = ch_versions.mix(PREPARE_EXT_PROTS.out.versions)
 
     // MODULE: BRAKER3
-    // ch_braker_inputs            =  REPEATMASKER.out.fasta_masked
-    //                             | mix(ch_rnaseq_bam)
-    //                             | groupTuple(size: 2, remainder: true)
-    //                             | map { meta, groupedItems ->
-    //                                 def maskedFasta = groupedItems[0]
-    //                                 def bam         = (groupedItems.size() == 2) ? groupedItems[1] : []
-                                    
-    //                                 [meta, maskedFasta, bam]
-    //                             }
+    ch_braker_inputs            = ch_masked_target_assembly
+                                | join(ch_rnaseq_bam, remainder: true)
+                                | combine(
+                                    ch_ext_prots_fasta.map { meta, filePath -> filePath }.ifEmpty(null)
+                                )
+                                | map { meta, fasta, bam, prots -> [meta, fasta, bam ?: [], prots ?: []] }
     
-    // if(params.external_protein_fastas) {
-    //     ch_braker_inputs
-    //     | combine(ch_ext_prot_seqs.map{meta, filePath -> filePath})
-    //     | set { ch_braker_inputs }
-    // } else {
-    //     ch_braker_inputs
-    //     | map{meta, assembly, bam -> [meta, assembly, bam, []]}
-    //     | set { ch_braker_inputs }
-    // }
-    
-    // ch_fasta            = ch_braker_inputs.map { meta, assembly, bam, proteinSeq -> [meta, assembly] }
-    // ch_bam              = ch_braker_inputs.map { meta, assembly, bam, proteinSeq -> bam }
-    // ch_proteins         = ch_braker_inputs.map { meta, assembly, bam, proteinSeq -> proteinSeq }
-    // ch_rnaseq_sets_dirs = []
-    // ch_rnaseq_sets_ids  = []
-    // ch_hintsfile        = []
+    def rnaseq_sets_dirs        = []
+    def rnaseq_sets_ids         = []
+    def hintsfile               = []
 
-    // BRAKER3(
-    //     ch_fasta,
-    //     ch_bam,
-    //     ch_rnaseq_sets_dirs,
-    //     ch_rnaseq_sets_ids,
-    //     ch_proteins,
-    //     ch_hintsfile
-    // )
+    BRAKER3(
+        ch_braker_inputs.map { meta, fasta, bam, prots -> [meta, fasta] },
+        ch_braker_inputs.map { meta, fasta, bam, prots -> bam },
+        rnaseq_sets_dirs,
+        rnaseq_sets_ids,
+        ch_braker_inputs.map { meta, fasta, bam, prots -> prots },
+        hintsfile
+    )
 
-    // ch_versions = ch_versions.mix(BRAKER3.out.versions.first())
+    ch_braker_gff3              = BRAKER3.out.gff3
+    ch_versions                 = ch_versions.mix(BRAKER3.out.versions.first())
 
     // // MODULE: GUNZIP_XREF_FASTA
     // ch_xref_annotations = Channel.empty()

@@ -30,7 +30,8 @@ workflow PREPARE_EXT_PROTS {
     | map { fileList -> [[id:"ext_protein_seqs"], fileList] }
     | CAT_PROTEIN_FASTAS
 
-    GUNZIP.out.versions.first()
+    Channel.empty()
+    | mix(GUNZIP.out.versions.first())
     | mix(CAT_PROTEIN_FASTAS.out.versions)
     | set { ch_versions }
     

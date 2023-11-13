@@ -5,9 +5,9 @@ def validateParams(params) {
     validateTEFastaCorrespondence(params)
 
     if (params.remove_ribo_rna) {
-        ch_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
+        file_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
         
-        if (ch_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${ch_ribo_db.getName()}!"}
+        if (file_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${file_ribo_db.getName()}!"}
     }
 }
 
@@ -32,6 +32,11 @@ def validateFastaTags(params) {
 }
 
 def validateTETags(params) {
+
+    if(!params["te_libraries"]) {
+        return
+    }
+
     def listOfTETuples   = params["te_libraries"]
 
     if (listOfTETuples.isEmpty()) {
@@ -52,6 +57,10 @@ def validateTETags(params) {
 }
 
 def validateTEFastaCorrespondence(params) {
+
+    if(!params["te_libraries"]) {
+        return
+    }
     
     def listOfTETuples   = params["te_libraries"]
     def listOfFastaTuples   = params["target_assemblies"]
