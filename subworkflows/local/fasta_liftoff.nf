@@ -69,7 +69,7 @@ workflow FASTA_LIFTOFF {
         ch_liftoff_inputs.map { meta, targetFasta, refFasta, refGFF -> refFasta },
         ch_liftoff_inputs.map { meta, targetFasta, refFasta, refGFF -> refGFF }
     )
-    .gff3
+    .polished_gff3
     | map { meta, gff -> [[id: meta.target_assemby], gff] }
     | groupTuple
     | set { ch_liftoff_gff3 }
