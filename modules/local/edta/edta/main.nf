@@ -4,7 +4,6 @@ process EDTA {
     label "process_week_long"
     
     container 'https://depot.galaxyproject.org/singularity/edta:2.1.0--hdfd78af_1'
-    containerOptions "-B $TMPDIR:$TMPDIR"
 
     input:
     tuple val(meta), path(fasta_file)

@@ -13,7 +13,7 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpso
 
 validateParams(params)
 
-workflow PAN_GENE {
+workflow PANGENE {
 
     ch_versions                 = Channel.empty()
 

@@ -6,8 +6,6 @@ process BRAKER3 {
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'registry.hub.docker.com/teambraker/braker3:v.1.0.3':
         'registry.hub.docker.com/teambraker/braker3:v.1.0.3' }"
-    
-    containerOptions "-B $TMPDIR:$TMPDIR"
 
     input:
     tuple val(meta), path(fasta)

@@ -1,4 +1,4 @@
-# PAN-GENE
+# PANGENE
 A NextFlow pipeline for pan-genome annotation.
 
 ## Pipeline Flowchart

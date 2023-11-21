@@ -2,8 +2,12 @@
 
 nextflow.enable.dsl=2
 
-include { PAN_GENE } from './workflows/pan_gene.nf'
+include { PANGENE } from './workflows/pangene.nf'
 
 workflow {
-    PAN_GENE()
+    PFR_PANGENE()
+}
+
+workflow PFR_PANGENE {
+    PANGENE()
 }
