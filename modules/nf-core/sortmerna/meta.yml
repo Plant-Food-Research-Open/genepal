@@ -48,4 +48,6 @@ output:
 authors:
   - "@drpatelh"
   - "@mashehu"
-  - "@gallvp"
+maintainers:
+  - "@drpatelh"
+  - "@mashehu"

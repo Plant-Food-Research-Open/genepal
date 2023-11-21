@@ -96,8 +96,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
             .out
             .reads
             .join(trim_json)
-            // Change: Bypassing getFastpReadsAfterFiltering when FASTP stub returns empty json
-            .map { meta, reads, json -> [ meta, reads, json.text ? getFastpReadsAfterFiltering(json) : min_trimmed_reads.toLong()] }
+            .map { meta, reads, json -> [ meta, reads, getFastpReadsAfterFiltering(json) ] }
             .set { ch_num_trimmed_reads }
 
         ch_num_trimmed_reads

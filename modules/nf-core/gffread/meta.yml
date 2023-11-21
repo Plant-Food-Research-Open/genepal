@@ -28,6 +28,5 @@ output:
       pattern: "versions.yml"
 authors:
   - "@emiller88"
-  - "@gallvp"
 maintainers:
   - "@emiller88"

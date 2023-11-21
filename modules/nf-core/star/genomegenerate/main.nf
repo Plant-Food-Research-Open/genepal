@@ -2,7 +2,7 @@ process STAR_GENOMEGENERATE {
     tag "$fasta"
     label 'process_high'
 
-    conda "bioconda::star=2.7.10a bioconda::samtools=1.16.1 conda-forge::gawk=5.1.0"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:1df389393721fc66f3fd8778ad938ac711951107-0' :
         'biocontainers/mulled-v2-1fa26d1ce03c295fe2fdcf85831a92fbcbd7e8c2:1df389393721fc66f3fd8778ad938ac711951107-0' }"
@@ -10,7 +10,6 @@ process STAR_GENOMEGENERATE {
     input:
     tuple val(meta), path(fasta)
     tuple val(meta2), path(gtf)
-    val star_ignore_sjdbgtf
 
     output:
     tuple val(meta), path("star")  , emit: index
@@ -23,7 +22,6 @@ process STAR_GENOMEGENERATE {
     def args = task.ext.args ?: ''
     def args_list = args.tokenize()
     def memory = task.memory ? "--limitGenomeGenerateRAM ${task.memory.toBytes() - 100000000}" : ''
-    def ignore_gtf = star_ignore_sjdbgtf ? '' : "--sjdbGTFfile $gtf"
     if (args_list.contains('--genomeSAindexNbases')) {
         """
         mkdir star
@@ -31,7 +29,7 @@ process STAR_GENOMEGENERATE {
             --runMode genomeGenerate \\
             --genomeDir star/ \\
             --genomeFastaFiles $fasta \\
-            $ignore_gtf \\
+            --sjdbGTFfile $gtf \\
             --runThreadN $task.cpus \\
             $memory \\
             $args
@@ -53,7 +51,7 @@ process STAR_GENOMEGENERATE {
             --runMode genomeGenerate \\
             --genomeDir star/ \\
             --genomeFastaFiles $fasta \\
-            $ignore_gtf \\
+            --sjdbGTFfile $gtf \\
             --runThreadN $task.cpus \\
             --genomeSAindexNbases \$NUM_BASES \\
             $memory \\

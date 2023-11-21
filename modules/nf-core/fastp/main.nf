@@ -2,7 +2,7 @@ process FASTP {
     tag "$meta.id"
     label 'process_medium'
 
-    conda "bioconda::fastp=0.23.4"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/fastp:0.23.4--h5f740d0_0' :
         'biocontainers/fastp:0.23.4--h5f740d0_0' }"
@@ -99,22 +99,4 @@ process FASTP {
         END_VERSIONS
         """
     }
-
-    stub:
-    def prefix              = task.ext.prefix ?: "${meta.id}"
-    def isSingleOutput      = task.ext.args?.contains('--interleaved_in') || meta.single_end
-    def outputFiles         = isSingleOutput ? "${prefix}.fastp.fastq.gz" : "${prefix}_1.fastp.fastq.gz ${prefix}_2.fastp.fastq.gz"
-    def mergedFileCommand   = (!isSingleOutput && save_merged) ? "touch ${prefix}.merged.fastq.gz" : ""
-    """
-    touch $outputFiles
-    touch "${prefix}.json"
-    touch "${prefix}.html"
-    touch "${prefix}.log"
-    $mergedFileCommand
-    
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        fastp: \$(fastp --version 2>&1 | sed -e "s/fastp //g")
-    END_VERSIONS
-    """
 }
