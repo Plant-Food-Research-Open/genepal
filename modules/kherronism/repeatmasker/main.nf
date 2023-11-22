@@ -8,7 +8,8 @@ process REPEATMASKER {
         'biocontainers/repeatmasker:4.1.5--pl5321hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(fasta), path(lib)
+    tuple val(meta), path(fasta)
+    path(lib)
 
     output:
     tuple val(meta), path("${meta.id}/*.f*a.masked") , emit: fasta_masked
@@ -33,6 +34,22 @@ process REPEATMASKER {
         -dir ${prefix} \\
         ${args} \\
         ${fasta}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        repeatmasker: ${VERSION}
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def VERSION = '4.1.5'  // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+    """
+    mkdir "$meta.id"
+
+    touch "${meta.id}/${meta.id}.fasta.masked"
+    touch "${meta.id}/${meta.id}.fasta.out"
+    touch "${meta.id}/${meta.id}.fasta.tbl"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
