@@ -2,6 +2,26 @@
     "name": "PlantandFoodResearch/pangene",
     "homePage": "https://github.com/PlantandFoodResearch/pangene",
     "repos": {
+        "git@github.com:kherronism/nf-modules.git": {
+            "modules": {
+                "kherronism": {
+                    "braker3": {
+                        "branch": "dev",
+                        "git_sha": "b01fec253f3b73b24e3f166a96d4beb49e58b0a6",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "repeatmasker": {
+                        "branch": "dev",
+                        "git_sha": "6778d5bb4c9f3d597753c699226fcde8d0811bfb",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    }
+                }
+            }
+        },
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {

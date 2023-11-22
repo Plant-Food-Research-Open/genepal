@@ -4,22 +4,17 @@ process BRAKER3 {
 
     conda "bioconda::braker3=3.0.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'registry.hub.docker.com/teambraker/braker3:v.1.0.3':
-        'registry.hub.docker.com/teambraker/braker3:v.1.0.3' }"
+        'registry.hub.docker.com/teambraker/braker3:v.1.0.4':
+        'registry.hub.docker.com/teambraker/braker3:v.1.0.4' }"
 
     input:
-    tuple val(meta), path(fasta)
-    path bam
-    path rnaseq_sets_dirs
-    path rnaseq_sets_ids
-    path proteins
-    path hintsfile
+    tuple val(meta), path(fasta), path(rnaseq_sets_ids), path(rnaseq_sets_dirs), path(bam), path(proteins), path(hintsfile)
 
     output:
     tuple val(meta), path("${prefix}/braker.gtf")      , emit: gtf
     tuple val(meta), path("${prefix}/braker.codingseq"), emit: cds
     tuple val(meta), path("${prefix}/braker.aa")       , emit: aa
-    tuple val(meta), path("${prefix}/hintsfile.gff")   , emit: hintsfile, optional: true
+    tuple val(meta), path("${prefix}/hintsfile.gff")   , emit: hintsfile
     tuple val(meta), path("${prefix}/braker.log")      , emit: log
     tuple val(meta), path("${prefix}/what-to-cite.txt"), emit: citations
     tuple val(meta), path("${prefix}/braker.gff3")     , emit: gff3     , optional: true
@@ -32,48 +27,27 @@ process BRAKER3 {
     def args = task.ext.args ?: ''
     prefix   = task.ext.prefix ?: "${meta.id}"
 
-    def hints    = hintsfile ? "--hints=${hintsfile}" : ''
+    def rna_ids  = rnaseq_sets_ids ? "--rnaseq_sets_ids=${rnaseq_sets_ids}" : ''
+    def rna_dirs = rnaseq_sets_dirs ? "--rnaseq_sets_dirs=${rnaseq_sets_dirs}" : ''
     def bam      = bam ? "--bam=${bam}" : ''
     def proteins = proteins ? "--prot_seq=${proteins}" : ''
-    def rna_dirs = rnaseq_sets_dirs ? "--rnaseq_sets_dirs=${rnaseq_sets_dirs}" : ''
-    def rna_ids  = rnaseq_sets_ids ? "--rnaseq_sets_ids=${rnaseq_sets_ids}" : ''
+    def hints    = hintsfile ? "--hints=${hintsfile}" : ''
     """
-    cp -r /usr/share/augustus/config augustus_config
-
     braker.pl \\
         --genome ${fasta} \\
         --species ${prefix} \\
         --workingdir ${prefix} \\
-        --AUGUSTUS_CONFIG_PATH "\$(pwd)/augustus_config" \\
         --threads ${task.cpus} \\
-        ${hints} \\
+        ${rna_ids} \\
+        ${rna_dirs} \\
         ${bam} \\
         ${proteins} \\
-        ${rna_dirs} \\
-        ${rna_ids} \\
+        ${hints} \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        braker3: \$(braker.pl --version 2>&1 | grep "version" | sed 's/braker.pl version//; s/\\s*//')
-    END_VERSIONS
-    """
-
-    stub:
-    prefix   = task.ext.prefix ?: "${meta.id}"
-    """
-    mkdir "$prefix"
-
-    touch "${prefix}/braker.gtf"
-    touch "${prefix}/braker.codingseq"
-    touch "${prefix}/braker.aa"
-    touch "${prefix}/hintsfile.gff"
-    touch "${prefix}/braker.log"
-    touch "${prefix}/what-to-cite.txt"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        braker3: \$(braker.pl --version 2>&1 | grep "version" | sed 's/braker.pl version//; s/\\s*//')
+         braker3: \$(braker.pl --version 2>&1 | sed 's/^.*BRAKER3 v//; s/ .*\$//')
     END_VERSIONS
     """
 }

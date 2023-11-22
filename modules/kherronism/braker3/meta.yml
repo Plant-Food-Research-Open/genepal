@@ -22,11 +22,28 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - assembly:
+  - fasta:
       type: file
-      description: Genome assembly
+      description: Genome assembly fasta
       pattern: "*.{fasta,fa,fas,faa,fna}"
-
+  - rnaseq_sets_ids:
+      type: file
+      description: IDs of RNA-seq data sets to be passed to --rnaseq_sets_ids
+  - rnaseq_sets_dirs:
+      type: file
+      description: Directories of RNA-seq data sets to be passed to --rnaseq_sets_dirs
+  - bam:
+      type: file
+      description: BAM file of RNA-seq data to be passed to --bam
+      pattern: "*.bam"
+  - proteins:
+      type: file
+      description: Protein evidence to be passed to --proteins
+      pattern: "*.{fasta,fa,fas,faa}"
+  - hintsfile:
+      type: file
+      description: Hintsfile to be passed to --hintsfile
+      pattern: "*.{gff, gtf, gff3}"
 output:
   - gtf:
       type: file
@@ -55,4 +72,3 @@ output:
 
 authors:
   - "@kherronism"
-  - "@gallvp"
