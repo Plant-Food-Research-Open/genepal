@@ -1,13 +1,16 @@
 process LIFTOFF {
     tag "$meta.id"
-    label "process_high"
+    label 'process_high'
 
-    container 'https://depot.galaxyproject.org/singularity/liftoff:1.6.3--pyhdfd78af_0'
+    conda "bioconda::liftoff=1.6.3"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/liftoff:1.6.3--pyhdfd78af_0':
+        'biocontainers/liftoff:1.6.3--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(target_fa)
-    path ref_fa
-    path ref_gff
+    path ref_fa, name: 'liftoff_reference_assembly.fa' // To avoid name collisions betwen target_fa and ref_fa
+    path ref_annotation
     
     output:
     tuple val(meta), path("*.gff3")             , emit: gff3
@@ -23,18 +26,16 @@ process LIFTOFF {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     liftoff \\
-    -g $ref_gff \\
-    -p $task.cpus \\
-    -o "${prefix}.gff3" \\
-    -u "${prefix}.unmapped.txt" \\
-    $args \\
-    $target_fa \\
-    $ref_fa \\
-    2> liftoff.stderr
+        -g $ref_annotation \\
+        -p $task.cpus \\
+        -o "${prefix}.gff3" \\
+        -u "${prefix}.unmapped.txt" \\
+        $args \\
+        $target_fa \\
+        liftoff_reference_assembly.fa
 
-    [ -f "${prefix}.gff3_polished" ] \\
-    && mv "${prefix}.gff3_polished" "${prefix}.polished.gff3" \\
-    || echo "-polish is absent"
+    mv "${prefix}.gff3_polished" "${prefix}.polished.gff3" \\
+        || echo "-polish is absent"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

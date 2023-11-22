@@ -1,0 +1,49 @@
+name: "fastavalidate"
+description: |
+  "A simple validator for fasta files. The module emits the validated file or an
+  error log upon validation failure."
+keywords:
+  - fasta
+  - validation
+  - genome
+tools:
+  - fasta_validate:
+      description: |
+        "A simple C code to validate a fasta file. It only checks a few things,
+        and by default only sets its response via the return code,
+        so you will need to check that!"
+      homepage: "https://github.com/gallvp/fasta_validator"
+      documentation: "https://github.com/gallvp/fasta_validator"
+      tool_dev_url: "https://github.com/gallvp/fasta_validator"
+      doi: "10.5281/zenodo.2532044"
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing file information
+        e.g. [ id:'test' ]
+  - fasta:
+      type: file
+      description: Input fasta file
+      pattern: "*.fasta"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing file information
+        e.g. [ id:'test' ]
+  - valid_fasta:
+      type: file
+      description: Validated fasta file if the validation succeeds
+      pattern: "*.validated.fasta"
+  - error_log:
+      type: file
+      description: Error log if the validation fails
+      pattern: "*.error.log"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@gallvp"
