@@ -1,0 +1,89 @@
+nextflow_process {
+
+    name "Test Process LIFTOFF"
+    script "../main.nf"
+    process "LIFTOFF"
+    config "./nextflow.config"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "liftoff"
+
+    test("homo_sapiens-genome_21_fasta-genome_1_fasta-genome_1_gtf") {
+
+        setup {
+            run("GUNZIP") {
+                script "../../../nf-core/gunzip"
+
+                process {
+                    """
+                    input[0] = [
+                        [ id:'test' ],
+                        file(params.test_data['homo_sapiens']['genome']['genome_1_fasta'], checkIfExists: true)
+                    ]
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+                ]
+                input[1] = GUNZIP.out.gunzip.map { meta, file -> file }
+                input[2] = [
+                    file(params.test_data['homo_sapiens']['genome']['genome_1_gtf'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.unmapped_txt).match("unmapped_txt") },
+                { assert snapshot(process.out.versions).match("versions") },
+                { assert path(process.out.gff3.get(0).get(1)).getText().contains("chr21\tLiftoff\texon\t34608061\t34608118\t.\t+\t.") },
+                { assert path(process.out.polished_gff3.get(0).get(1)).getText().contains("chr21\tLiftoff\texon\t34608061\t34608118\t.\t+\t.") }
+            )
+        }
+
+    }
+
+    test("stub") {
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+                ]
+                input[1] = [
+                    file(params.test_data['homo_sapiens']['genome']['genome_1_fasta'], checkIfExists: true)
+                ]
+                input[2] = [
+                    file(params.test_data['homo_sapiens']['genome']['genome_1_gtf'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.gff3 != null },
+                { assert process.out.polished_gff3 == [] },
+                { assert process.out.unmapped_txt != null },
+                { assert process.out.versions != null },
+                { assert snapshot(process.out.versions).match("versions") }
+            )
+        }
+
+    }
+
+}

@@ -1,3 +1,5 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: "liftoff"
 description: "Liftoff is a tool that accurately maps annotations in GFF or GTF between assemblies of the same, or closely-related species."
 keywords:
@@ -46,7 +48,6 @@ output:
       type: file
       description: Polished lifted annotations for the target assembly in gff3 format
       pattern: "*.polished.gff3"
-      optional: true
   - unmapped_txt:
       type: file
       description: List of unmapped reference annotations
@@ -56,4 +57,6 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
-  - "@gallvp"
+  - "@GallVp"
+maintainers:
+  - "@GallVp"

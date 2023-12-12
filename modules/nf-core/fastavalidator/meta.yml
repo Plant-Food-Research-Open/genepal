@@ -1,6 +1,8 @@
-name: "fastavalidate"
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "fastavalidator"
 description: |
-  "A simple validator for fasta files. The module emits the validated file or an
+  "Python C-extension for a simple validator for fasta files. The module emits the validated file or an
   error log upon validation failure."
 keywords:
   - fasta
@@ -9,13 +11,13 @@ keywords:
 tools:
   - fasta_validate:
       description: |
-        "A simple C code to validate a fasta file. It only checks a few things,
+        "Python C-extension for a simple C code to validate a fasta file. It only checks a few things,
         and by default only sets its response via the return code,
         so you will need to check that!"
-      homepage: "https://github.com/gallvp/fasta_validator"
-      documentation: "https://github.com/gallvp/fasta_validator"
-      tool_dev_url: "https://github.com/gallvp/fasta_validator"
-      doi: "10.5281/zenodo.2532044"
+      homepage: "https://github.com/linsalrob/py_fasta_validator"
+      documentation: "https://github.com/linsalrob/py_fasta_validator"
+      tool_dev_url: "https://github.com/linsalrob/py_fasta_validator"
+      doi: "10.5281/zenodo.5002710"
       licence: ["MIT"]
 input:
   - meta:
@@ -33,17 +35,19 @@ output:
       description: |
         Groovy Map containing file information
         e.g. [ id:'test' ]
-  - valid_fasta:
+  - success_log:
       type: file
-      description: Validated fasta file if the validation succeeds
-      pattern: "*.validated.fasta"
+      description: Log file for successful validation
+      pattern: "*.success.log"
   - error_log:
       type: file
-      description: Error log if the validation fails
+      description: Log file for failed validation
       pattern: "*.error.log"
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@gallvp"
+maintainers:
   - "@gallvp"
