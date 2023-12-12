@@ -1,26 +1,22 @@
 #!/usr/bin/env python3
 
 import re
-import sys
 
 from Bio import SeqIO
+from importlib.metadata import version
+from platform import python_version
 
 # The input fasta file path
-fasta_file_path = sys.argv[1]
-
-# The prefix for output files: prefix.renamed.ids.fa, prefix.renamed.ids.tsv
-output_files_prefix = sys.argv[2]
-
-# In the case where IDs have acceptable character and no change is needed, the output is stdout:
-# "IDs have acceptable length and character. No change required."
+fasta_file_path = "$fasta"
+output_files_prefix = "$prefix"
 
 
-def extract_fasta_ids(fasta_file_path):
+def extract_fasta_ids_and_descriptions(fasta_file_path):
     fasta_file_obj = SeqIO.parse(fasta_file_path, "fasta")
 
     ids = []
     for record in fasta_file_obj:
-        ids.append(record.id)
+        ids.append((record.id, record.description))
     return ids
 
 
@@ -38,29 +34,39 @@ def write_fasta_with_new_ids(fasta_file_path, id_mapping, file_prefix):
 
         replaced_records.append(record)
 
-    SeqIO.write(replaced_records, f"{file_prefix}.renamed.ids.fa", "fasta")
+    SeqIO.write(replaced_records, f"{file_prefix}.short.ids.fasta", "fasta")
 
 
-def write_fasta_without_comments(fasta_file_path, file_prefix):
-    old_fasta_file_obj = SeqIO.parse(fasta_file_path, "fasta")
-
-    replaced_records = []
-    for record in old_fasta_file_obj:
-        record.description = ""
-        replaced_records.append(record)
-
-    SeqIO.write(replaced_records, f"{file_prefix}.renamed.ids.fa", "fasta")
-
-
-def do_id_need_to_change(id):
-    if len(id) > 13 or not re.match(r"^[a-zA-Z0-9_]+$", id):
+def do_id_need_to_change(id_and_description, silent=False):
+    id = id_and_description[0]
+    description = id_and_description[1]
+    if len(id) > 13:
+        if not silent:
+            print(f"{id} has length greater than 13")
         return True
 
+    if not re.match(r"^[a-zA-Z0-9_]+\$", id):
+        if not silent:
+            print(f"{id} does not match '^[a-zA-Z0-9_]+\$'")
+        return True
+
+    if description != id and description != "":
+        if not silent:
+            print(f"{id} contains a comment: {description.replace(id, '')}")
+        return True
+
+    if not silent:
+        print(f"{id} is acceptable")
     return False
 
 
-def do_ids_need_to_change(ids):
-    return any([do_id_need_to_change(id) for id in ids])
+def do_ids_need_to_change(ids_and_descriptions, silent=False):
+    return any(
+        [
+            do_id_need_to_change(id_and_description, silent)
+            for id_and_description in ids_and_descriptions
+        ]
+    )
 
 
 def extract_common_patterns(ids):
@@ -80,23 +86,25 @@ def extract_common_patterns(ids):
     return {pattern: pattern[:3] for pattern in common_patterns}
 
 
-def shorten_ids(ids, patterns_dict):
+def shorten_ids(input_ids_and_descriptions, patterns_dict):
     shortened_ids = []
 
-    for id in ids:
-        if not do_id_need_to_change(id):
+    for id_and_description in input_ids_and_descriptions:
+        id = id_and_description[0]
+        description = ""  # Treat description as absent as it will be removed by write_fasta_with_new_ids
+        if not do_id_need_to_change((id, description), silent=True):
             shortened_ids.append(id)
             continue
 
         shortened_id = shorten_id_by_pattern_replacement(patterns_dict, id)
 
-        if not do_id_need_to_change(shortened_id):
+        if not do_id_need_to_change((shortened_id, description), silent=True):
             shortened_ids.append(shortened_id)
             continue
 
         shortened_id = f"Ctg{generate_hash(id)}"
 
-        if not do_id_need_to_change(shortened_id):
+        if not do_id_need_to_change((shortened_id, description), silent=True):
             shortened_ids.append(shortened_id)
             continue
 
@@ -146,24 +154,27 @@ def fail_if_new_ids_not_valid(ids):
 
 
 if __name__ == "__main__":
-    input_ids = extract_fasta_ids(fasta_file_path)
+    input_ids_and_descriptions = extract_fasta_ids_and_descriptions(fasta_file_path)
+    input_ids = [x[0] for x in input_ids_and_descriptions]
 
-    if not do_ids_need_to_change(input_ids):
+    # Write versions
+    with open(f"versions.yml", "w") as f_versions:
+        f_versions.write('"${task.process}":\\n')
+        f_versions.write(f"    python: {python_version()}\\n")
+        f_versions.write(f"    biopython: {version('biopython')}\\n")
+
+    if not do_ids_need_to_change(input_ids_and_descriptions):
         print("IDs have acceptable length and character. No change required.")
-
-        with open(f"{output_files_prefix}.renamed.ids.tsv", "w") as f:
-            f.write("IDs have acceptable length and character. No change required.")
-
-        write_fasta_without_comments(fasta_file_path, output_files_prefix)
-
         exit(0)
 
-    new_ids = shorten_ids(input_ids, extract_common_patterns(input_ids))
+    new_ids = shorten_ids(
+        input_ids_and_descriptions, extract_common_patterns(input_ids)
+    )
     fail_if_new_ids_not_valid(new_ids)
 
-    with open(f"{output_files_prefix}.renamed.ids.tsv", "w") as f:
+    with open(f"{output_files_prefix}.short.ids.tsv", "w") as f:
         for input_id, new_id in zip(input_ids, new_ids):
-            f.write(f"{input_id}\t{new_id}\n")
+            f.write(f"{input_id}\\t{new_id}\\n")
 
     write_fasta_with_new_ids(
         fasta_file_path, zip(input_ids, new_ids), output_files_prefix

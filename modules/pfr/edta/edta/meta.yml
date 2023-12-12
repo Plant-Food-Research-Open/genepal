@@ -1,0 +1,61 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "edta_edta"
+description: Extensive de-novo TE Annotator (EDTA)
+keywords:
+  - genome
+  - repeat
+  - annotation
+  - transposable-elements
+tools:
+  - "edta":
+      description: Extensive de-novo TE Annotator (EDTA)
+      homepage: "https://github.com/oushujun/EDTA"
+      documentation: "https://github.com/oushujun/EDTA"
+      tool_dev_url: "https://github.com/oushujun/EDTA"
+      doi: "10.1186/s13059-019-1905-y"
+      licence: ["GPL v3"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'test' ]`
+  - fasta:
+      type: file
+      description: Genome fasta file
+      pattern: "*.{fsa,fa,fasta}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'test' ]`
+  - log:
+      type: file
+      description: Log emitted by EDTA
+      pattern: "*.log"
+  - te_lib_fasta:
+      type: file
+      description: A non-redundant TE library in fasta format
+      pattern: "*.EDTA.TElib.fa"
+  - pass_list:
+      type: file
+      description: A summary table of intact LTR-RTs with coordinate and structural information
+      pattern: "*.EDTA.pass.list"
+  - out_file:
+      type: file
+      description: RepeatMasker annotation of all LTR sequences in the genome
+      pattern: "*.EDTA.out"
+  - te_anno_gff3:
+      type: file
+      description: A gff3 file containing both structurally intact and fragmented TE annotations
+      pattern: "*.EDTA.TEanno.gff3"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@GallVp"
+maintainers:
+  - "@GallVp"
