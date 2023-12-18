@@ -1,10 +1,8 @@
 include { GUNZIP as GUNZIP_TARGET_ASSEMBLY      } from '../../modules/nf-core/gunzip'
 include { GUNZIP as GUNZIP_TE_LIBRARY           } from '../../modules/nf-core/gunzip'
-include { FASTA_VALIDATE                        } from '../../modules/local/fasta_validate'
+include { FASTAVALIDATOR                        } from '../../modules/nf-core/fastavalidator'
 include { REPEATMASKER                          } from '../../modules/kherronism/repeatmasker'
 include { STAR_GENOMEGENERATE                   } from '../../modules/nf-core/star/genomegenerate'
-
-include { FASTA_EDTA                            } from '../../subworkflows/local/fasta_edta'
 
 workflow PREPARE_ASSEMBLY {
     take:
@@ -29,10 +27,18 @@ workflow PREPARE_ASSEMBLY {
     )
     | set { ch_gunzip_target_assembly }
 
-    // MODULE: FASTA_VALIDATE
-    FASTA_VALIDATE(ch_gunzip_target_assembly)
-    .valid_fasta
+    // MODULE: FASTAVALIDATOR
+    FASTAVALIDATOR(ch_gunzip_target_assembly)
+
+    ch_gunzip_target_assembly
+    | join(FASTAVALIDATOR.out.success_log)
+    | map { meta, fasta, log -> [ meta, fasta ] }
     | set { ch_validated_target_assembly }
+
+    FASTAVALIDATOR.out.error_log
+    | map { meta, log ->
+        System.err.println("WARNING: FASTAVALIDATOR failed for ${meta.id} with error: ${log}. ${meta.id} is excluded from further analysis.")
+    }
 
     // MODULE: GUNZIP_TE_LIBRARY
     te_library
@@ -85,7 +91,7 @@ workflow PREPARE_ASSEMBLY {
     | set { ch_assembly_index }
 
     Channel.empty()
-    | mix(FASTA_VALIDATE.out.versions.first())
+    | mix(FASTAVALIDATOR.out.versions.first())
     | mix(GUNZIP_TE_LIBRARY.out.versions.first())
     | mix(FASTA_EDTA.out.versions)
     | mix(REPEATMASKER.out.versions.first())
