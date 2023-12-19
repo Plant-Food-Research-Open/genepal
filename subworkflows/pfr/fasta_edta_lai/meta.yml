@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "fasta_edta_lai"
+description: |
+  Performs extensive de-novo transposable element annotation with EDTA and optionally estimates repeat-space completeness with LAI
+keywords:
+  - genomics
+  - genome
+  - annotation
+  - repeat
+  - transposons
+  - stats
+  - qc
+components:
+  - custom/restoregffids
+  - custom/shortenfastaids
+  - edta/edta
+  - lai
+input:
+  - ch_fasta:
+      type: file
+      description: |
+        Channel for the assembly fasta file
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.{fsa/fa/fasta}"
+  - ch_monoploid_seqs:
+      type: file
+      description: |
+        Channel for providing a list of monoploid sequences
+        for correct estimation of LAI for polyploid genomes.
+        This parameter is useful when all the haplotypes are
+        stored in a single fasta file.
+        Structure: [ val(meta), path(txt) ]
+      pattern: "*.txt"
+  - skip_lai:
+      type: boolean
+      description: |
+        Skip LAI estimation
+        Structure: [ val(boolean) ]
+output:
+  - te_lib_fasta:
+      type: file
+      description: A non-redundant TE library in fasta format
+      pattern: "*.EDTA.TElib.fa"
+  - te_anno_gff3:
+      type: file
+      description: A gff3 file containing both structurally intact and fragmented TE annotations
+      pattern: "*.EDTA.TEanno.gff3"
+  - lai_log:
+      type: file
+      description: |
+        Log from LAI
+        Structure: [ val(meta), path(log) ]
+      pattern: "*.LAI.log"
+  - lai_out:
+      type: file
+      description: |
+        LAI output
+        Structure: [ val(meta), path(out) ]
+      pattern: "*.LAI.out"
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@GallVp"
+maintainers:
+  - "@GallVp"

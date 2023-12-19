@@ -1,0 +1,38 @@
+nextflow_workflow {
+
+    name "Test Workflow FASTA_EDTA_LAI"
+    script "../main.nf"
+    workflow "FASTA_EDTA_LAI"
+
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "subworkflows/fasta_edta_lai"
+    tag "fasta_edta_lai"
+    tag "lai"
+    tag "edta/edta"
+    tag "custom/restoregffids"
+    tag "custom/shortenfastaids"
+
+    test("test_data") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ],
+                    file("/Users/hrauxr/Projects/nxf-modules/data/chr1.fa", checkIfExists: true)
+                ])
+                input[1] = []
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(workflow.out.versions).match("versions") }
+            )
+        }
+    }
+}

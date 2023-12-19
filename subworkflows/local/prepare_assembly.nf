@@ -4,6 +4,8 @@ include { FASTAVALIDATOR                        } from '../../modules/nf-core/fa
 include { REPEATMASKER                          } from '../../modules/kherronism/repeatmasker'
 include { STAR_GENOMEGENERATE                   } from '../../modules/nf-core/star/genomegenerate'
 
+include { FASTA_EDTA_LAI                        } from '../../subworkflows/pfr/fasta_edta_lai'
+
 workflow PREPARE_ASSEMBLY {
     take:
     target_assembly     // channel: [ meta, fasta ]
@@ -57,7 +59,7 @@ workflow PREPARE_ASSEMBLY {
     )
     | set { ch_gunzip_te_library }
 
-    // SUBWORKFLOW: FASTA_EDTA
+    // SUBWORKFLOW: FASTA_EDTA_LAI
     ch_validated_target_assembly
     | join(
         ch_gunzip_te_library, remainder: true
@@ -66,12 +68,18 @@ workflow PREPARE_ASSEMBLY {
         teLib == null
     }
     | map { meta, assembly, teLib -> [meta, assembly] }
-    | FASTA_EDTA
+    | set { ch_edta_inputs }
+    
+    FASTA_EDTA_LAI (
+        ch_edta_inputs,
+        [],
+        true // Skip LAI
+    )
     
     // MODULE: REPEATMASKER
     ch_validated_target_assembly
     | join(
-        FASTA_EDTA.out.te_lib_fasta.mix(ch_gunzip_te_library)
+        FASTA_EDTA_LAI.out.te_lib_fasta.mix(ch_gunzip_te_library)
     )
     | set { ch_assembly_n_te_lib }
 
@@ -84,8 +92,7 @@ workflow PREPARE_ASSEMBLY {
     def star_ignore_sjdbgtf = true
     STAR_GENOMEGENERATE(
         ch_validated_target_assembly,
-        ch_validated_target_assembly.map { meta, maskedFasta -> [meta, []] },
-        star_ignore_sjdbgtf
+        ch_validated_target_assembly.map { meta, fasta -> [ [], [] ] }
     )
     .index
     | set { ch_assembly_index }
@@ -93,7 +100,7 @@ workflow PREPARE_ASSEMBLY {
     Channel.empty()
     | mix(FASTAVALIDATOR.out.versions.first())
     | mix(GUNZIP_TE_LIBRARY.out.versions.first())
-    | mix(FASTA_EDTA.out.versions)
+    | mix(FASTA_EDTA_LAI.out.versions)
     | mix(REPEATMASKER.out.versions.first())
     | mix(STAR_GENOMEGENERATE.out.versions.first())
     | mix(GUNZIP_TARGET_ASSEMBLY.out.versions.first())
