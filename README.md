@@ -1,4 +1,5 @@
 # PANGENE
+
 A NextFlow pipeline for pan-genome annotation.
 
 ## Pipeline Flowchart
@@ -12,7 +13,7 @@ flowchart TD
     EDTA
     REPEATMASKER
     end
-    
+
     TARGET_ASSEMBLIES(["[target_assemblies]"])
     TE_LIBRARIES(["[te_libs]"])
     TARGET_ASSEMBLIES --> FASTA_VALIDATE
@@ -30,7 +31,7 @@ flowchart TD
     STAR
     SAMTOOLS_CAT
     end
-    
+
     SAMPLESHEET([samplesheet])
     SAMPLESHEET --> |Tech. reps|CAT_FASTQ
     CAT_FASTQ --> FASTQC
@@ -60,7 +61,7 @@ flowchart TD
     XREF_ANNOTATIONS --> |xref_fasta|LIFTOFF
     GFFREAD --> LIFTOFF
     anno_fasta --> |Fasta|LIFTOFF
-    
+
     EXTERNAL_PROTEIN_SEQS --> CAT
     anno_masked_fasta --> |Masked fasta|BRAKER3
     anno_bam --> |RNASeq bam|BRAKER3
@@ -76,9 +77,8 @@ flowchart TD
 Configure the pipeline by modifying `nextflow.config` and submit to SLURM for execution.
 
 ```bash
-sbatch ./pan_gene_pfr.sh 
+sbatch ./pan_gene_pfr.sh
 ```
-
 
 ## Third-party Sources
 

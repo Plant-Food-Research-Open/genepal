@@ -1,6 +1,6 @@
 name: braker3
 description: |
-    Gene prediction in novel genomes using RNA-seq and protein homology information
+  Gene prediction in novel genomes using RNA-seq and protein homology information
 keywords:
   - genome
   - annotation
@@ -8,8 +8,8 @@ keywords:
 tools:
   - braker3:
       description: "BRAKER3 is a pipeline for fully automated prediction of
-          protein coding gene structures using protein and RNA-seq and protein homology
-          information"
+        protein coding gene structures using protein and RNA-seq and protein homology
+        information"
       homepage: "https://github.com/Gaius-Augustus/BRAKER"
       documentation: "https://github.com/Gaius-Augustus/BRAKER"
       tool_dev_url: "https://github.com/Gaius-Augustus/BRAKER"

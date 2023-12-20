@@ -1,6 +1,6 @@
 name: repeatmasker
 description: |
-  Screening DNA sequences for interspersed repeats and low complexity DNA sequences.
+  Screening DNA sequences for interspersed repeats and low complexity DNA sequences
 
 keywords:
   - genome
@@ -9,8 +9,9 @@ keywords:
 
 tools:
   - repeatmasker:
-      description: "RepeatMasker is a program that screens DNA sequences for interspersed
-      repeats and low complexity DNA sequences."
+      description: |
+        RepeatMasker is a program that screens DNA sequences for interspersed
+        repeats and low complexity DNA sequences
       homepage: "https://www.repeatmasker.org/"
       documentation: "https://www.repeatmasker.org/webrepeatmaskerhelp.html"
       tool_dev_url: "https://github.com/rmhubley/RepeatMasker"
