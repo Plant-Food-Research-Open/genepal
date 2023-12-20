@@ -70,6 +70,14 @@ workflow PREPROCESS_RNASEQ {
     .reads
     | set { ch_trim_reads }
 
+    ch_cat_fastq
+    | join(ch_trim_reads, remainder:true)
+    | map { meta, reads, trimmed ->
+        if (!trimmed) {
+            System.err.println("WARNING: Dropping ${reads.collect { it.getName() }} as read count after trimming is less than $min_trimmed_reads")
+        }
+    }
+
     // MODULE: SORTMERNA
     if (remove_ribo_rna) {
         SORTMERNA (

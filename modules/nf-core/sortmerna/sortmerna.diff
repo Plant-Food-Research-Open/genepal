@@ -1,0 +1,36 @@
+Changes in module 'nf-core/sortmerna'
+--- modules/nf-core/sortmerna/main.nf
++++ modules/nf-core/sortmerna/main.nf
+@@ -67,4 +67,30 @@
+         END_VERSIONS
+         """
+     }
++
++    stub:
++    def args = task.ext.args ?: ''
++    def prefix = task.ext.prefix ?: "${meta.id}"
++    if (meta.single_end) {
++        """
++        touch ${prefix}.non_rRNA.fastq.gz
++        touch ${prefix}.sortmerna.log
++
++        cat <<-END_VERSIONS > versions.yml
++        "${task.process}":
++            sortmerna: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
++        END_VERSIONS
++        """
++    } else {
++        """
++        touch ${prefix}_1.non_rRNA.fastq.gz
++        touch ${prefix}_2.non_rRNA.fastq.gz
++        touch ${prefix}.sortmerna.log
++
++        cat <<-END_VERSIONS > versions.yml
++        "${task.process}":
++            sortmerna: \$(echo \$(sortmerna --version 2>&1) | sed 's/^.*SortMeRNA version //; s/ Build Date.*\$//')
++        END_VERSIONS
++        """
++    }
+ }
+
+************************************************************

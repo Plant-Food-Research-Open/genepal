@@ -12,9 +12,9 @@ include { FASTP                 } from '../../../modules/nf-core/fastp/main'
 //
 import groovy.json.JsonSlurper
 
-def getFastpReadsAfterFiltering(json_file) {
+def getFastpReadsAfterFiltering(json_file, min_trimmed_reads) {
 
-    if (!json_file.text) { return 0 } // Usman Rashid: To allow -stub with FASTP
+    if (!json_file.text) { return min_trimmed_reads } // Usman Rashid: To allow -stub with FASTP
 
     def Map json = (Map) new JsonSlurper().parseText(json_file.text).get('summary')
     return json['after_filtering']['total_reads'].toLong()
@@ -99,7 +99,7 @@ workflow FASTQ_FASTQC_UMITOOLS_FASTP {
             .out
             .reads
             .join(trim_json)
-            .map { meta, reads, json -> [ meta, reads, getFastpReadsAfterFiltering(json) ] }
+            .map { meta, reads, json -> [ meta, reads, getFastpReadsAfterFiltering(json, min_trimmed_reads) ] }
             .set { ch_num_trimmed_reads }
 
         ch_num_trimmed_reads
