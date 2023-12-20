@@ -13,6 +13,9 @@ include { FASTP                 } from '../../../modules/nf-core/fastp/main'
 import groovy.json.JsonSlurper
 
 def getFastpReadsAfterFiltering(json_file) {
+
+    if (!json_file.text) { return 0 } // Usman Rashid: To allow -stub with FASTP
+
     def Map json = (Map) new JsonSlurper().parseText(json_file.text).get('summary')
     return json['after_filtering']['total_reads'].toLong()
 }

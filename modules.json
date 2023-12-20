@@ -1,142 +1,191 @@
 {
-  "name": "PlantandFoodResearch/pangene",
-  "homePage": "https://github.com/PlantandFoodResearch/pangene",
-  "repos": {
-    "git@github.com:PlantandFoodResearch/nxf-modules.git": {
-      "modules": {
-        "pfr": {
-          "custom/restoregffids": {
-            "branch": "main",
-            "git_sha": "e9f6bdd634bdbcd52c5568ba82f16176ec06631f",
-            "installed_by": ["fasta_edta_lai", "modules"]
-          },
-          "custom/shortenfastaids": {
-            "branch": "main",
-            "git_sha": "5e0e41b51d7fc7f68ae43692b6fe19b95d7f3a8c",
-            "installed_by": ["fasta_edta_lai", "modules"]
-          },
-          "edta/edta": {
-            "branch": "main",
-            "git_sha": "d14b1f1d790cc01c11f8ec5aa80a9562c6808b20",
-            "installed_by": ["fasta_edta_lai", "modules"]
-          },
-          "lai": {
-            "branch": "main",
-            "git_sha": "7e6e3cb41362a045c6bb6065903efa0eba246e87",
-            "installed_by": ["fasta_edta_lai"]
-          },
-          "liftoff": {
-            "branch": "main",
-            "git_sha": "3593ec100c92b656204bf739a51d62fd44d81f6f",
-            "installed_by": ["modules"]
-          }
+    "name": "PlantandFoodResearch/pangene",
+    "homePage": "https://github.com/PlantandFoodResearch/pangene",
+    "repos": {
+        "git@github.com:PlantandFoodResearch/nxf-modules.git": {
+            "modules": {
+                "pfr": {
+                    "custom/restoregffids": {
+                        "branch": "main",
+                        "git_sha": "e9f6bdd634bdbcd52c5568ba82f16176ec06631f",
+                        "installed_by": [
+                            "fasta_edta_lai",
+                            "modules"
+                        ]
+                    },
+                    "custom/shortenfastaids": {
+                        "branch": "main",
+                        "git_sha": "5e0e41b51d7fc7f68ae43692b6fe19b95d7f3a8c",
+                        "installed_by": [
+                            "fasta_edta_lai",
+                            "modules"
+                        ]
+                    },
+                    "edta/edta": {
+                        "branch": "main",
+                        "git_sha": "d14b1f1d790cc01c11f8ec5aa80a9562c6808b20",
+                        "installed_by": [
+                            "fasta_edta_lai",
+                            "modules"
+                        ]
+                    },
+                    "lai": {
+                        "branch": "main",
+                        "git_sha": "7e6e3cb41362a045c6bb6065903efa0eba246e87",
+                        "installed_by": [
+                            "fasta_edta_lai"
+                        ]
+                    },
+                    "liftoff": {
+                        "branch": "main",
+                        "git_sha": "3593ec100c92b656204bf739a51d62fd44d81f6f",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    }
+                }
+            },
+            "subworkflows": {
+                "pfr": {
+                    "fasta_edta_lai": {
+                        "branch": "main",
+                        "git_sha": "fde2f37998ba54ec9c0b5cf65a2f28f14af981b0",
+                        "installed_by": [
+                            "subworkflows"
+                        ]
+                    }
+                }
+            }
+        },
+        "git@github.com:kherronism/nf-modules.git": {
+            "modules": {
+                "kherronism": {
+                    "braker3": {
+                        "branch": "dev",
+                        "git_sha": "b01fec253f3b73b24e3f166a96d4beb49e58b0a6",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "repeatmasker": {
+                        "branch": "dev",
+                        "git_sha": "6778d5bb4c9f3d597753c699226fcde8d0811bfb",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    }
+                }
+            }
+        },
+        "https://github.com/nf-core/modules.git": {
+            "modules": {
+                "nf-core": {
+                    "cat/cat": {
+                        "branch": "master",
+                        "git_sha": "d593e8f6b7d1bbbb2acf43a4b9efeeac8d6720f2",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "cat/fastq": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "custom/dumpsoftwareversions": {
+                        "branch": "master",
+                        "git_sha": "bba7e362e4afead70653f84d8700588ea28d0f9e",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "fastavalidator": {
+                        "branch": "master",
+                        "git_sha": "89ff95427f695086369d7927a3c17cea2a37a382",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "fastp": {
+                        "branch": "master",
+                        "git_sha": "3c77ca9aac783e76c3614a06db3bfe4fef619bde",
+                        "installed_by": [
+                            "fastq_fastqc_umitools_fastp"
+                        ],
+                        "patch": "modules/nf-core/fastp/fastp.diff"
+                    },
+                    "fastqc": {
+                        "branch": "master",
+                        "git_sha": "65ad3e0b9a4099592e1102e92e10455dc661cf53",
+                        "installed_by": [
+                            "fastq_fastqc_umitools_fastp",
+                            "modules"
+                        ]
+                    },
+                    "gffread": {
+                        "branch": "master",
+                        "git_sha": "a2d6c3082c5c44b4155a3246daff36701ee49af8",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "gunzip": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "samtools/cat": {
+                        "branch": "master",
+                        "git_sha": "a64788f5ad388f1d2ac5bd5f1f3f8fc81476148c",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "sortmerna": {
+                        "branch": "master",
+                        "git_sha": "a20b6b1e9114a08007608528e4a2b0fbbb8a9ca2",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "star/align": {
+                        "branch": "master",
+                        "git_sha": "a64788f5ad388f1d2ac5bd5f1f3f8fc81476148c",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "star/genomegenerate": {
+                        "branch": "master",
+                        "git_sha": "d87a6e2156c2099c09280fa70776eaf0a824817a",
+                        "installed_by": [
+                            "modules"
+                        ]
+                    },
+                    "umitools/extract": {
+                        "branch": "master",
+                        "git_sha": "65ad3e0b9a4099592e1102e92e10455dc661cf53",
+                        "installed_by": [
+                            "fastq_fastqc_umitools_fastp"
+                        ]
+                    }
+                }
+            },
+            "subworkflows": {
+                "nf-core": {
+                    "fastq_fastqc_umitools_fastp": {
+                        "branch": "master",
+                        "git_sha": "3e8b0c1144ccf60b7848efbdc2be285ff20b49ee",
+                        "installed_by": [
+                            "subworkflows"
+                        ]
+                    }
+                }
+            }
         }
-      },
-      "subworkflows": {
-        "pfr": {
-          "fasta_edta_lai": {
-            "branch": "main",
-            "git_sha": "fde2f37998ba54ec9c0b5cf65a2f28f14af981b0",
-            "installed_by": ["subworkflows"]
-          }
-        }
-      }
-    },
-    "git@github.com:kherronism/nf-modules.git": {
-      "modules": {
-        "kherronism": {
-          "braker3": {
-            "branch": "dev",
-            "git_sha": "b01fec253f3b73b24e3f166a96d4beb49e58b0a6",
-            "installed_by": ["modules"]
-          },
-          "repeatmasker": {
-            "branch": "dev",
-            "git_sha": "6778d5bb4c9f3d597753c699226fcde8d0811bfb",
-            "installed_by": ["modules"]
-          }
-        }
-      }
-    },
-    "https://github.com/nf-core/modules.git": {
-      "modules": {
-        "nf-core": {
-          "cat/cat": {
-            "branch": "master",
-            "git_sha": "d593e8f6b7d1bbbb2acf43a4b9efeeac8d6720f2",
-            "installed_by": ["modules"]
-          },
-          "cat/fastq": {
-            "branch": "master",
-            "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-            "installed_by": ["modules"]
-          },
-          "custom/dumpsoftwareversions": {
-            "branch": "master",
-            "git_sha": "bba7e362e4afead70653f84d8700588ea28d0f9e",
-            "installed_by": ["modules"]
-          },
-          "fastavalidator": {
-            "branch": "master",
-            "git_sha": "89ff95427f695086369d7927a3c17cea2a37a382",
-            "installed_by": ["modules"]
-          },
-          "fastp": {
-            "branch": "master",
-            "git_sha": "3c77ca9aac783e76c3614a06db3bfe4fef619bde",
-            "installed_by": ["fastq_fastqc_umitools_fastp"]
-          },
-          "fastqc": {
-            "branch": "master",
-            "git_sha": "65ad3e0b9a4099592e1102e92e10455dc661cf53",
-            "installed_by": ["fastq_fastqc_umitools_fastp", "modules"]
-          },
-          "gffread": {
-            "branch": "master",
-            "git_sha": "a2d6c3082c5c44b4155a3246daff36701ee49af8",
-            "installed_by": ["modules"]
-          },
-          "gunzip": {
-            "branch": "master",
-            "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-            "installed_by": ["modules"]
-          },
-          "samtools/cat": {
-            "branch": "master",
-            "git_sha": "a64788f5ad388f1d2ac5bd5f1f3f8fc81476148c",
-            "installed_by": ["modules"]
-          },
-          "sortmerna": {
-            "branch": "master",
-            "git_sha": "a20b6b1e9114a08007608528e4a2b0fbbb8a9ca2",
-            "installed_by": ["modules"]
-          },
-          "star/align": {
-            "branch": "master",
-            "git_sha": "a64788f5ad388f1d2ac5bd5f1f3f8fc81476148c",
-            "installed_by": ["modules"]
-          },
-          "star/genomegenerate": {
-            "branch": "master",
-            "git_sha": "d87a6e2156c2099c09280fa70776eaf0a824817a",
-            "installed_by": ["modules"]
-          },
-          "umitools/extract": {
-            "branch": "master",
-            "git_sha": "65ad3e0b9a4099592e1102e92e10455dc661cf53",
-            "installed_by": ["fastq_fastqc_umitools_fastp"]
-          }
-        }
-      },
-      "subworkflows": {
-        "nf-core": {
-          "fastq_fastqc_umitools_fastp": {
-            "branch": "master",
-            "git_sha": "3e8b0c1144ccf60b7848efbdc2be285ff20b49ee",
-            "installed_by": ["subworkflows"]
-          }
-        }
-      }
     }
-  }
 }
