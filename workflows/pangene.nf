@@ -1,7 +1,7 @@
 include { validateParams                } from '../modules/local/validate_params'
 
 include { PREPARE_ASSEMBLY              } from '../subworkflows/local/prepare_assembly'
-// include { PREPROCESS_RNASEQ             } from '../subworkflows/local/preprocess_rnaseq'
+include { PREPROCESS_RNASEQ             } from '../subworkflows/local/preprocess_rnaseq'
 // include { ALIGN_RNASEQ                  } from '../subworkflows/local/align_rnaseq'
 // include { PREPARE_EXT_PROTS             } from '../subworkflows/local/prepare_ext_prots'
 
@@ -78,21 +78,21 @@ workflow PANGENE {
     ch_target_assemby_index     = PREPARE_ASSEMBLY.out.target_assemby_index
     ch_versions                 = ch_versions.mix(PREPARE_ASSEMBLY.out.versions)
 
-    // // SUBWORKFLOW: PREPROCESS_RNASEQ
-    // PREPROCESS_RNASEQ(
-    //     ch_samplesheet,
-    //     ch_tar_assm_str,
-    //     params.skip_fastqc,
-    //     params.skip_fastp,
-    //     params.save_trimmed,
-    //     params.min_trimmed_reads,
-    //     params.remove_ribo_rna,
-    //     ch_sortmerna_fastas
-    // )
+    // SUBWORKFLOW: PREPROCESS_RNASEQ
+    PREPROCESS_RNASEQ(
+        ch_samplesheet,
+        ch_tar_assm_str,
+        params.skip_fastqc,
+        params.skip_fastp,
+        params.save_trimmed,
+        params.min_trimmed_reads,
+        params.remove_ribo_rna,
+        ch_sortmerna_fastas
+    )
 
-    // ch_trim_reads               = PREPROCESS_RNASEQ.out.trim_reads
-    // ch_reads_target             = PREPROCESS_RNASEQ.out.reads_target
-    // ch_versions                 = ch_versions.mix(PREPROCESS_RNASEQ.out.versions)
+    ch_trim_reads               = PREPROCESS_RNASEQ.out.trim_reads
+    ch_reads_target             = PREPROCESS_RNASEQ.out.reads_target
+    ch_versions                 = ch_versions.mix(PREPROCESS_RNASEQ.out.versions)
 
     // // SUBWORKFLOW: ALIGN_RNASEQ
     // ALIGN_RNASEQ(
