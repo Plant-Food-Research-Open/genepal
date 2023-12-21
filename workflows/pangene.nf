@@ -1,15 +1,11 @@
 include { validateParams                } from '../modules/local/validate_params'
-
 include { PREPARE_ASSEMBLY              } from '../subworkflows/local/prepare_assembly'
 include { PREPROCESS_RNASEQ             } from '../subworkflows/local/preprocess_rnaseq'
 include { ALIGN_RNASEQ                  } from '../subworkflows/local/align_rnaseq'
 include { PREPARE_EXT_PROTS             } from '../subworkflows/local/prepare_ext_prots'
-
 include { BRAKER3                       } from '../modules/kherronism/braker3'
-
-// include { FASTA_LIFTOFF                 } from '../subworkflows/local/fasta_liftoff'
-
-// include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions'
+include { FASTA_LIFTOFF                 } from '../subworkflows/local/fasta_liftoff'
+include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions'
 
 validateParams(params)
 
@@ -50,22 +46,22 @@ workflow PANGENE {
                                 ? Channel.fromList(params.external_protein_fastas)
                                 | map { filePath ->
                                     def fileHandle = file(filePath, checkIfExists: true)
-                                    [ [id: fileHandle.getSimpleName() ], fileHandle]
+                                    [ [ id: fileHandle.getSimpleName() ], fileHandle]
                                 }
                                 : Channel.empty()
     
-    // ch_xref_annotations_mm      = params.liftoff_xref_annotations
-    //                             ? Channel.fromList(params.liftoff_xref_annotations)
-    //                             | multiMap { fasta, gff ->
-    //                                 def fastaFile = file(fasta, checkIfExists:true)
+    ch_xref_mm                  = params.liftoff_xref_annotations
+                                ? Channel.fromList(params.liftoff_xref_annotations)
+                                | multiMap { fasta, gff ->
+                                    def fastaFile = file(fasta, checkIfExists:true)
 
-    //                                 fasta: [[id:fastaFile.getSimpleName()], fastaFile]
-    //                                 gff: [[id:fastaFile.getSimpleName()], file(gff, checkIfExists:true)]
-    //                             }
-    //                             : Channel.empty()
+                                    fasta: [ [ id: fastaFile.getSimpleName() ], fastaFile ]
+                                    gff: [ [ id: fastaFile.getSimpleName() ], file(gff, checkIfExists:true) ]
+                                }
+                                : Channel.empty()
 
-    // ch_xref_annotations_fasta   = ch_xref_annotations_mm.fasta
-    // ch_xref_annotations_gff     = ch_xref_annotations_mm.gff
+    ch_xref_fasta               = ch_xref_mm.fasta
+    ch_xref_gff                 = ch_xref_mm.gff
 
     // SUBWORKFLOW: PREPARE_ASSEMBLY
     PREPARE_ASSEMBLY(
@@ -136,18 +132,18 @@ workflow PANGENE {
     ch_braker_gff3              = BRAKER3.out.gff3
     ch_versions                 = ch_versions.mix(BRAKER3.out.versions.first())
 
-    // // SUBWORKFLOW: FASTA_LIFTOFF
-    // FASTA_LIFTOFF(
-    //     ch_valid_target_assembly,
-    //     ch_xref_annotations_fasta,
-    //     ch_xref_annotations_gff
-    // )
+    // SUBWORKFLOW: FASTA_LIFTOFF
+    FASTA_LIFTOFF(
+        ch_valid_target_assembly,
+        ch_xref_fasta,
+        ch_xref_gff
+    )
 
-    // ch_liftoff_gff3             = FASTA_LIFTOFF.out.gff3
-    // ch_versions                 = ch_versions.mix(FASTA_LIFTOFF.out.versions)
+    ch_liftoff_gff3             = FASTA_LIFTOFF.out.gff3
+    ch_versions                 = ch_versions.mix(FASTA_LIFTOFF.out.versions)
 
-    // // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
-    // CUSTOM_DUMPSOFTWAREVERSIONS (
-    //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    // )
+    // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    )
 }
