@@ -5,7 +5,7 @@ include { PREPROCESS_RNASEQ             } from '../subworkflows/local/preprocess
 include { ALIGN_RNASEQ                  } from '../subworkflows/local/align_rnaseq'
 include { PREPARE_EXT_PROTS             } from '../subworkflows/local/prepare_ext_prots'
 
-// include { BRAKER3                       } from '../modules/kherronism/braker3'
+include { BRAKER3                       } from '../modules/kherronism/braker3'
 
 // include { FASTA_LIFTOFF                 } from '../subworkflows/local/fasta_liftoff'
 
@@ -112,29 +112,29 @@ workflow PANGENE {
     ch_ext_prots_fasta          = PREPARE_EXT_PROTS.out.ext_prots_fasta
     ch_versions                 = ch_versions.mix(PREPARE_EXT_PROTS.out.versions)
 
-    // // MODULE: BRAKER3
-    // ch_braker_inputs            = ch_masked_target_assembly
-    //                             | join(ch_rnaseq_bam, remainder: true)
-    //                             | combine(
-    //                                 ch_ext_prots_fasta.map { meta, filePath -> filePath }.ifEmpty(null)
-    //                             )
-    //                             | map { meta, fasta, bam, prots -> [meta, fasta, bam ?: [], prots ?: []] }
+    // MODULE: BRAKER3
+    ch_braker_inputs            = ch_masked_target_assembly
+                                | join(ch_rnaseq_bam, remainder: true)
+                                | combine(
+                                    ch_ext_prots_fasta.map { meta, filePath -> filePath }.ifEmpty(null)
+                                )
+                                | map { meta, fasta, bam, prots -> [ meta, fasta, bam ?: [], prots ?: [] ] }
     
-    // def rnaseq_sets_dirs        = []
-    // def rnaseq_sets_ids         = []
-    // def hintsfile               = []
+    def rnaseq_sets_dirs        = []
+    def rnaseq_sets_ids         = []
+    def hintsfile               = []
 
-    // BRAKER3(
-    //     ch_braker_inputs.map { meta, fasta, bam, prots -> [meta, fasta] },
-    //     ch_braker_inputs.map { meta, fasta, bam, prots -> bam },
-    //     rnaseq_sets_dirs,
-    //     rnaseq_sets_ids,
-    //     ch_braker_inputs.map { meta, fasta, bam, prots -> prots },
-    //     hintsfile
-    // )
+    BRAKER3(
+        ch_braker_inputs.map { meta, fasta, bam, prots -> [meta, fasta] },
+        ch_braker_inputs.map { meta, fasta, bam, prots -> bam },
+        rnaseq_sets_dirs,
+        rnaseq_sets_ids,
+        ch_braker_inputs.map { meta, fasta, bam, prots -> prots },
+        hintsfile
+    )
 
-    // ch_braker_gff3              = BRAKER3.out.gff3
-    // ch_versions                 = ch_versions.mix(BRAKER3.out.versions.first())
+    ch_braker_gff3              = BRAKER3.out.gff3
+    ch_versions                 = ch_versions.mix(BRAKER3.out.versions.first())
 
     // // SUBWORKFLOW: FASTA_LIFTOFF
     // FASTA_LIFTOFF(

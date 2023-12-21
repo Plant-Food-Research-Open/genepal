@@ -2,10 +2,10 @@ process BRAKER3 {
     tag "${meta.id}"
     label 'process_high'
 
-    conda "bioconda::braker3=3.0.3"
+    conda "bioconda::braker3=3.0.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'registry.hub.docker.com/teambraker/braker3:v.1.0.6':
-        'registry.hub.docker.com/teambraker/braker3:v.1.0.6' }"
+        'https://depot.galaxyproject.org/singularity/braker3%3A3.0.6--hdfd78af_0':
+        'biocontainers/braker3:3.0.6--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(fasta)
@@ -29,14 +29,14 @@ process BRAKER3 {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
-    prefix   = task.ext.prefix ?: "${meta.id}"
+    def args        = task.ext.args         ?: ''
+    prefix          = task.ext.prefix       ?: "${meta.id}"
 
-    def rna_ids  = rnaseq_sets_ids ? "--rnaseq_sets_ids=${rnaseq_sets_ids}" : ''
-    def rna_dirs = rnaseq_sets_dirs ? "--rnaseq_sets_dirs=${rnaseq_sets_dirs}" : ''
-    def bam      = bam ? "--bam=${bam}" : ''
-    def proteins = proteins ? "--prot_seq=${proteins}" : ''
-    def hints    = hintsfile ? "--hints=${hintsfile}" : ''
+    def rna_ids     = rnaseq_sets_ids       ? "--rnaseq_sets_ids=${rnaseq_sets_ids}"    : ''
+    def rna_dirs    = rnaseq_sets_dirs      ? "--rnaseq_sets_dirs=${rnaseq_sets_dirs}"  : ''
+    def bam         = bam                   ? "--bam=${bam}"                            : ''
+    def proteins    = proteins              ? "--prot_seq=${proteins}"                  : ''
+    def hints       = hintsfile             ? "--hints=${hintsfile}"                    : ''
     """
     cp -r /usr/share/augustus/config augustus_config
 
@@ -60,15 +60,16 @@ process BRAKER3 {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
-    def createHints = (rna_ids || bam || proteins || hints) ? "touch ${prefix}/hintsfile.gff" : ''
+    prefix          = task.ext.prefix                       ?: "${meta.id}"
+    def rna_ids     = rnaseq_sets_ids                       ? "--rnaseq_sets_ids=${rnaseq_sets_ids}"    : ''
+    def touch_hints = (rna_ids || bam || proteins || hints) ? "touch ${prefix}/hintsfile.gff"           : ''
     """
     mkdir "$prefix"
 
     touch "${prefix}/braker.gtf"
     touch "${prefix}/braker.codingseq"
     touch "${prefix}/braker.aa"
-    $createHints
+    $touch_hints
     touch "${prefix}/braker.log"
     touch "${prefix}/what-to-cite.txt"
 
