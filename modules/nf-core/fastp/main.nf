@@ -99,7 +99,7 @@ process FASTP {
         END_VERSIONS
         """
     }
-    
+
     stub:
     def prefix              = task.ext.prefix ?: "${meta.id}"
     def is_single_output    = task.ext.args?.contains('--interleaved_in') || meta.single_end

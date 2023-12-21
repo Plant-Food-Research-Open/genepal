@@ -7,6 +7,7 @@ nextflow_process {
 
     tag "modules"
     tag "modules_nfcore"
+    tag "nf-core/gunzip"
     tag "liftoff"
 
     test("homo_sapiens-genome_21_fasta-genome_1_fasta-genome_1_gtf") {
@@ -45,16 +46,41 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(process.out.unmapped_txt).match("unmapped_txt") },
-                { assert snapshot(process.out.versions).match("versions") },
-                { assert path(process.out.gff3.get(0).get(1)).getText().contains("chr21\tLiftoff\texon\t34608061\t34608118\t.\t+\t.") },
-                { assert path(process.out.polished_gff3.get(0).get(1)).getText().contains("chr21\tLiftoff\texon\t34608061\t34608118\t.\t+\t.") }
+                { assert file(process.out.gff3[0][1]).text.contains("chr21\tLiftoff\texon\t34608061\t34608118\t.\t+\t.") },
+                { assert file(process.out.polished_gff3[0][1]).text.contains("chr21\tLiftoff\texon\t34608061\t34608118\t.\t+\t.") },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.gff3[0][0].toString()] + // meta
+                            process.out.gff3.collect { file(it[1]).getName() } +
+                            process.out.polished_gff3.collect { file(it[1]).getName() } +
+                            process.out.unmapped_txt.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("homo_sapiens-genome_21_fasta-genome_1_fasta-genome_1_gtf-for_stub_match")
+                },
+                { assert snapshot(process.out.versions).match("versions") }
             )
         }
 
     }
 
-    test("stub") {
-        options "-stub"
+    test("homo_sapiens-genome_21_fasta-genome_1_fasta-genome_1_gtf-stub") {
+        options '-stub'
+
+        setup {
+            run("GUNZIP") {
+                script "../../../nf-core/gunzip"
+
+                process {
+                    """
+                    input[0] = [
+                        [ id:'test' ],
+                        file(params.test_data['homo_sapiens']['genome']['genome_1_fasta'], checkIfExists: true)
+                    ]
+                    """
+                }
+            }
+        }
 
         when {
             process {
@@ -63,9 +89,7 @@ nextflow_process {
                     [ id:'test' ],
                     file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
                 ]
-                input[1] = [
-                    file(params.test_data['homo_sapiens']['genome']['genome_1_fasta'], checkIfExists: true)
-                ]
+                input[1] = GUNZIP.out.gunzip.map { meta, file -> file }
                 input[2] = [
                     file(params.test_data['homo_sapiens']['genome']['genome_1_gtf'], checkIfExists: true)
                 ]
@@ -76,10 +100,16 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert process.out.gff3 != null },
-                { assert process.out.polished_gff3 == [] },
-                { assert process.out.unmapped_txt != null },
-                { assert process.out.versions != null },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.gff3[0][0].toString()] + // meta
+                            process.out.gff3.collect { file(it[1]).getName() } +
+                            process.out.polished_gff3.collect { file(it[1]).getName() } +
+                            process.out.unmapped_txt.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("homo_sapiens-genome_21_fasta-genome_1_fasta-genome_1_gtf-for_stub_match")
+                },
                 { assert snapshot(process.out.versions).match("versions") }
             )
         }

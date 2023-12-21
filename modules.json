@@ -27,7 +27,7 @@
           },
           "liftoff": {
             "branch": "main",
-            "git_sha": "3593ec100c92b656204bf739a51d62fd44d81f6f",
+            "git_sha": "444b35f4e6285115f84d2bfce49fc0e6d8a2754e",
             "installed_by": ["modules"]
           }
         }
@@ -83,9 +83,8 @@
           },
           "fastp": {
             "branch": "master",
-            "git_sha": "3c77ca9aac783e76c3614a06db3bfe4fef619bde",
-            "installed_by": ["fastq_fastqc_umitools_fastp"],
-            "patch": "modules/nf-core/fastp/fastp.diff"
+            "git_sha": "d086322563bdbb08c94bf15a7db58a39ccdb1520",
+            "installed_by": ["fastq_fastqc_umitools_fastp"]
           },
           "fastqc": {
             "branch": "master",
@@ -109,9 +108,8 @@
           },
           "sortmerna": {
             "branch": "master",
-            "git_sha": "a20b6b1e9114a08007608528e4a2b0fbbb8a9ca2",
-            "installed_by": ["modules"],
-            "patch": "modules/nf-core/sortmerna/sortmerna.diff"
+            "git_sha": "ce558e30784469b88a16923ca96d81899d240b42",
+            "installed_by": ["modules"]
           },
           "star/align": {
             "branch": "master",

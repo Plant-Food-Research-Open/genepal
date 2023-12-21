@@ -19,5 +19,16 @@
             ]
         ],
         "timestamp": "2023-12-01T13:57:40.752414"
+    },
+    "homo_sapiens-genome_21_fasta-genome_1_fasta-genome_1_gtf-for_stub_match": {
+        "content": [
+            [
+                "test.gff3",
+                "test.polished.gff3",
+                "test.unmapped.txt",
+                "{id=test}"
+            ]
+        ],
+        "timestamp": "2023-12-21T15:20:04.816416"
     }
 }

@@ -1,7 +1,9 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 name: "liftoff"
-description: "Liftoff is a tool that accurately maps annotations in GFF or GTF between assemblies of the same, or closely-related species."
+description: |
+  Uses Liftoff to accurately map annotations in GFF or GTF between assemblies of the same,
+  or closely-related species
 keywords:
   - genome
   - annotation
@@ -10,7 +12,9 @@ keywords:
   - liftover
 tools:
   - "liftoff":
-      description: "Liftoff is a tool that accurately maps annotations in GFF or GTF between assemblies of the same, or closely-related species."
+      description: |
+        Liftoff is a tool that accurately maps annotations in GFF or GTF between assemblies of the same,
+        or closely-related species
       homepage: "https://github.com/agshumate/Liftoff"
       documentation: "https://github.com/agshumate/Liftoff"
       tool_dev_url: "https://github.com/agshumate/Liftoff"

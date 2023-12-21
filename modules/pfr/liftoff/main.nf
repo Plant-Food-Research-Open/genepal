@@ -9,11 +9,11 @@ process LIFTOFF {
 
     input:
     tuple val(meta), path(target_fa)
-    path ref_fa, name: 'liftoff_reference_assembly.fa' // To avoid name collisions betwen target_fa and ref_fa
+    path ref_fa, name: 'ref_assembly.fa'
     path ref_annotation
 
     output:
-    tuple val(meta), path("${prefix}.gff3")     , emit: gff3    // To avoid pattern collision with '*.polished.gff3'
+    tuple val(meta), path("${prefix}.gff3")     , emit: gff3
     tuple val(meta), path("*.polished.gff3")    , emit: polished_gff3, optional: true
     tuple val(meta), path("*.unmapped.txt")     , emit: unmapped_txt
     path "versions.yml"                         , emit: versions
@@ -22,8 +22,8 @@ process LIFTOFF {
     task.ext.when == null || task.ext.when
 
     script:
-    def args    = task.ext.args ?: ''
-    prefix      = task.ext.prefix ?: "${meta.id}"
+    def args    = task.ext.args     ?: ''
+    prefix      = task.ext.prefix   ?: "${meta.id}"
     """
     liftoff \\
         -g $ref_annotation \\
@@ -32,9 +32,11 @@ process LIFTOFF {
         -u "${prefix}.unmapped.txt" \\
         $args \\
         $target_fa \\
-        liftoff_reference_assembly.fa
+        ref_assembly.fa
 
-    mv "${prefix}.gff3_polished" "${prefix}.polished.gff3" \\
+    mv \\
+        "${prefix}.gff3_polished" \\
+        "${prefix}.polished.gff3" \\
         || echo "-polish is absent"
 
     cat <<-END_VERSIONS > versions.yml
@@ -44,10 +46,13 @@ process LIFTOFF {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def args            = task.ext.args     ?: ''
+    prefix              = task.ext.prefix   ?: "${meta.id}"
+    def touch_polished  = args.contains('-polish') ? "touch ${prefix}.polished.gff3" : ''
     """
     touch "${prefix}.gff3"
     touch "${prefix}.unmapped.txt"
+    $touch_polished
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
