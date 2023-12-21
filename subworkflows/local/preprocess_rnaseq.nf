@@ -6,7 +6,7 @@ include { FASTQ_FASTQC_UMITOOLS_FASTP   } from '../../subworkflows/nf-core/fastq
 workflow PREPROCESS_RNASEQ {
     take:
     samplesheet                     // path: csv
-    permissible_target_assemblies   // val: assembly_a,assembly_b
+    permissible_assemblies          // val: assembly_a,assembly_b
     skip_fastqc                     // val: true|false
     skip_fastp                      // val: true|false
     save_trimmed                    // val: true|false
@@ -16,45 +16,46 @@ workflow PREPROCESS_RNASEQ {
     
     main:
     ch_versions = Channel.empty()
+    
     // SUBWORKFLOW: EXTRACT_SAMPLES
     EXTRACT_SAMPLES(
         samplesheet,
-        permissible_target_assemblies
+        permissible_assemblies
     )
-    .reads
-    | map { meta, fastq ->
-        groupID = meta.id - ~/_T\d+/
-        [ meta + [id: groupID], fastq ]
-    }
-    | groupTuple()
-    | branch { meta, fastq ->
-        single  : fastq.size() == 1
-            return [ meta, fastq.flatten() ]
-        multiple: fastq.size() > 1
-            return [ meta, fastq.flatten() ]
-    }
-    | set { ch_fastq }
 
-    EXTRACT_SAMPLES.out.assemblies
-    | map { meta, assembly ->
-        groupID = meta.id - ~/_T\d+/
-        [ meta + [id: groupID], assembly ]
-    }
-    | unique
-    | set { ch_reads_target }
+    ch_fastq                        = EXTRACT_SAMPLES.out.reads
+                                    | map { meta, fastq ->
+                                        groupID = meta.id - ~/_T\d+/
+                                        [ meta + [id: groupID], fastq ]
+                                    }
+                                    | groupTuple()
+                                    | branch { meta, fastq ->
+                                        single  : fastq.size() == 1
+                                            return [ meta, fastq.flatten() ]
+                                        multiple: fastq.size() > 1
+                                            return [ meta, fastq.flatten() ]
+                                    }
+
+    ch_reads_target                 = EXTRACT_SAMPLES.out.assemblies
+                                    | map { meta, assembly ->
+                                        groupID = meta.id - ~/_T\d+/
+                                        [ meta + [id: groupID], assembly ]
+                                    }
+                                    | unique
+
+    ch_versions                     = ch_versions.mix(EXTRACT_SAMPLES.out.versions)
 
     // MODULES: CAT_FASTQ
-    CAT_FASTQ (
-        ch_fastq.multiple
-    )
-    .reads
-    | mix(ch_fastq.single)
-    | set { ch_cat_fastq }
+    CAT_FASTQ ( ch_fastq.multiple )
+
+    ch_cat_fastq                    = CAT_FASTQ.out.reads.mix(ch_fastq.single)
+    ch_versions                     = ch_versions.mix(CAT_FASTQ.out.versions.first())
 
     // SUBWORKFLOW: FASTQ_FASTQC_UMITOOLS_FASTP
-    def with_umi            = false
-    def skip_umi_extract    = true
-    def umi_discard_read    = false
+    def with_umi                    = false
+    def skip_umi_extract            = true
+    def umi_discard_read            = false
+    
     FASTQ_FASTQC_UMITOOLS_FASTP (
         ch_cat_fastq,
         skip_fastqc,
@@ -67,8 +68,8 @@ workflow PREPROCESS_RNASEQ {
         save_trimmed,
         min_trimmed_reads
     )
-    .reads
-    | set { ch_trim_reads }
+
+    ch_trim_reads                   = FASTQ_FASTQC_UMITOOLS_FASTP.out.reads
 
     ch_cat_fastq
     | join(ch_trim_reads, remainder:true)
@@ -78,26 +79,23 @@ workflow PREPROCESS_RNASEQ {
         }
     }
 
+    ch_versions                     = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions.first())
+
     // MODULE: SORTMERNA
-    if (remove_ribo_rna) {
-        SORTMERNA (
-            ch_trim_reads,
-            sortmerna_fastas
-        )
-        .reads
-        | set { ch_sortmerna_reads }
+    SORTMERNA(
+        remove_ribo_rna ? ch_trim_reads : Channel.empty(),
+        sortmerna_fastas
+    )
+    
+    ch_emitted_reads                = remove_ribo_rna
+                                    ? SORTMERNA.out.reads
+                                    : ch_trim_reads
+    ch_versions                     = ch_versions.mix(SORTMERNA.out.versions.first())
 
-        ch_versions = ch_versions.mix(SORTMERNA.out.versions.first())
-    }
-
-    ch_versions
-    | mix(EXTRACT_SAMPLES.out.versions)
-    | mix(CAT_FASTQ.out.versions.first())
-    | mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions)
-    | set { ch_versions }
+    
 
     emit:
-    trim_reads      = remove_ribo_rna ? ch_sortmerna_reads : ch_trim_reads  // channel: [ meta, [ fq ] ]
-    reads_target    = ch_reads_target                                       // channel: [ meta, assembly_id ]
-    versions        = ch_versions                                           // channel: [ versions.yml ]
+    trim_reads                      = ch_emitted_reads  // channel: [ meta, [ fq ] ]
+    reads_target                    = ch_reads_target   // channel: [ meta, assembly_id ]
+    versions                        = ch_versions       // channel: [ versions.yml ]
 }
