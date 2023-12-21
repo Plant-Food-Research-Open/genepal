@@ -3,7 +3,7 @@ include { validateParams                } from '../modules/local/validate_params
 include { PREPARE_ASSEMBLY              } from '../subworkflows/local/prepare_assembly'
 include { PREPROCESS_RNASEQ             } from '../subworkflows/local/preprocess_rnaseq'
 include { ALIGN_RNASEQ                  } from '../subworkflows/local/align_rnaseq'
-// include { PREPARE_EXT_PROTS             } from '../subworkflows/local/prepare_ext_prots'
+include { PREPARE_EXT_PROTS             } from '../subworkflows/local/prepare_ext_prots'
 
 // include { BRAKER3                       } from '../modules/kherronism/braker3'
 
@@ -19,12 +19,12 @@ workflow PANGENE {
 
     ch_target_assembly          = Channel.fromList(params.target_assemblies)
                                 | map { tag, filePath ->
-                                    [[id:tag], file(filePath, checkIfExists: true)]
+                                    [ [ id: tag ], file(filePath, checkIfExists: true) ]
                                 }
 
     ch_te_library               = Channel.fromList(params.te_libraries)
                                 | map { tag, filePath ->
-                                    [[id:tag], file(filePath, checkIfExists: true)]
+                                    [ [ id:tag ], file(filePath, checkIfExists: true) ]
                                 }
 
     ch_samplesheet              = params.samplesheet
@@ -46,13 +46,13 @@ workflow PANGENE {
                                 | collect
                                 : Channel.empty()
 
-    // ch_ext_prot_fastas          = params.external_protein_fastas
-    //                             ? Channel.fromList(params.external_protein_fastas)
-    //                             | map { filePath ->
-    //                                 def fileHandle = file(filePath, checkIfExists: true)
-    //                                 [[id:fileHandle.getSimpleName()], fileHandle]
-    //                             }
-    //                             : Channel.empty()
+    ch_ext_prot_fastas          = params.external_protein_fastas
+                                ? Channel.fromList(params.external_protein_fastas)
+                                | map { filePath ->
+                                    def fileHandle = file(filePath, checkIfExists: true)
+                                    [ [id: fileHandle.getSimpleName() ], fileHandle]
+                                }
+                                : Channel.empty()
     
     // ch_xref_annotations_mm      = params.liftoff_xref_annotations
     //                             ? Channel.fromList(params.liftoff_xref_annotations)
@@ -104,13 +104,13 @@ workflow PANGENE {
     ch_rnaseq_bam               = ALIGN_RNASEQ.out.bam
     ch_versions                 = ch_versions.mix(ALIGN_RNASEQ.out.versions)
 
-    // // MODULE: PREPARE_EXT_PROTS
-    // PREPARE_EXT_PROTS(
-    //     ch_ext_prot_fastas
-    // )
+    // MODULE: PREPARE_EXT_PROTS
+    PREPARE_EXT_PROTS(
+        ch_ext_prot_fastas
+    )
 
-    // ch_ext_prots_fasta          = PREPARE_EXT_PROTS.out.ext_prots_fasta
-    // ch_versions                 = ch_versions.mix(PREPARE_EXT_PROTS.out.versions)
+    ch_ext_prots_fasta          = PREPARE_EXT_PROTS.out.ext_prots_fasta
+    ch_versions                 = ch_versions.mix(PREPARE_EXT_PROTS.out.versions)
 
     // // MODULE: BRAKER3
     // ch_braker_inputs            = ch_masked_target_assembly

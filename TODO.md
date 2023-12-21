@@ -13,3 +13,5 @@
 > https://www.biorxiv.org/content/10.1101/096529v2.full.pdf
 
 > Don't use `-exclude_partial`
+
+- [ ] Sort out EDTA testing

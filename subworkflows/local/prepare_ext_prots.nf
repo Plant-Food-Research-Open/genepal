@@ -6,36 +6,30 @@ workflow PREPARE_EXT_PROTS {
     ch_ext_prot_fastas          // Channel: [ meta, fasta ]
     
     main:
-    ch_ext_prot_fastas
-    | branch { meta, file ->
-        gz: "$file".endsWith(".gz")
-        rest: !"$file".endsWith(".gz")
-    }
-    | set { ch_ext_prot_seqs_branch }
+    ch_versions                 = Channel.empty()
 
     // MODULE: GUNZIP
-    GUNZIP(
-        ch_ext_prot_seqs_branch.gz
-    )
-    .gunzip
-    | mix(
-        ch_ext_prot_seqs_branch.rest
-    )
-    | set { ch_ext_prot_gunzip_fastas }
+    ch_ext_prot_seqs_branch     = ch_ext_prot_fastas
+                                | branch { meta, file ->
+                                    gz: "$file".endsWith(".gz")
+                                    rest: !"$file".endsWith(".gz")
+                                }
+    
+    GUNZIP ( ch_ext_prot_seqs_branch.gz )
+    
+    ch_ext_prot_gunzip_fastas   = GUNZIP.out.gunzip.mix(ch_ext_prot_seqs_branch.rest)
+                                | map { meta, filePath -> filePath }
+                                | collect
+                                | map { fileList -> [ [ id: "ext_protein_seqs" ], fileList ] }
+    
+    ch_versions                 = ch_versions.mix(GUNZIP.out.versions.first())
 
-    // MODULE: CAT_PROTEIN_FASTAS
-    ch_ext_prot_gunzip_fastas
-    | map { meta, filePath -> filePath }
-    | collect
-    | map { fileList -> [[id:"ext_protein_seqs"], fileList] }
-    | CAT_PROTEIN_FASTAS
+    // MODULE: CAT_CAT as CAT_PROTEIN_FASTAS
+    CAT_PROTEIN_FASTAS ( ch_ext_prot_gunzip_fastas )
 
-    Channel.empty()
-    | mix(GUNZIP.out.versions.first())
-    | mix(CAT_PROTEIN_FASTAS.out.versions)
-    | set { ch_versions }
+    ch_versions                 = ch_versions.mix(CAT_PROTEIN_FASTAS.out.versions)
     
     emit:
-    ext_prots_fasta = CAT_PROTEIN_FASTAS.out.file_out   // Channel: [ meta, fasta ]
-    versions        = ch_versions                       // Channel: [ versions.yml ]
+    ext_prots_fasta             = CAT_PROTEIN_FASTAS.out.file_out   // Channel: [ meta, fasta ]
+    versions                    = ch_versions                       // Channel: [ versions.yml ]
 }
