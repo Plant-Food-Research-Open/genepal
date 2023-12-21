@@ -2,7 +2,7 @@ include { validateParams                } from '../modules/local/validate_params
 
 include { PREPARE_ASSEMBLY              } from '../subworkflows/local/prepare_assembly'
 include { PREPROCESS_RNASEQ             } from '../subworkflows/local/preprocess_rnaseq'
-// include { ALIGN_RNASEQ                  } from '../subworkflows/local/align_rnaseq'
+include { ALIGN_RNASEQ                  } from '../subworkflows/local/align_rnaseq'
 // include { PREPARE_EXT_PROTS             } from '../subworkflows/local/prepare_ext_prots'
 
 // include { BRAKER3                       } from '../modules/kherronism/braker3'
@@ -94,15 +94,15 @@ workflow PANGENE {
     ch_reads_target             = PREPROCESS_RNASEQ.out.reads_target
     ch_versions                 = ch_versions.mix(PREPROCESS_RNASEQ.out.versions)
 
-    // // SUBWORKFLOW: ALIGN_RNASEQ
-    // ALIGN_RNASEQ(
-    //     ch_reads_target,
-    //     ch_trim_reads,
-    //     ch_target_assemby_index
-    // )
+    // SUBWORKFLOW: ALIGN_RNASEQ
+    ALIGN_RNASEQ(
+        ch_reads_target,
+        ch_trim_reads,
+        ch_target_assemby_index
+    )
 
-    // ch_rnaseq_bam               = ALIGN_RNASEQ.out.bam
-    // ch_versions                 = ch_versions.mix(ALIGN_RNASEQ.out.versions)
+    ch_rnaseq_bam               = ALIGN_RNASEQ.out.bam
+    ch_versions                 = ch_versions.mix(ALIGN_RNASEQ.out.versions)
 
     // // MODULE: PREPARE_EXT_PROTS
     // PREPARE_EXT_PROTS(
