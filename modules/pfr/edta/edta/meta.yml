@@ -25,6 +25,27 @@ input:
       type: file
       description: Genome fasta file
       pattern: "*.{fsa,fa,fasta}"
+  - cds:
+      type: file
+      description: |
+        A FASTA file containing the coding sequence (no introns, UTRs, nor TEs)
+        of this genome or its close relative
+      pattern: "*.{fsa,fa,fasta}"
+  - curatedlib:
+      type: file
+      description: |
+        A curated library to keep consistent naming and classification for known TEs
+      pattern: "*.liban"
+  - rmout:
+      type: file
+      description: |
+        Homology-based TE annotation instead of using the EDTA library for masking in
+        RepeatMasker .out format
+      pattern: "*.out"
+  - exclude:
+      type: file
+      description: Exclude regions (bed format) from TE masking in the MAKER.masked output
+      pattern: "*.bed"
 output:
   - meta:
       type: map

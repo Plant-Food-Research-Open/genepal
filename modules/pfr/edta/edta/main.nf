@@ -42,7 +42,7 @@ process EDTA_EDTA {
         $rmout_file \\
         $exclude_file \\
         $args \\
-        &> "${prefix}.log"
+        &> >(tee "${prefix}.log" 2>&1)
 
     mv \\
         "${mod_file_name}.EDTA.TElib.fa" \\
