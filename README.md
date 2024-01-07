@@ -10,6 +10,7 @@ flowchart TD
     TARGET_ASSEMBLIES
     TE_LIBRARIES
     FASTA_VALIDATE
+    fasta_file_from_fasta_validate
     EDTA
     REPEATMASKER
     end
@@ -17,7 +18,8 @@ flowchart TD
     TARGET_ASSEMBLIES(["[target_assemblies]"])
     TE_LIBRARIES(["[te_libs]"])
     TARGET_ASSEMBLIES --> FASTA_VALIDATE
-    FASTA_VALIDATE --> EDTA
+    FASTA_VALIDATE --> |Fasta|fasta_file_from_fasta_validate(( ))
+    fasta_file_from_fasta_validate --> EDTA
     TE_LIBRARIES --> REPEATMASKER
     EDTA --> |te_lib absent|REPEATMASKER
 
@@ -28,6 +30,7 @@ flowchart TD
     FASTP
     FASTP_FASTQC
     SORTMERNA
+    fasta_file_for_star
     STAR
     SAMTOOLS_CAT
     end
@@ -39,6 +42,8 @@ flowchart TD
     FASTQC --> FASTP
     FASTP --> FASTP_FASTQC[FASTQC]
     FASTP_FASTQC --> SORTMERNA
+    fasta_file_for_star(( ))
+    fasta_file_for_star --> |Fasta|STAR
     SORTMERNA --> STAR
     STAR --> SAMTOOLS_CAT
 
