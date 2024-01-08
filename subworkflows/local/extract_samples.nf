@@ -67,7 +67,5 @@ def create_fastq_channel(LinkedHashMap row, sheetPath) {
         fastq_meta = [ meta, [ file(fq1), file(fq2) ] ]
     }
 
-    println fastq_meta
-
     return fastq_meta
 }

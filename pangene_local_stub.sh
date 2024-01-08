@@ -5,6 +5,4 @@ nextflow \
     -profile local,docker \
     -resume \
     -stub \
-    --max_cpus=1 \
-    --max_memory=1.GB \
-    --samplesheet="./.test/samplesheet_small.csv"
+    --params-file conf/local_stub_params.json

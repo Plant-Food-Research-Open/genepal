@@ -1,0 +1,29 @@
+{
+  "target_assemblies": [
+    ["red5_v2p1", ".test/red5_v2p1_chr1.fasta"],
+    ["donghong", ".test/donghong.chr1.fsa.gz"]
+  ],
+
+  "te_libraries": [["donghong", ".test/donghong.TElib.fa.gz"]],
+
+  "samplesheet": "./.test/samplesheet_small.csv",
+
+  "external_protein_fastas": [
+    ".test/ext_prots/Viridiplantae.fa.gz",
+    ".test/ext_prots/RU01.20221115150135.pep.fasta"
+  ],
+
+  "liftoff_xref_annotations": [
+    [
+      ".test/liftoff/Russell_V2a.chromosomes.and.unassiged.and.haplotigs.fsa",
+      ".test/liftoff/RU01.20221115150135.gff3"
+    ],
+    [
+      ".test/liftoff/TAIR10_chr_all.fas",
+      ".test/liftoff/TAIR10_GFF3_genes_transposons.fixed.gff3"
+    ]
+  ],
+
+  "max_cpus": 1,
+  "max_memory": "1.GB"
+}

@@ -13,3 +13,9 @@
 > https://www.biorxiv.org/content/10.1101/096529v2.full.pdf
 
 - [ ] Sort out EDTA testing
+
+- Mib finder, eggnog, blastp against TAIR and uniprot (Wait)
+- entap to merge (Wait)
+- trinity and PASA + StringTie2 -> Evigene (Do)
+- othrofinder paper
+- gffcompre on braker and liftoff
