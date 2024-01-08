@@ -82,7 +82,7 @@ flowchart TD
 Configure the pipeline by modifying `nextflow.config` and submit to SLURM for execution.
 
 ```bash
-sbatch ./pan_gene_pfr.sh
+sbatch ./pangene_pfr.sh
 ```
 
 ## Third-party Sources
