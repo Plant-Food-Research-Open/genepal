@@ -5,4 +5,4 @@ nextflow \
     -profile local,docker \
     -resume \
     -stub \
-    --params-file conf/local_stub_params.json
+    -params-file conf/local_stub_params.json
