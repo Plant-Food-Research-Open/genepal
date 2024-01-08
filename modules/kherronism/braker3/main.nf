@@ -2,10 +2,7 @@ process BRAKER3 {
     tag "${meta.id}"
     label 'process_high'
 
-    conda "bioconda::braker3=3.0.6"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/braker3%3A3.0.6--hdfd78af_0':
-        'biocontainers/braker3:3.0.6--hdfd78af_0' }"
+    container "docker://teambraker/braker3:v1.0.6"
 
     input:
     tuple val(meta), path(fasta)
