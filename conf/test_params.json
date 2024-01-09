@@ -1,0 +1,31 @@
+{
+  "target_assemblies": [
+    ["red5_v2p1", ".test/target/red5_v2p1_chr1_600k.fasta.gz"],
+    ["donghong", ".test/target/donghong_chr1_600k.fsa.gz"]
+  ],
+
+  "te_libraries": [["donghong", ".test/te_lib/donghong.TElib.fa.gz"]],
+
+  "samplesheet": ".test/samplesheet/samplesheet.csv",
+
+  "ribo_database_manifest":"assets/rrna-db-test.txt",
+
+  "external_protein_fastas": [
+    ".test/ext_prot/RU01_20221115150135_chr1_600k.pep.fasta.gz",
+    ".test/ext_prot/RU01_20221115150135_chr2_600k.pep.fasta.gz"
+  ],
+
+  "liftoff_xref_annotations": [
+    [
+      ".test/liftoff/Russell_V2a_chr1_600k.fsa.gz",
+      ".test/liftoff/Russell_V2a_chr1_600k.gff3.gz"
+    ],
+    [
+      ".test/liftoff/TAIR10_chr1_600k.fas.gz",
+      ".test/liftoff/TAIR10_chr1_600k.gff3.gz"
+    ]
+  ],
+
+  "max_cpus": 2,
+  "max_memory": "3.GB"
+}

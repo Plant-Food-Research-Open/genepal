@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+[[ $1 == '-stub' ]] \
+    && stub='-stub' \
+    || stub=''
+
+[[ $1 == '-stub' ]] \
+    && echo 'Executing with -stub' \
+    || echo 'Executing without -stub'
+
+nextflow \
+    main.nf \
+    -profile local,docker \
+    -resume \
+    $stub \
+    -params-file conf/test_params.json

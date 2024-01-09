@@ -2,7 +2,7 @@ process BRAKER3 {
     tag "${meta.id}"
     label 'process_high'
 
-    container "docker://teambraker/braker3:v1.0.6"
+    container "gallvp/teambraker_braker3:v1.0.6"
 
     input:
     tuple val(meta), path(fasta)
