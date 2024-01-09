@@ -1,6 +1,6 @@
 {
   "target_assemblies": [
-    ["red5_v2p1", ".test/target/red5_v2p1_chr1_600k.fasta.gz"],
+    ["red5_v2p1", ".test/target/red5_v2p1_chr1_1200k.fasta.gz"],
     ["donghong", ".test/target/donghong_chr1_600k.fsa.gz"]
   ],
 
@@ -14,6 +14,8 @@
     ".test/ext_prot/RU01_20221115150135_chr1_600k.pep.fasta.gz",
     ".test/ext_prot/RU01_20221115150135_chr2_600k.pep.fasta.gz"
   ],
+
+  "braker_extra_args": "--testMode --species=arabidopsis --useexisting",
 
   "liftoff_xref_annotations": [
     [

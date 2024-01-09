@@ -26,20 +26,25 @@ process BRAKER3 {
     task.ext.when == null || task.ext.when
 
     script:
-    def args        = task.ext.args         ?: ''
-    prefix          = task.ext.prefix       ?: "${meta.id}"
+    def args        = task.ext.args                                     ?: ''
+    prefix          = task.ext.prefix                                   ?: "${meta.id}"
 
-    def rna_ids     = rnaseq_sets_ids       ? "--rnaseq_sets_ids=${rnaseq_sets_ids}"    : ''
-    def rna_dirs    = rnaseq_sets_dirs      ? "--rnaseq_sets_dirs=${rnaseq_sets_dirs}"  : ''
-    def bam         = bam                   ? "--bam=${bam}"                            : ''
-    def proteins    = proteins              ? "--prot_seq=${proteins}"                  : ''
-    def hints       = hintsfile             ? "--hints=${hintsfile}"                    : ''
+    def test_mode   = args.contains('--testMode') // Custom flag for test data
+    def args_fmt    = test_mode ? args.replace('--testMode', '') : args
+
+    def rna_ids     = rnaseq_sets_ids           ? "--rnaseq_sets_ids=${rnaseq_sets_ids}"    : ''
+    def rna_dirs    = rnaseq_sets_dirs          ? "--rnaseq_sets_dirs=${rnaseq_sets_dirs}"  : ''
+    def bam         = bam && !test_mode         ? "--bam=${bam}"                            : ''
+    def proteins    = proteins && !test_mode    ? "--prot_seq=${proteins}"                  : ''
+    def hints       = hintsfile                 ? "--hints=${hintsfile}"                    : ''
+
+    def new_species = args.contains('--species')   ? '' : "--species new_species"
     """
     cp -r /usr/share/augustus/config augustus_config
 
     braker.pl \\
         --genome ${fasta} \\
-        --species ${prefix} \\
+        ${new_species} \\
         --workingdir ${prefix} \\
         --AUGUSTUS_CONFIG_PATH "\$(pwd)/augustus_config" \\
         --threads ${task.cpus} \\
@@ -48,7 +53,7 @@ process BRAKER3 {
         ${bam} \\
         ${proteins} \\
         ${hints} \\
-        ${args}
+        ${args_fmt}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
