@@ -1,0 +1,16 @@
+{
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,7944637266bc3e2726899eaad5e46c87"
+            ]
+        ],
+        "timestamp": "2024-01-09T15:14:48.807063"
+    },
+    "for-stub-match": {
+        "content": [
+            "[test.nhr, test.nin, test.njs, test.nnd, test.nni, test.nog, test.nsq, test.translation]"
+        ],
+        "timestamp": "2024-01-09T15:14:48.81702"
+    }
+}

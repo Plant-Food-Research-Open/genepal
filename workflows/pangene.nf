@@ -66,7 +66,8 @@ workflow PANGENE {
     // SUBWORKFLOW: PREPARE_ASSEMBLY
     PREPARE_ASSEMBLY(
         ch_target_assembly,
-        ch_te_library
+        ch_te_library,
+        params.repeat_annotator
     )
 
     ch_valid_target_assembly    = PREPARE_ASSEMBLY.out.target_assemby

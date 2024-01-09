@@ -1,6 +1,14 @@
 def validateParams(params) {
     validateFastaTags(params)
     
+    if (!params['repeat_annotator']) {
+        error "Error: repeat_annotator must be either 'repeatmodeler' or 'edta'"
+    }
+
+    if ( !(params['repeat_annotator'] in ['repeatmodeler', 'edta']) ) {
+        error "Error: repeat_annotator must be either 'repeatmodeler' or 'edta'"
+    }
+    
     validateTETags(params)
     validateTEFastaCorrespondence(params)
 

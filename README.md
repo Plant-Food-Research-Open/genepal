@@ -12,16 +12,21 @@ flowchart TD
     FASTA_VALIDATE
     fasta_file_from_fasta_validate
     EDTA
+    REPEATMODELER
+    te_lib_absent_node
     REPEATMASKER
     end
 
     TARGET_ASSEMBLIES(["[target_assemblies]"])
     TE_LIBRARIES(["[te_libs]"])
     TARGET_ASSEMBLIES --> FASTA_VALIDATE
-    FASTA_VALIDATE --> |Fasta|fasta_file_from_fasta_validate(( ))
-    fasta_file_from_fasta_validate --> EDTA
+    FASTA_VALIDATE --- |Fasta|fasta_file_from_fasta_validate(( ))
+    fasta_file_from_fasta_validate --> |or|EDTA
+    fasta_file_from_fasta_validate --> |default|REPEATMODELER
+    REPEATMODELER --- te_lib_absent_node(( ))
+    EDTA --- te_lib_absent_node
     TE_LIBRARIES --> REPEATMASKER
-    EDTA --> |te_lib absent|REPEATMASKER
+    te_lib_absent_node --> REPEATMASKER
 
     subgraph Samplesheet [ ]
     SAMPLESHEET

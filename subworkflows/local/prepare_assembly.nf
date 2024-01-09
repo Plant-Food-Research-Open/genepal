@@ -1,6 +1,8 @@
 include { GUNZIP as GUNZIP_TARGET_ASSEMBLY      } from '../../modules/nf-core/gunzip'
 include { GUNZIP as GUNZIP_TE_LIBRARY           } from '../../modules/nf-core/gunzip'
 include { FASTAVALIDATOR                        } from '../../modules/nf-core/fastavalidator'
+include { REPEATMODELER_BUILDDATABASE           } from '../../modules/pfr/repeatmodeler/builddatabase'
+include { REPEATMODELER_REPEATMODELER           } from '../../modules/pfr/repeatmodeler/repeatmodeler'
 include { REPEATMASKER                          } from '../../modules/kherronism/repeatmasker'
 include { STAR_GENOMEGENERATE                   } from '../../modules/nf-core/star/genomegenerate'
 
@@ -10,6 +12,7 @@ workflow PREPARE_ASSEMBLY {
     take:
     target_assembly             // channel: [ meta, fasta ]
     te_library                  // channel: [ meta, fasta ]
+    repeat_annotator            // val(String), 'repeatmodeler' or 'edta'
 
     main:
     ch_versions                 = Channel.empty()
@@ -59,7 +62,7 @@ workflow PREPARE_ASSEMBLY {
     ch_versions                 = ch_versions.mix(GUNZIP_TE_LIBRARY.out.versions.first())
 
     // SUBWORKFLOW: FASTA_EDTA_LAI
-    ch_edta_inputs              = ch_validated_assembly
+    ch_annotator_inputs         = ch_validated_assembly
                                 | join(
                                     ch_gunzip_te_library, remainder: true
                                 )
@@ -67,19 +70,39 @@ workflow PREPARE_ASSEMBLY {
                                     teLib == null
                                 }
                                 | map { meta, assembly, teLib -> [meta, assembly] }
+
+    ch_edta_inputs              = repeat_annotator != 'edta'
+                                ? Channel.empty()
+                                : ch_annotator_inputs
     
     FASTA_EDTA_LAI(
         ch_edta_inputs,
         [],
         true // Skip LAI
     )
+
+    ch_versions                 = ch_versions.mix(FASTA_EDTA_LAI.out.versions.first())
+
+    // MODULE: REPEATMODELER_BUILDDATABASE
+    ch_repeatmodeler_inputs     = repeat_annotator != 'repeatmodeler'
+                                ? Channel.empty()
+                                : ch_annotator_inputs
+
+    REPEATMODELER_BUILDDATABASE ( ch_repeatmodeler_inputs )
+    
+    ch_versions                 = ch_versions.mix(REPEATMODELER_BUILDDATABASE.out.versions.first())
+
+    // MODULE: REPEATMODELER_REPEATMODELER
+    REPEATMODELER_REPEATMODELER ( REPEATMODELER_BUILDDATABASE.out.db )
     
     ch_assembly_and_te_lib      = ch_validated_assembly
                                 | join(
-                                    FASTA_EDTA_LAI.out.te_lib_fasta.mix(ch_gunzip_te_library)
+                                    repeat_annotator == 'edta'
+                                    ? FASTA_EDTA_LAI.out.te_lib_fasta.mix(ch_gunzip_te_library)
+                                    : REPEATMODELER_REPEATMODELER.out.fasta.mix(ch_gunzip_te_library)
                                 )
 
-    ch_versions                 = ch_versions.mix(FASTA_EDTA_LAI.out.versions.first())
+    ch_versions                 = ch_versions.mix(REPEATMODELER_REPEATMODELER.out.versions.first())
     
     // MODULE: REPEATMASKER
     REPEATMASKER(

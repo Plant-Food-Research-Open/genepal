@@ -1,0 +1,46 @@
+{
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,1bb6846ecf1304c262eaef4d3de60cf9"
+            ]
+        ],
+        "timestamp": "2024-01-09T15:06:55.753492"
+    },
+    "stk": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.stk:md5,acd01ad35763c11315e2297a4f051d57"
+                ]
+            ]
+        ],
+        "timestamp": "2024-01-09T15:06:55.740963"
+    },
+    "for-stub-match": {
+        "content": [
+            [
+                "test.fa",
+                "test.log",
+                "test.stk"
+            ]
+        ],
+        "timestamp": "2024-01-09T15:06:55.759971"
+    },
+    "fasta": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.fa:md5,e25326771341204e1f8054d9529411e5"
+                ]
+            ]
+        ],
+        "timestamp": "2024-01-09T15:06:55.737658"
+    }
+}

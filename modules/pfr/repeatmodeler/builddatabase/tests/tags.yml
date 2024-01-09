@@ -1,0 +1,2 @@
+repeatmodeler/builddatabase:
+  - "modules/pfr/repeatmodeler/builddatabase/**"

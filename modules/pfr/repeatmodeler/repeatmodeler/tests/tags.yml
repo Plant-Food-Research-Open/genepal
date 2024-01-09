@@ -1,0 +1,2 @@
+repeatmodeler/repeatmodeler:
+  - "modules/pfr/repeatmodeler/repeatmodeler/**"
