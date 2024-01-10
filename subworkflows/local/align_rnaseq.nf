@@ -6,7 +6,7 @@ workflow ALIGN_RNASEQ {
     reads_target                // channel: [ meta, assembly_id ]
     trim_reads                  // channel: [ meta, [ fq ] ]
     assembly_index              // channel: [ meta2, star_index ]
-    
+
     main:
     ch_versions                 = Channel.empty()
 
@@ -33,7 +33,7 @@ workflow ALIGN_RNASEQ {
     def star_ignore_sjdbgtf     = true
     def seq_platform            = false
     def seq_center              = false
-    
+
     STAR_ALIGN(
         ch_star_inputs.map { meta, fastq, index -> [ meta, fastq ] },
         ch_star_inputs.map { meta, fastq, index -> [ [ id: meta.target_assembly ], index ] },
@@ -67,9 +67,9 @@ workflow ALIGN_RNASEQ {
                                 | mix(
                                     ch_star_bam_branch.bam
                                 )
-    
+
     ch_versions                 = ch_versions.mix(SAMTOOLS_CAT.out.versions.first())
-    
+
     emit:
     bam                         = ch_samtools_bam   // channel: [ [ id, single_end, target_assembly ], [ bam ] ]
     versions                    = ch_versions       // channel: [ versions.yml ]

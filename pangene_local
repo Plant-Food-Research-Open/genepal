@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
+NO_FORMAT="\033[0m"
+C_RED="\033[38;5;9m"
+F_BOLD="\033[1m"
+
 [[ $1 == '-stub' ]] \
     && stub='-stub' \
     || stub=''
 
 [[ $1 == '-stub' ]] \
     && echo 'Executing with -stub' \
-    || echo 'Executing without -stub'
+    || echo -e "${C_RED}${F_BOLD}Executing without -stub${NO_FORMAT}"
 
 nextflow \
     main.nf \

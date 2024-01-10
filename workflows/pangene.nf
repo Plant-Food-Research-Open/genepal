@@ -26,7 +26,7 @@ workflow PANGENE {
     ch_samplesheet              = params.samplesheet
                                 ? Channel.fromPath(params.samplesheet, checkIfExists: true)
                                 : Channel.empty()
-    
+
     ch_tar_assm_str             = Channel.of(
                                     params.target_assemblies
                                     .collect { tag, fastaPath -> tag.strip() }.join(",")
@@ -49,7 +49,7 @@ workflow PANGENE {
                                     [ [ id: fileHandle.getSimpleName() ], fileHandle]
                                 }
                                 : Channel.empty()
-    
+
     ch_xref_mm                  = params.liftoff_xref_annotations
                                 ? Channel.fromList(params.liftoff_xref_annotations)
                                 | multiMap { fasta, gff ->
@@ -116,7 +116,7 @@ workflow PANGENE {
                                     ch_ext_prots_fasta.map { meta, filePath -> filePath }.ifEmpty(null)
                                 )
                                 | map { meta, fasta, bam, prots -> [ meta, fasta, bam ?: [], prots ?: [] ] }
-    
+
     def rnaseq_sets_dirs        = []
     def rnaseq_sets_ids         = []
     def hintsfile               = []

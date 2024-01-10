@@ -1,3 +1,6 @@
+includes/Maven_Pro/
+
+# gitignore
 .nextflow*
 work/
 results/

@@ -8,7 +8,7 @@ workflow FASTA_LIFTOFF {
     target_assemby                  // Channel: [ meta, fasta ]
     xref_fasta                      // Channel: [ meta2, fasta ]
     xref_gff                        // Channel: [ meta2, gff3 ]
-    
+
     main:
     ch_versions                     = Channel.empty()
 
@@ -20,12 +20,12 @@ workflow FASTA_LIFTOFF {
                                     }
 
     GUNZIP_FASTA ( ch_xref_fasta_branch.gz )
-    
+
     ch_xref_gunzip_fasta            = GUNZIP_FASTA.out.gunzip
                                     | mix(
                                         ch_xref_fasta_branch.rest
                                     )
-    
+
     ch_versions                     = ch_versions.mix(GUNZIP_FASTA.out.versions.first())
 
     // MODULE: GUNZIP as GUNZIP_GFF
@@ -57,7 +57,7 @@ workflow FASTA_LIFTOFF {
                                     | join(ch_gffread_inputs)
                                     | map { fid, gffread_gff, meta, gff -> [ meta, gffread_gff ] }
                                     // meta insertion
-    
+
     ch_versions                     = ch_versions.mix(GFFREAD.out.versions.first())
 
     // MODULE: LIFTOFF
@@ -89,7 +89,7 @@ workflow FASTA_LIFTOFF {
     ch_liftoff_gff3                 = LIFTOFF.out.polished_gff3
                                     | map { meta, gff -> [ [ id: meta.target_assemby ], gff ] }
                                     | groupTuple
-    
+
     ch_versions                     = ch_versions.mix(LIFTOFF.out.versions.first())
 
     emit:

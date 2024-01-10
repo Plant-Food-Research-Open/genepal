@@ -13,10 +13,10 @@ workflow PREPROCESS_RNASEQ {
     min_trimmed_reads               // val: Integer
     remove_ribo_rna                 // val: true|false
     sortmerna_fastas                // channel: [ [ fasta ] ]
-    
+
     main:
     ch_versions = Channel.empty()
-    
+
     // SUBWORKFLOW: EXTRACT_SAMPLES
     EXTRACT_SAMPLES(
         samplesheet,
@@ -55,7 +55,7 @@ workflow PREPROCESS_RNASEQ {
     def with_umi                    = false
     def skip_umi_extract            = true
     def umi_discard_read            = false
-    
+
     FASTQ_FASTQC_UMITOOLS_FASTP (
         ch_cat_fastq,
         skip_fastqc,
@@ -86,13 +86,13 @@ workflow PREPROCESS_RNASEQ {
         remove_ribo_rna ? ch_trim_reads : Channel.empty(),
         sortmerna_fastas
     )
-    
+
     ch_emitted_reads                = remove_ribo_rna
                                     ? SORTMERNA.out.reads
                                     : ch_trim_reads
     ch_versions                     = ch_versions.mix(SORTMERNA.out.versions.first())
 
-    
+
 
     emit:
     trim_reads                      = ch_emitted_reads  // channel: [ meta, [ fq ] ]

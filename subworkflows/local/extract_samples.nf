@@ -29,13 +29,13 @@ workflow EXTRACT_SAMPLES {
     | set { ch_reads }
 
     reads = ch_reads.map { meta, fastq -> [[id:meta.id, single_end:meta.single_end], fastq]}
-    
+
     ch_reads
     | flatMap { meta, fastq ->
         meta.target_assemblies.collect { assembly -> [[id:meta.id, single_end:meta.single_end], assembly] }
     }
     | set { assemblies }
-    
+
     emit:
     reads                                       // channel: [ val(meta), [ reads ] ]
     assemblies                                  // channel: [ val(meta), val(assembly) ]

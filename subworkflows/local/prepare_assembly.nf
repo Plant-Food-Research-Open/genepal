@@ -74,7 +74,7 @@ workflow PREPARE_ASSEMBLY {
     ch_edta_inputs              = repeat_annotator != 'edta'
                                 ? Channel.empty()
                                 : ch_annotator_inputs
-    
+
     FASTA_EDTA_LAI(
         ch_edta_inputs,
         [],
@@ -89,12 +89,12 @@ workflow PREPARE_ASSEMBLY {
                                 : ch_annotator_inputs
 
     REPEATMODELER_BUILDDATABASE ( ch_repeatmodeler_inputs )
-    
+
     ch_versions                 = ch_versions.mix(REPEATMODELER_BUILDDATABASE.out.versions.first())
 
     // MODULE: REPEATMODELER_REPEATMODELER
     REPEATMODELER_REPEATMODELER ( REPEATMODELER_BUILDDATABASE.out.db )
-    
+
     ch_assembly_and_te_lib      = ch_validated_assembly
                                 | join(
                                     repeat_annotator == 'edta'
@@ -103,7 +103,7 @@ workflow PREPARE_ASSEMBLY {
                                 )
 
     ch_versions                 = ch_versions.mix(REPEATMODELER_REPEATMODELER.out.versions.first())
-    
+
     // MODULE: REPEATMASKER
     REPEATMASKER(
         ch_assembly_and_te_lib.map { meta, assembly, teLib -> [meta, assembly] },
@@ -120,7 +120,7 @@ workflow PREPARE_ASSEMBLY {
 
     ch_assembly_index           = STAR_GENOMEGENERATE.out.index
     ch_versions                 = ch_versions.mix(STAR_GENOMEGENERATE.out.versions.first())
-    
+
     emit:
     target_assemby              = ch_validated_assembly         // channel: [ meta, fasta ]
     masked_target_assembly      = REPEATMASKER.out.fasta_masked // channel: [ meta, fasta ]
