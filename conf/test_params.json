@@ -8,6 +8,7 @@
 
   "samplesheet": ".test/samplesheet/samplesheet.csv",
 
+  "remove_ribo_rna": true,
   "ribo_database_manifest":"assets/rrna-db-test.txt",
 
   "external_protein_fastas": [
