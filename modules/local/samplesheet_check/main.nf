@@ -3,7 +3,7 @@
 // MIT: https://github.com/nf-core/rnaseq/blob/master/LICENSE
 //
 // Changes:
-// Added channel permissible_target_assemblies 
+// Added channel permissible_target_assemblies
 
 process SAMPLESHEET_CHECK {
     tag "$samplesheet"

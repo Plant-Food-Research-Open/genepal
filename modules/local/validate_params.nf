@@ -1,6 +1,6 @@
 def validateParams(params) {
     validateFastaTags(params)
-    
+
     if (!params['repeat_annotator']) {
         error "Error: repeat_annotator must be either 'repeatmodeler' or 'edta'"
     }
@@ -8,7 +8,7 @@ def validateParams(params) {
     if ( !(params['repeat_annotator'] in ['repeatmodeler', 'edta']) ) {
         error "Error: repeat_annotator must be either 'repeatmodeler' or 'edta'"
     }
-    
+
     validateTETags(params)
     validateTEFastaCorrespondence(params)
 
@@ -67,7 +67,7 @@ def validateTEFastaCorrespondence(params) {
     if(!params["te_libraries"]) {
         return
     }
-    
+
     def listOfTETuples   = params["te_libraries"]
     def listOfFastaTuples   = params["target_assemblies"]
 
@@ -84,7 +84,7 @@ def validateTEFastaCorrespondence(params) {
 def validateRiboDBManifest(params) {
     if (params.remove_ribo_rna) {
         file_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
-        
+
         if (file_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${file_ribo_db.getName()}!"}
     }
 }
