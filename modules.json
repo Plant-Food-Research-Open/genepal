@@ -131,6 +131,11 @@
                         "git_sha": "d87a6e2156c2099c09280fa70776eaf0a824817a",
                         "installed_by": ["modules"]
                     },
+                    "trinity": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "installed_by": ["modules"]
+                    },
                     "umitools/extract": {
                         "branch": "master",
                         "git_sha": "65ad3e0b9a4099592e1102e92e10455dc661cf53",
