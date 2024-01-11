@@ -92,6 +92,10 @@ Configure the pipeline by modifying `nextflow.config` and submit to SLURM for ex
 sbatch ./pangene_pfr
 ```
 
+## Credits
+
+Some of the workflows included in the pipeline were originally written by Jason Shiller [@jasonshiller](https://github.com/jasonshiller), Ross Crowhurst [@rosscrowhurst](https://github.com/rosscrowhurst) and Chen Wu [@christinawu2008](https://github.com/christinawu2008).
+
 ## Third-party Sources
 
 Some software components of this pipeline have been adopted from following third-party sources:
