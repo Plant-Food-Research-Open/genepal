@@ -1,0 +1,176 @@
+{
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,dd425b328132f16a51a41fddc8d5e851"
+            ]
+        ],
+        "timestamp": "2024-01-16T10:19:44.501687"
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.drop.aa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.drop.cds:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.drop.tr:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.ann.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.cull.aa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.cull.cds:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.cull.mrna:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.genesum.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.mainalt.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.okay.aa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.okay.cds:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.okay.mrna:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.pubids:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.pubids.old:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.pubids.realt.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,dd425b328132f16a51a41fddc8d5e851"
+                ],
+                "dropset": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.drop.aa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.drop.cds:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.drop.tr:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "okayset": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.ann.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.cull.aa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.cull.cds:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.cull.mrna:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.genesum.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.mainalt.tab:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.okay.aa:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.okay.cds:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.okay.mrna:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.pubids:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.pubids.old:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.pubids.realt.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,dd425b328132f16a51a41fddc8d5e851"
+                ]
+            }
+        ],
+        "timestamp": "2024-01-16T11:49:25.567227"
+    },
+    "homo_sapiens-transcriptome_fasta": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.drop.aa:md5,b43c660c34a419ec35090c163a4e4a54",
+                            "test.drop.cds:md5,5adb810e379fde7d2057a34ead7eaa58",
+                            "test.drop.tr:md5,5f38aa1a7e7adb09ce34c0bd74727d67"
+                        ]
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.ann.txt:md5,87f3689629e407f9e8283ed84a50c032",
+                            "test.cull.aa:md5,3e97169fdce1aa48f564f853e8566073",
+                            "test.cull.cds:md5,1d64ac56588846c4ef71d6aaffc9ad12",
+                            "test.cull.mrna:md5,7c8b1ac63912af681567608fcefe5b27",
+                            "test.genesum.txt:md5,b3bd589332e13a144602303fefa40d91",
+                            "test.mainalt.tab:md5,644eb58b92641e17437293d93b22cf88",
+                            "test.okay.aa:md5,406d7a073525993d820d63d2045cdfe3",
+                            "test.okay.cds:md5,bf833d09e180f48849a749048f547126",
+                            "test.okay.mrna:md5,38b7f4c1fb2c603d52a5ee3ee5e51965",
+                            "test.pubids:md5,88897349d4b4a3c54d3a96c9926508cb",
+                            "test.pubids.old:md5,7aa7ef68562dffa3e5cd5a1b8a9c360d",
+                            "test.pubids.realt.log:md5,df56bf7e7661842c3821b635fde411c4"
+                        ]
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,dd425b328132f16a51a41fddc8d5e851"
+                ],
+                "dropset": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.drop.aa:md5,b43c660c34a419ec35090c163a4e4a54",
+                            "test.drop.cds:md5,5adb810e379fde7d2057a34ead7eaa58",
+                            "test.drop.tr:md5,5f38aa1a7e7adb09ce34c0bd74727d67"
+                        ]
+                    ]
+                ],
+                "okayset": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test.ann.txt:md5,87f3689629e407f9e8283ed84a50c032",
+                            "test.cull.aa:md5,3e97169fdce1aa48f564f853e8566073",
+                            "test.cull.cds:md5,1d64ac56588846c4ef71d6aaffc9ad12",
+                            "test.cull.mrna:md5,7c8b1ac63912af681567608fcefe5b27",
+                            "test.genesum.txt:md5,b3bd589332e13a144602303fefa40d91",
+                            "test.mainalt.tab:md5,644eb58b92641e17437293d93b22cf88",
+                            "test.okay.aa:md5,406d7a073525993d820d63d2045cdfe3",
+                            "test.okay.cds:md5,bf833d09e180f48849a749048f547126",
+                            "test.okay.mrna:md5,38b7f4c1fb2c603d52a5ee3ee5e51965",
+                            "test.pubids:md5,88897349d4b4a3c54d3a96c9926508cb",
+                            "test.pubids.old:md5,7aa7ef68562dffa3e5cd5a1b8a9c360d",
+                            "test.pubids.realt.log:md5,df56bf7e7661842c3821b635fde411c4"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,dd425b328132f16a51a41fddc8d5e851"
+                ]
+            }
+        ],
+        "timestamp": "2024-01-16T11:49:21.795373"
+    }
+}

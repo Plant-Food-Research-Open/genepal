@@ -20,6 +20,11 @@
                         "git_sha": "35468dbb1f35eb17a43d7e05544601c7c3f8cd90",
                         "installed_by": ["fasta_edta_lai", "modules"]
                     },
+                    "evigene/tr2aacds": {
+                        "branch": "main",
+                        "git_sha": "8eeef38fcdfc5b4dda4f2af84a2c05b6cf4b742a",
+                        "installed_by": ["modules"]
+                    },
                     "lai": {
                         "branch": "main",
                         "git_sha": "7e6e3cb41362a045c6bb6065903efa0eba246e87",
