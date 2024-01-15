@@ -78,7 +78,7 @@
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "e8940f18cfbbdcdcde38f4b3633df5ed4e48da10",
                         "installed_by": ["modules"]
                     },
                     "custom/dumpsoftwareversions": {
@@ -133,9 +133,8 @@
                     },
                     "trinity": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/trinity/trinity.diff"
+                        "git_sha": "864c39faf6f06e74ebea373a96e9e56ed5de7da9",
+                        "installed_by": ["modules"]
                     },
                     "umitools/extract": {
                         "branch": "master",
