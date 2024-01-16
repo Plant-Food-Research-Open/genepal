@@ -8,6 +8,7 @@
 
     "samplesheet": "pangene-test/samplesheet/samplesheet.csv",
 
+    "min_trimmed_reads": 10,
     "remove_ribo_rna": true,
     "ribo_database_manifest": "assets/rrna-db-test.txt",
 

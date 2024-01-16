@@ -22,7 +22,7 @@
                     },
                     "evigene/tr2aacds": {
                         "branch": "main",
-                        "git_sha": "8eeef38fcdfc5b4dda4f2af84a2c05b6cf4b742a",
+                        "git_sha": "532a2fa9d73b717246e6fe91624a57cc7216527e",
                         "installed_by": ["modules"]
                     },
                     "lai": {

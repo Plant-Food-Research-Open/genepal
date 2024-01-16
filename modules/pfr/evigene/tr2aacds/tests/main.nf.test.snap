@@ -122,9 +122,9 @@
                             "test.okay.aa:md5,406d7a073525993d820d63d2045cdfe3",
                             "test.okay.cds:md5,bf833d09e180f48849a749048f547126",
                             "test.okay.mrna:md5,38b7f4c1fb2c603d52a5ee3ee5e51965",
-                            "test.pubids:md5,88897349d4b4a3c54d3a96c9926508cb",
+                            "test.pubids:md5,7a0876975cfcb95aef432d957c1dab02",
                             "test.pubids.old:md5,7aa7ef68562dffa3e5cd5a1b8a9c360d",
-                            "test.pubids.realt.log:md5,df56bf7e7661842c3821b635fde411c4"
+                            "test.pubids.realt.log:md5,62ec6a006dc1b0c2fc326eaf6b3d7f01"
                         ]
                     ]
                 ],
@@ -160,9 +160,9 @@
                             "test.okay.aa:md5,406d7a073525993d820d63d2045cdfe3",
                             "test.okay.cds:md5,bf833d09e180f48849a749048f547126",
                             "test.okay.mrna:md5,38b7f4c1fb2c603d52a5ee3ee5e51965",
-                            "test.pubids:md5,88897349d4b4a3c54d3a96c9926508cb",
+                            "test.pubids:md5,7a0876975cfcb95aef432d957c1dab02",
                             "test.pubids.old:md5,7aa7ef68562dffa3e5cd5a1b8a9c360d",
-                            "test.pubids.realt.log:md5,df56bf7e7661842c3821b635fde411c4"
+                            "test.pubids.realt.log:md5,62ec6a006dc1b0c2fc326eaf6b3d7f01"
                         ]
                     ]
                 ],
@@ -171,6 +171,6 @@
                 ]
             }
         ],
-        "timestamp": "2024-01-16T11:49:21.795373"
+        "timestamp": "2024-01-16T21:37:40.393362"
     }
 }

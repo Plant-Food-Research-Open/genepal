@@ -23,14 +23,17 @@ process TRINITY {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
+    def reads1 = [], reads2 = []
+    meta.single_end ? [reads].flatten().each{reads1 << it} : reads.eachWithIndex{ v, ix -> ( ix & 1 ? reads2 : reads1) << v }
+
     if (meta.single_end) {
-        reads_args = "--single ${reads}"
+        reads_args = "--single ${reads1.join(',')}"
     } else {
-        reads_args = "--left ${reads[0]} --right ${reads[1]}"
+        reads_args = "--left ${reads1.join(',')} --right ${reads2.join(',')}"
     }
 
     // --seqType argument, fasta or fastq. Exact pattern match .fasta or .fa suffix with optional .gz (gzip) suffix
-    seqType_args = reads[0] ==~ /(.*fasta(.gz)?$)|(.*fa(.gz)?$)/ ? "fa" : "fq"
+    seqType_args = reads1[0] ==~ /(.*fasta(.gz)?$)|(.*fa(.gz)?$)/ ? "fa" : "fq"
 
     // Define the memory requirements. Trinity needs this as an option.
     def avail_mem = 7
@@ -67,10 +70,26 @@ process TRINITY {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
+
+    def reads1 = [], reads2 = []
+    meta.single_end ? [reads].flatten().each{reads1 << it} : reads.eachWithIndex{ v, ix -> ( ix & 1 ? reads2 : reads1) << v }
+
+    if (meta.single_end) {
+        reads_args = "--single ${reads1.join(',')}"
+    } else {
+        reads_args = "--left ${reads1.join(',')} --right ${reads2.join(',')}"
+    }
+
+    // --seqType argument, fasta or fastq. Exact pattern match .fasta or .fa suffix with optional .gz (gzip) suffix
+    seqType_args = reads1[0] ==~ /(.*fasta(.gz)?$)|(.*fa(.gz)?$)/ ? "fa" : "fq"
+
     """
     touch ${prefix}.fa
     gzip ${prefix}.fa
     touch ${prefix}.log
+
+    echo "--seqType ${seqType_args}"
+    echo "--seqType ${reads_args}"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

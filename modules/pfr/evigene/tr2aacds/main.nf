@@ -8,7 +8,7 @@ process EVIGENE_TR2AACDS {
         'biocontainers/evigene:23.7.15--hdfd78af_1' }"
 
     input:
-    tuple val(meta), path(fasta, name: 'transcripts.fasta')
+    tuple val(meta), path(fasta)
 
     output:
     tuple val(meta), path("dropset/*")  , emit: dropset
@@ -28,22 +28,24 @@ process EVIGENE_TR2AACDS {
     } else {
         max_memory  = (task.memory.mega*0.8).intValue()
     }
+
+    def simple_name = fasta.simpleName
     """
     \$EVIGENEHOME/scripts/prot/tr2aacds.pl \\
         $args \\
         -NCPU=$task.cpus \\
         -MAXMEM=$max_memory \\
-        -cdnaseq transcripts.fasta
+        -cdnaseq $fasta
 
     find \\
         dropset \\
         -type f \\
-        -exec sh -c 'mv "\$1" "\$(echo \$1 | sed s/transcripts/$prefix/)"' sh {} \\;
+        -exec sh -c 'mv "\$1" "\$(echo \$1 | sed s/$simple_name/$prefix/)"' sh {} \\;
 
     find \\
         okayset \\
         -type f \\
-        -exec sh -c 'mv "\$1" "\$(echo \$1 | sed s/transcripts/$prefix/)"' sh {} \\;
+        -exec sh -c 'mv "\$1" "\$(echo \$1 | sed s/$simple_name/$prefix/)"' sh {} \\;
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

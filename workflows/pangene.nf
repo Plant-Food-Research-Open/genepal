@@ -2,6 +2,7 @@ include { validateParams                } from '../modules/local/validate_params
 include { PREPARE_ASSEMBLY              } from '../subworkflows/local/prepare_assembly'
 include { PREPROCESS_RNASEQ             } from '../subworkflows/local/preprocess_rnaseq'
 include { ALIGN_RNASEQ                  } from '../subworkflows/local/align_rnaseq'
+include { FASTA_TRINITY_EVIGENE_PASA    } from '../subworkflows/local/fasta_trinity_evigene_pasa'
 include { PREPARE_EXT_PROTS             } from '../subworkflows/local/prepare_ext_prots'
 include { BRAKER3                       } from '../modules/kherronism/braker3'
 include { FASTA_LIFTOFF                 } from '../subworkflows/local/fasta_liftoff'
@@ -101,9 +102,19 @@ workflow PANGENE {
     ch_rnaseq_bam               = ALIGN_RNASEQ.out.bam
     ch_versions                 = ch_versions.mix(ALIGN_RNASEQ.out.versions)
 
+    // SUBWORKFLOW: FASTA_TRINITY_EVIGENE_PASA
+    FASTA_TRINITY_EVIGENE_PASA(
+        ch_reads_target,
+        ch_trim_reads,
+        ch_trim_reads
+    )
+
+    ch_trinity_proteins         = FASTA_TRINITY_EVIGENE_PASA.out.proteins
+    ch_versions                 = ch_versions.mix(FASTA_TRINITY_EVIGENE_PASA.out.versions)
+
     // MODULE: PREPARE_EXT_PROTS
     PREPARE_EXT_PROTS(
-        ch_ext_prot_fastas
+        ch_ext_prot_fastas.mix(ch_trinity_proteins)
     )
 
     ch_ext_prots_fasta          = PREPARE_EXT_PROTS.out.ext_prots_fasta

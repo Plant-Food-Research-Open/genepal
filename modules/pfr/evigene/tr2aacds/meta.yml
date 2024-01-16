@@ -26,7 +26,7 @@ input:
   - fasta:
       type: file
       description: Transcript assembly in fasta format
-      pattern: "*.{fsa,fa,fasta}"
+      pattern: "*.{fsa,fa,fasta,fsa.gz,fa.gz,fasta.gz}"
 output:
   - meta:
       type: map
