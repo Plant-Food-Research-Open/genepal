@@ -31,7 +31,7 @@ process EVIGENE_TR2AACDS {
 
     def simple_name = fasta.simpleName
     """
-    \$EVIGENEHOME/scripts/prot/tr2aacds.pl \\
+    /usr/local/opt/evigene-23.7.15/scripts/prot/tr2aacds.pl \\
         $args \\
         -NCPU=$task.cpus \\
         -MAXMEM=$max_memory \\
@@ -49,7 +49,7 @@ process EVIGENE_TR2AACDS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        tr2aacds: \$(cat \$EVIGENEHOME/scripts/prot/tr2aacds.pl | grep 'use constant VERSION =>  ' | sed 's/use constant VERSION =>  //' | sed 's/;.*//' | sed "s/'//g")
+        tr2aacds: \$(cat /usr/local/opt/evigene-23.7.15/scripts/prot/tr2aacds.pl | grep 'use constant VERSION =>  ' | sed 's/use constant VERSION =>  //' | sed 's/;.*//' | sed "s/'//g")
     END_VERSIONS
     """
 
@@ -82,7 +82,7 @@ process EVIGENE_TR2AACDS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        tr2aacds: \$(cat \$EVIGENEHOME/scripts/prot/tr2aacds.pl | grep 'use constant VERSION =>  ' | sed 's/use constant VERSION =>  //' | sed 's/;.*//' | sed "s/'//g")
+        tr2aacds: \$(cat /usr/local/opt/evigene-23.7.15/scripts/prot/tr2aacds.pl | grep 'use constant VERSION =>  ' | sed 's/use constant VERSION =>  //' | sed 's/;.*//' | sed "s/'//g")
     END_VERSIONS
     """
 }
