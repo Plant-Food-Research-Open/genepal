@@ -1,0 +1,236 @@
+---
+title: "pangene_wflow"
+format: html
+editor: visual
+---
+
+## Pangene workflow: post gene prediction
+
+```{r}
+Sys.setenv(merged_gff = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/merge_purge/v3.cat.clean.gff3",
+          stringtiegtf = "/workspace/hrtjbs/pangene_2024/stringtie/fsrclf_merged.gtf")
+
+```
+
+#### Create scoring table from gff file. This file is a merge of Braker3 predictions and liftoff genes:
+
+```{r}
+
+library(stringr)
+library(tidyr)
+library(dplyr)
+
+#read in the gff file containing the merged braker3 and liftoff genes
+gff = read.csv("/workspace/hrtjbs/pangene_2024/pangene/prototyping/merge_purge/v3.cat.clean.gff3",skip = 3,sep = "\t",header = FALSE)
+
+#grab just the transcripts
+gff.transcripts = merged.v1 %>% filter(V3 == "mRNA")
+
+#get various descriptors parent id, transcipt id and name (nid)
+pid = str_extract(string = gff.transcripts$V9,pattern = "(?<=Parent=)[^;]+")
+tid = str_extract(string = gff.transcripts$V9,pattern = "(?<=ID=)[^;]+")
+nid = str_extract(string = gff.transcripts$V9,pattern = "(?<=Name=)[^;]+")
+
+#add these to df
+gff.transcripts$tid = tid 
+gff.transcripts$pid = pid
+gff.transcripts$nid = nid
+
+#extract just the columns we need to begin the scoring table, make all different braker methods = Braker3
+scoring_df = gff.transcripts %>%
+  mutate(ID = coalesce(nid, pid)) %>%
+  select(ID,V2,tid) %>%
+  rename("Method" = V2) %>% 
+  mutate(Method = ifelse(Method == "Liftoff", Method, "Braker3"))
+  
+```
+
+**Notes:** \
+While the Braker gff3 file naming will be constant, the naming of genes from liftoff will vary. This script has been written to work with the naming we have in our kiwfruit annotations i.e. "Name" = the highest order of gene feature. Full version will need to to have a generalised approach to get highest level feature.
+
+#### Transcript evidence for gene models: Using stringtie assembly to assess gene models
+
+Here we are using gffcompare to categorise each transcript as to whether it matches rna-seq evidence (as described in stringtie assembly gtf). This uses an\
+output file from transcriptome assembly (stringtie) that will already be produced earlier in the Braker3 pipeline.
+
+We are assuming that user provided genes are infallable so we won't need to do this against liftoff genes in the actual pipeline. Here i am doing it with our full gene set out of curiosity\
+and to estimate how good the Braker3 predictions are in comaprison
+
+```{bash}
+cat << EOF > gffcompare.sl
+#!/bin/bash -e
+#SBATCH -J gffcompare
+#SBATCH --output=gffcompare.%j.out
+#SBATCH --error=gffcompare.%j.err
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=8G
+#SBATCH --time=12:00:00
+
+module load gffcompare/0.12.2
+gffcompare -r $stringtiegtf \
+-G \
+-o v3.cat.clean.vs.transcripts \
+$merged_gff
+EOF
+sbatch gffcompare.sl
+
+```
+
+#### Run database searches against eggnog, swissprot and Tair
+
+These will be used to score the gene models and for functional annotation
+
+```{bash}
+cd /workspace/hrtjbs/pangene_2024/pangene/prototyping
+mkdir -p /workspace/hrtjbs/pangene_2024/pangene/prototyping/eggnog_out.fork
+
+cat << EOF  > eggnog.annotation.fork.sl
+#!/bin/bash
+#SBATCH -J egg_nog
+#SBATCH -o egg_nog_job_output.%j.out
+#SBATCH -e egg_nog_job_errors.%j.err
+#SBATCH --cpus-per-task=12
+#SBATCH --mem=12G
+#SBATCH --time=24:00:00
+
+module load conda
+conda activate /workspace/hrtjbs/software/eggnog
+
+emapper.py --cpu 12 \
+-i /workspace/hrtjbs/pangene_2024/refGenome/v3.cat.clean.proteins.fasta \
+--output_dir /workspace/hrtjbs/pangene_2024/pangene/prototyping/eggnog_out.fork \
+--data_dir /workspace/hrtjbs/software/eggnog/dbs \
+--evalue 0.00001 \
+--pident 35 \
+--mp_start_method fork \
+--itype proteins \
+--tax_scope 33090 \
+--target_orthologs all \
+--go_evidence all \
+--pfam_realign none \
+--override \
+-m diamond \
+-o red5_all.fork 
+EOF
+sbatch eggnog.annotation.fork.sl
+
+
+#These below blasts were done on my Mac as powerplant was too busy
+#note added custom output fields so that we have the information we neeed later
+
+blastp -query /Users/hrtjbs/Documents/v3.cat.clean.proteins.fasta \
+-db ~/Documents/dbs/TAIR10_pep_20101214_updated \
+-num_threads 10 \
+-max_target_seqs 5 \
+-outfmt "6 qseqid sseqid qlen slen stitle pident length sstart send qcovs evalue
+ bitscore" \
+-evalue 1e-10 \
+-out red5.all.vs.tair.len.outfmt6
+
+blastp -query /Users/hrtjbs/Documents/v3.cat.clean.proteins.fasta \
+-db ~/Documents/dbs/uniprot_sprot.fasta \
+-num_threads 10 \
+-max_target_seqs 5 \
+-outfmt "6 qseqid sseqid qlen slen stitle pident length sstart send qcovs evalue
+ bitscore" \
+-evalue 1e-10 \
+-out red5.all.vs.uniprot.len.outfmt6
+```
+
+#### Parse annotation results and gffread output  and populate scoring table
+
+```{r}
+
+#Read in the eggnog results (Annotations)
+eggnog_ann = read.csv(file = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/eggnog_out.fork/red5_all.fork.emapper.annotations",
+                      header = TRUE,
+                      sep = "\t",
+                      skip = 4)
+#Read in the eggnog results (Diamond hits containing seed orthologues)
+eggnog_seed = read.csv(file = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/eggnog_out.fork/red5_all.fork.emapper.seed_orthologs",
+                        header = TRUE,
+                        skip = 5,
+                        sep = "\t")
+
+
+#Read in tair and swissp  blast results
+tair_raw = read.csv("/workspace/hrtjbs/pangene_2024/pangene/prototyping/blast/red5.all.vs.tair.len.outfmt6",sep = "\t",header = FALSE)
+swissp_raw = read.csv("/workspace/hrtjbs/pangene_2024/pangene/prototyping/blast/red5.all.vs.uniprot.len.outfmt6",sep = "\t",header = FALSE)
+
+#add headers
+blast_col = c("qseqid", "sseqid", "qlen", "slen", "stitle", "pident", "length","sstart", "send", "qcovs", "evalue", "bitscore")
+colnames(tair_raw) = blast_col
+colnames(swissp_raw) = blast_col
+
+#just get the best hit for each query and add scov (subject sequence coverage as a percentage)
+#tair
+tair_filt = tair_raw %>%
+  group_by(qseqid) %>%
+  slice_max(bitscore, n = 1,with_ties = FALSE) %>%
+  ungroup()  %>% mutate("scov" =  (send - sstart) / slen * 100) %>%
+  select(qseqid,qcovs,scov,pident) %>%
+  rename("tid"= qseqid,"tair_qcov" = qcovs,"tair_scov" = scov,"tair_pident" = pident)
+
+#swissprot
+swiss_filt = swissp_raw %>%
+  group_by(qseqid) %>%
+  slice_max(bitscore, n = 1,with_ties = FALSE) %>%
+  ungroup()  %>% mutate("scov" =  (send - sstart) / slen * 100) %>%
+  select(qseqid,qcovs,scov,pident) %>%
+  rename("tid"= qseqid,"swiss_qcov" = qcovs,"swiss_scov" = scov,"swiss_pident" = pident)
+
+#eggnog
+egg_filt = eggnog_seed %>%
+  select(X.qseqid,qcov,scov,pident) %>%
+  rename("tid" = X.qseqid,"egg_qcov" = qcov,"egg_scov" = scov, "egg_pident" = pident)
+
+
+#read in gffread results stringtie transcripts vs gene models
+string_results_all = read.csv(file = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/gffcompare/v3.cat.clean.vs.transcripts.tracking",
+                              sep = "\t",
+                              header = FALSE)
+
+
+string_results_all = string_results_all %>%
+  filter(V4 == "=") %>%
+  select(V5) %>%
+  mutate(tid = sapply(strsplit(as.character(V5), split = "\\|"), function(x)  x[2] )) %>% 
+  mutate(V5 = 1) %>% rename("stringtie" = V5)
+
+scoring_df = left_join(x = scoring_df,y = egg_filt,"tid")
+scoring_df = left_join(x = scoring_df,y = tair_filt,"tid")
+scoring_df = left_join(x = scoring_df,y = swiss_filt,"tid")
+scoring_df = left_join(x = scoring_df,y = string.results.all,"tid") %>% 
+mutate(stringtie = replace_na(stringtie, 0))
+```
+
+```{r}
+
+#Remove isoforms that aren't supported by stringtie evidence (when at least another isoform at that locus has evidence)
+
+#If a gene has 1 or more transcripts that have stringtie evidence remove any isoforms that don't have stringtie evidence
+transcript_filter = function(df, group_id) {
+  # Convert the group_id string into a symbol
+  group_col <- sym(group_id)
+
+  # Add a helper column to identify groups with at least one stringtie == 1
+  df <- df %>%
+    group_by(.data[[group_col]]) %>%
+    mutate(has_stringtie_1 = any(stringtie == 1)) %>%
+    ungroup()
+
+  # Filter out rows where stringtie == 0 only in groups that have a stringtie == 1
+  filtered_df <- df %>%
+    filter(!(stringtie == 0 & has_stringtie_1)) %>%
+    select(-has_stringtie_1)  # Remove the helper column
+
+  return(filtered_df)
+}
+
+
+# Apply the function 
+scoring_df = transcript_filter(scoring_df,group_id = "ID") %>%  mutate("Tier" = ifelse(Method == "Liftoff", "Gold",NA))
+
+
+scoring_df %>% filter(egg_scov < 50,swiss_scov < 50,tair_scov < 50,Method == "Braker3")
+```
