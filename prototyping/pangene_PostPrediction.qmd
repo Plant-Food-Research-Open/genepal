@@ -40,12 +40,14 @@ gff.transcripts$nid = nid
 scoring_df = gff.transcripts %>%
   mutate(ID = coalesce(nid, pid)) %>%
   select(ID,V2,tid) %>%
-  rename("Method" = V2) %>% 
+  dplyr::rename("Method" = V2) %>% 
   mutate(Method = ifelse(Method == "Liftoff", Method, "Braker3"))
+
+
   
 ```
 
-**Notes:** \
+**Notes:**\
 While the Braker gff3 file naming will be constant, the naming of genes from liftoff will vary. This script has been written to work with the naming we have in our kiwfruit annotations i.e. "Name" = the highest order of gene feature. Full version will need to to have a generalised approach to get highest level feature.
 
 #### Transcript evidence for gene models: Using stringtie assembly to assess gene models
@@ -137,10 +139,10 @@ blastp -query /Users/hrtjbs/Documents/v3.cat.clean.proteins.fasta \
 -out red5.all.vs.uniprot.len.outfmt6
 ```
 
-#### Parse annotation results and gffread output  and populate scoring table
+#### Parse annotation results and gffread output and populate scoring table
 
 ```{r}
-
+library(tidyr)
 #Read in the eggnog results (Annotations)
 eggnog_ann = read.csv(file = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/eggnog_out.fork/red5_all.fork.emapper.annotations",
                       header = TRUE,
@@ -162,27 +164,30 @@ blast_col = c("qseqid", "sseqid", "qlen", "slen", "stitle", "pident", "length","
 colnames(tair_raw) = blast_col
 colnames(swissp_raw) = blast_col
 
-#just get the best hit for each query and add scov (subject sequence coverage as a percentage)
+#Get the best hit for each query and add prelim filter of 35 % idenity  and add scov (subject sequence coverage as a percentage)
 #tair
-tair_filt = tair_raw %>%
+tair_filt = tair_raw %>% 
+  filter(pident > 35) %>% 
   group_by(qseqid) %>%
   slice_max(bitscore, n = 1,with_ties = FALSE) %>%
   ungroup()  %>% mutate("scov" =  (send - sstart) / slen * 100) %>%
   select(qseqid,qcovs,scov,pident) %>%
-  rename("tid"= qseqid,"tair_qcov" = qcovs,"tair_scov" = scov,"tair_pident" = pident)
+  dplyr::rename("tid"= qseqid,"tair_qcov" = qcovs,"tair_scov" = scov,"tair_pident" = pident)
 
 #swissprot
-swiss_filt = swissp_raw %>%
+swiss_filt = swissp_raw %>% 
+  filter(pident > 35) %>% 
   group_by(qseqid) %>%
   slice_max(bitscore, n = 1,with_ties = FALSE) %>%
   ungroup()  %>% mutate("scov" =  (send - sstart) / slen * 100) %>%
   select(qseqid,qcovs,scov,pident) %>%
-  rename("tid"= qseqid,"swiss_qcov" = qcovs,"swiss_scov" = scov,"swiss_pident" = pident)
+  dplyr::rename("tid"= qseqid,"swiss_qcov" = qcovs,"swiss_scov" = scov,"swiss_pident" = pident)
+
 
 #eggnog
 egg_filt = eggnog_seed %>%
   select(X.qseqid,qcov,scov,pident) %>%
-  rename("tid" = X.qseqid,"egg_qcov" = qcov,"egg_scov" = scov, "egg_pident" = pident)
+  dplyr::rename("tid" = X.qseqid,"egg_qcov" = qcov,"egg_scov" = scov, "egg_pident" = pident)
 
 
 #read in gffread results stringtie transcripts vs gene models
@@ -195,42 +200,231 @@ string_results_all = string_results_all %>%
   filter(V4 == "=") %>%
   select(V5) %>%
   mutate(tid = sapply(strsplit(as.character(V5), split = "\\|"), function(x)  x[2] )) %>% 
-  mutate(V5 = 1) %>% rename("stringtie" = V5)
+  mutate(V5 = 1) %>% dplyr::rename("stringtie" = V5)
+
 
 scoring_df = left_join(x = scoring_df,y = egg_filt,"tid")
 scoring_df = left_join(x = scoring_df,y = tair_filt,"tid")
 scoring_df = left_join(x = scoring_df,y = swiss_filt,"tid")
 scoring_df = left_join(x = scoring_df,y = string.results.all,"tid") %>% 
-mutate(stringtie = replace_na(stringtie, 0))
+dplyr::mutate(stringtie = tidyr::replace_na(stringtie, 0))
+
 ```
+
+#### Plots: looking at different thresholds of scov 
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+
+#Create a dataframe with th enumber of proteins with hits above a set of scoverage thresholds so 
+# I can plot the difference between liftoff genes and braker genes
+
+thresholds = c(0,10, 20, 30, 40, 50, 60, 70, 80, 90)
+threshold.results = data.frame()
+for (threshold in thresholds) {
+  for (coverage in c('egg_scov', 'tair_scov', 'swiss_scov')) {
+    temp = scoring_df %>%
+      filter(!!as.name(coverage) >= threshold) %>%
+      group_by(Method) %>%
+      summarise(Count = n()) %>%
+      mutate(Coverage = coverage, Threshold = threshold)
+    threshold.results = rbind(threshold.results,temp)
+  }
+}
+
+
+
+#get the total number of genes in each method so we can express numbers as % of total
+liftoff.genes = scoring_df %>% filter(Method == "Liftoff") %>% nrow()
+braker.genes = scoring_df %>% filter(Method == "Braker3") %>% nrow()
+
+
+
+#Get numbers passing threshold as percentage of total proteins in each method cat
+threshold.results.pc = threshold.results %>%
+  mutate(perc_total = case_when(
+    Method == "Liftoff" ~ round((Count / liftoff.genes) * 100,digits = 2),
+    Method == "Braker3" ~ round((Count / braker.genes) * 100,digits = 2)
+  ))
+
+
+
+# Enhanced ggplot
+sscov.thresh.plot = ggplot(threshold.results.pc, aes(x = Threshold, y = perc_total, color = Coverage, group = interaction(Coverage, Method))) +
+  geom_line( size = 0.25, position = position_dodge(0.2)) +  # Adjusted line aesthetics
+  geom_point() +  # Adjusted point aesthetics
+  facet_wrap(~Method) +
+    scale_color_viridis_d(option = "D") +
+  theme_minimal(base_size = 10) +  # Using a minimal theme for a cleaner look
+  theme(legend.position = "bottom") +  # Moving legend to the bottom
+  labs(
+    title = "Proteins (%) passing threshold filters vs eggnog,swissprot,tair",  # Add a title
+    x = "Threshold (percentage subject coverage)",  # Customizing x-axis label
+    y = "Percentage of total proteins remaining",  # Customizing y-axis label
+    fill = "Database",  # Customizing legend title for fill
+    color = "Database"  # Customizing legend title for color
+  )
+
+ggsave(plot = sscov.thresh.plot,
+       filename = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/sscov.thresh.plot.png",
+       device = "png",
+       units = "cm",
+       width = 15,
+       height = 21,
+       dpi = 300,
+       bg = "white")
+```
+
+```         
+```
+
+#### **Identity vs coverage plots**
 
 ```{r}
 
-#Remove isoforms that aren't supported by stringtie evidence (when at least another isoform at that locus has evidence)
+idcov.tair = ggplot(scoring_df, aes(x = tair_scov, y = tair_pident, color = Method)) +
+  geom_point(stat = 'identity', size = 0.5,alpha = 0.4) +  
+  theme_minimal(base_size = 10) +  
+  scale_color_viridis_d(option = "D", begin = 0.2, end = 0.8, direction = 1, name = "Method") +
+  labs(title = "Hits against tair protein db",
+       x = "Coverage(Subject)",
+       y = "Percentage identity")
 
-#If a gene has 1 or more transcripts that have stringtie evidence remove any isoforms that don't have stringtie evidence
-transcript_filter = function(df, group_id) {
-  # Convert the group_id string into a symbol
+
+idcov.egg = ggplot(scoring_df, aes(x = egg_scov, y = egg_pident, color = Method)) +
+   geom_point(stat = 'identity', size = 0.5,alpha = 0.4) +   
+  theme_minimal(base_size = 10) +  
+  scale_color_viridis_d(option = "D", begin = 0.2, end = 0.8, direction = 1, name = "Method") +
+  labs(title = "Hits against eggnog protein db",
+       x = "Coverage(Subject)",
+       y = "Percentage identity")
+
+
+idcov.swiss = ggplot(scoring_df, aes(x = swiss_scov, y = swiss_pident, color = Method)) +
+  geom_point(stat = 'identity', size = 0.5,alpha = 0.4) + 
+  theme_minimal(base_size = 10) + 
+  scale_color_viridis_d(option = 'D', begin = 0.2, end = 0.8, direction = 1, name = "Method") +
+  labs(title = "Hits against swissprot protein db",
+       x = "Coverage(Subject)",
+       y = "Percentage identity")
+
+
+ggsave(plot = idcov.egg,
+       filename = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/idcov.egg.png",
+       device = "png",
+       units = "cm",
+       width = 15,
+       height = 15,
+       dpi = 300,
+       bg = "white")
+
+ggsave(plot = idcov.tair,
+       filename = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/idcov.tair.png",
+       device = "png",
+       units = "cm",
+       width = 15,
+       height = 15,
+       dpi = 300,
+       bg = "white")
+
+ggsave(plot = idcov.swiss,
+       filename = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/idcov.swiss.png",
+       device = "png",
+       units = "cm",
+       width = 15,
+       height = 15,
+       dpi = 300,
+       bg = "white")
+```
+
+Select the best transcripts and gene models to be selected by pangene
+
+```{r}
+ tsdf = scoring_df
+ 
+## We aren't going to support isoforms in this release so first step is start removing those isoforms we are confident are 
+## wrong given our evidence
+###  Remove isoforms that aren't supported by stringtie evidence (when at least another isoform at that locus has evidence)
+
+ transcript_filter <- function(df, group_id) {
   group_col <- sym(group_id)
-
-  # Add a helper column to identify groups with at least one stringtie == 1
   df <- df %>%
     group_by(.data[[group_col]]) %>%
     mutate(has_stringtie_1 = any(stringtie == 1)) %>%
     ungroup()
-
-  # Filter out rows where stringtie == 0 only in groups that have a stringtie == 1
   filtered_df <- df %>%
     filter(!(stringtie == 0 & has_stringtie_1)) %>%
     select(-has_stringtie_1)  # Remove the helper column
-
-  return(filtered_df)
+   return(filtered_df)
 }
 
 
-# Apply the function 
-scoring_df = transcript_filter(scoring_df,group_id = "ID") %>%  mutate("Tier" = ifelse(Method == "Liftoff", "Gold",NA))
+ #label the transcripts as gold / grey
+transcript_labeler <- function(df, group_id, scov) {
+ df <- df %>%
+    group_by(!!sym(group_id)) %>%
+    mutate(has_stringtie_1 = any(stringtie == 1),
+           Tier = if_else(stringtie == 0 & has_stringtie_1 & Tier != "grey", "grey", Tier)) %>%
+    ungroup() %>%
+    select(-has_stringtie_1)
+
+  golds <- df %>%
+    filter(((egg_scov > scov & Method == "Braker3") | Method == "Liftoff") & Tier != "grey") %>%
+    group_by(!!sym(group_id)) %>%
+    arrange(desc(swiss_scov), desc(tair_scov), desc(egg_scov), .by_group = TRUE) %>%
+    slice_head(n = 1) %>%
+    ungroup() %>%
+    mutate(Tier_Gold = "Gold") %>%
+    select(tid, Tier_Gold)
 
 
-scoring_df %>% filter(egg_scov < 50,swiss_scov < 50,tair_scov < 50,Method == "Braker3")
+  df <- left_join(df, golds, by = "tid")
+  df <- df %>%
+    mutate(Tier = ifelse(!is.na(Tier_Gold) & Tier != "grey", "Gold", Tier)) %>%
+    select(-Tier_Gold) 
+
+  return(df)
+}
+
+ 
+#testing the new func
+
+tl.test = transcript_labeler(scoring_df,group_id = "ID",scov = 50) 
+
+# transcript labeler function working but need to check further
+
+
+
+#this function will filter by a certain scov value and then pick best transcript labelling gold
+select_gold <- function(df, group_id, scov) {
+  group_col = sym(group_id)
+  gold.genes = df %>%
+    filter((egg_scov > scov & Method == "Braker3") | Method == "Liftoff") %>%
+    group_by(.data[[group_col]]) %>%
+    arrange(desc(swiss_scov), desc(tair_scov), desc(egg_scov), .by_group = TRUE) %>%
+    slice_head(n = 1) %>%
+    mutate("Tier" = "Gold") %>%
+    ungroup() %>%
+    select(tid, Tier) %>%
+   as.data.frame() 
+   df <- df %>%
+    left_join(gold.genes, by = "tid") %>%
+    mutate(Tier = ifelse(is.na(Tier), "", Tier))  
+   return(df)
+}
+
+
+
+df.gold = select_gold(df = sdf.sf,group_id = "ID",scov = 50)
+
+
+
+
+
+
+
+
+
 ```
