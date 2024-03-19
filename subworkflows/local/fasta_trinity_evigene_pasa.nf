@@ -19,6 +19,7 @@ workflow FASTA_TRINITY_EVIGENE_PASA {
                                 | map { meta, group -> [ meta, group.flatten() ] }
                                 // TODO: This logic might break when single_end
                                 // true and false are mixed
+                                // Need to bifurcate samples into groups by reads_target
 
     TRINITY ( ch_all_trim_reads )
 
