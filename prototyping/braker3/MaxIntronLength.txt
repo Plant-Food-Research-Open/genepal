@@ -1,0 +1,13 @@
+To get true intron length, GenomeTools "gt interfeat" is used to insert missing introns in GFF3 files.
+
+Russell Intron Length Quantiles:
+--------------------------------
+
+100%    99%     95%     90%     80%     70%
+93480   7458    3419    2259    1324    882
+
+Red5 Intron Length Quantiles:
+-----------------------------
+
+100%    99%     95%     90%     80%     70%
+69586   7276    3339    2204    1291    858
