@@ -15,5 +15,4 @@ __pycache__
 *.stdout
 *.stderr
 
-.literature
 pangene-test/
