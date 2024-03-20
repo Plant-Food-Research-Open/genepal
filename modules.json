@@ -20,11 +20,6 @@
                         "git_sha": "35468dbb1f35eb17a43d7e05544601c7c3f8cd90",
                         "installed_by": ["fasta_edta_lai"]
                     },
-                    "liftoff": {
-                        "branch": "main",
-                        "git_sha": "444b35f4e6285115f84d2bfce49fc0e6d8a2754e",
-                        "installed_by": ["modules"]
-                    },
                     "ltrretriever/lai": {
                         "branch": "main",
                         "git_sha": "154661d7c1769532ff7b5f11259644ec200dd47d",
@@ -109,6 +104,11 @@
                     "gunzip": {
                         "branch": "master",
                         "git_sha": "3a5fef109d113b4997c9822198664ca5f2716208",
+                        "installed_by": ["modules"]
+                    },
+                    "liftoff": {
+                        "branch": "master",
+                        "git_sha": "8ce34a40589137b75b65dfe8bb334c9b94f1d6c8",
                         "installed_by": ["modules"]
                     },
                     "samtools/cat": {

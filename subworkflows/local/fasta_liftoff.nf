@@ -1,7 +1,7 @@
 include { GUNZIP as GUNZIP_FASTA    } from '../../modules/nf-core/gunzip'
 include { GUNZIP as GUNZIP_GFF      } from '../../modules/nf-core/gunzip'
 include { GFFREAD                   } from '../../modules/nf-core/gffread'
-include { LIFTOFF                   } from '../../modules/pfr/liftoff'
+include { LIFTOFF                   } from '../../modules/nf-core/liftoff'
 
 workflow FASTA_LIFTOFF {
     take:
@@ -83,7 +83,8 @@ workflow FASTA_LIFTOFF {
     LIFTOFF(
         ch_liftoff_inputs.map { meta, target_fa, ref_fa, ref_gff -> [ meta, target_fa ] },
         ch_liftoff_inputs.map { meta, target_fa, ref_fa, ref_gff -> ref_fa },
-        ch_liftoff_inputs.map { meta, target_fa, ref_fa, ref_gff -> ref_gff }
+        ch_liftoff_inputs.map { meta, target_fa, ref_fa, ref_gff -> ref_gff },
+        []
     )
 
     ch_liftoff_gff3                 = LIFTOFF.out.polished_gff3
