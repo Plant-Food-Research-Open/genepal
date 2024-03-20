@@ -11,10 +11,10 @@ keywords:
   - stats
   - qc
 components:
-  - custom/restoregffids
-  - custom/shortenfastaids
   - edta/edta
-  - lai
+  - custom/restoregffids
+  - ltrretriever/lai
+  - custom/shortenfastaids
 input:
   - ch_fasta:
       type: file

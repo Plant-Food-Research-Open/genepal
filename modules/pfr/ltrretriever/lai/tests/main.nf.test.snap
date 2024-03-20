@@ -1,5 +1,5 @@
 {
-    "actinidia_chinensis-genome_21_fasta_gz-stub": {
+    "stub": {
         "content": [
             {
                 "0": [
@@ -7,7 +7,7 @@
                         {
                             "id": "test"
                         },
-                        "test.EDTA.TElib.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.LAI.log:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "1": [
@@ -15,37 +15,11 @@
                         {
                             "id": "test"
                         },
-                        "test.EDTA.TEanno.gff3:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "2": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.LAI.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "3": [
-                    [
-                        {
-                            "id": "test"
-                        },
                         "test.LAI.out:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "4": [
-                    "versions.yml:md5,0d4bc49e94acb8995ca552d4e666e3ce",
-                    "versions.yml:md5,65666e975bdfd71978843ca963e84d0c",
-                    "versions.yml:md5,754bb19f86be761d90c002a0af2faf1c"
-                ],
-                "lai_log": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.LAI.log:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                "2": [
+                    "versions.yml:md5,e04e27f9408e771795cd44d96518b7cd"
                 ],
                 "lai_out": [
                     [
@@ -55,26 +29,16 @@
                         "test.LAI.out:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "te_anno_gff3": [
+                "log": [
                     [
                         {
                             "id": "test"
                         },
-                        "test.EDTA.TEanno.gff3:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
-                ],
-                "te_lib_fasta": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.EDTA.TElib.fa:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.LAI.log:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0d4bc49e94acb8995ca552d4e666e3ce",
-                    "versions.yml:md5,65666e975bdfd71978843ca963e84d0c",
-                    "versions.yml:md5,754bb19f86be761d90c002a0af2faf1c"
+                    "versions.yml:md5,e04e27f9408e771795cd44d96518b7cd"
                 ]
             }
         ],
@@ -82,6 +46,55 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-03-20T18:05:46.667121"
+        "timestamp": "2024-02-22T20:09:00.558021"
+    },
+    "stub_with_monoploid_seqs": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.LAI.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.LAI.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,e04e27f9408e771795cd44d96518b7cd"
+                ],
+                "lai_out": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.LAI.out:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "log": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.LAI.log:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e04e27f9408e771795cd44d96518b7cd"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-22T20:10:08.213842"
     }
 }

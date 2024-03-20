@@ -84,7 +84,8 @@ workflow PREPROCESS_RNASEQ {
     // MODULE: SORTMERNA
     SORTMERNA(
         remove_ribo_rna ? ch_trim_reads : Channel.empty(),
-        sortmerna_fastas
+        sortmerna_fastas.map { fastas -> [ [], fastas ] },
+        [ [], [] ]
     )
 
     ch_emitted_reads                = remove_ribo_rna

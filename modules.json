@@ -8,27 +8,27 @@
                     "custom/restoregffids": {
                         "branch": "main",
                         "git_sha": "e9f6bdd634bdbcd52c5568ba82f16176ec06631f",
-                        "installed_by": ["fasta_edta_lai", "modules"]
+                        "installed_by": ["fasta_edta_lai"]
                     },
                     "custom/shortenfastaids": {
                         "branch": "main",
                         "git_sha": "5e0e41b51d7fc7f68ae43692b6fe19b95d7f3a8c",
-                        "installed_by": ["fasta_edta_lai", "modules"]
+                        "installed_by": ["fasta_edta_lai"]
                     },
                     "edta/edta": {
                         "branch": "main",
                         "git_sha": "35468dbb1f35eb17a43d7e05544601c7c3f8cd90",
-                        "installed_by": ["fasta_edta_lai", "modules"]
-                    },
-                    "lai": {
-                        "branch": "main",
-                        "git_sha": "7e6e3cb41362a045c6bb6065903efa0eba246e87",
                         "installed_by": ["fasta_edta_lai"]
                     },
                     "liftoff": {
                         "branch": "main",
                         "git_sha": "444b35f4e6285115f84d2bfce49fc0e6d8a2754e",
                         "installed_by": ["modules"]
+                    },
+                    "ltrretriever/lai": {
+                        "branch": "main",
+                        "git_sha": "154661d7c1769532ff7b5f11259644ec200dd47d",
+                        "installed_by": ["fasta_edta_lai"]
                     },
                     "repeatmodeler/builddatabase": {
                         "branch": "main",
@@ -46,7 +46,7 @@
                 "pfr": {
                     "fasta_edta_lai": {
                         "branch": "main",
-                        "git_sha": "5ae026a98da1331433fa4cf5b667c9abdf43e395",
+                        "git_sha": "ba9c14555adf50c193f326dc91f48b770fe9b1ae",
                         "installed_by": ["subworkflows"]
                     }
                 }
@@ -73,17 +73,17 @@
                 "nf-core": {
                     "cat/cat": {
                         "branch": "master",
-                        "git_sha": "d593e8f6b7d1bbbb2acf43a4b9efeeac8d6720f2",
+                        "git_sha": "9437e6053dccf4aafa022bfd6e7e9de67e625af8",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "0997b47c93c06b49aa7b3fefda87e728312cf2ca",
                         "installed_by": ["modules"]
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "8ec825f465b9c17f9d83000022995b4f7de6fe93",
+                        "git_sha": "de45447d060b8c8b98575bc637a4a575fd0638e1",
                         "installed_by": ["modules"]
                     },
                     "fastavalidator": {
@@ -93,47 +93,47 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "d086322563bdbb08c94bf15a7db58a39ccdb1520",
+                        "git_sha": "95cf5fe0194c7bf5cb0e3027a2eb7e7c89385080",
                         "installed_by": ["fastq_fastqc_umitools_fastp"]
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "617777a807a1770f73deb38c80004bac06807eef",
+                        "git_sha": "f4ae1d942bd50c5c0b9bd2de1393ce38315ba57c",
                         "installed_by": ["fastq_fastqc_umitools_fastp", "modules"]
                     },
                     "gffread": {
                         "branch": "master",
-                        "git_sha": "a2d6c3082c5c44b4155a3246daff36701ee49af8",
+                        "git_sha": "b1b959609bda44341120aed1766329909f54b8d0",
                         "installed_by": ["modules"]
                     },
                     "gunzip": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "3a5fef109d113b4997c9822198664ca5f2716208",
                         "installed_by": ["modules"]
                     },
                     "samtools/cat": {
                         "branch": "master",
-                        "git_sha": "a64788f5ad388f1d2ac5bd5f1f3f8fc81476148c",
+                        "git_sha": "f4596fe0bdc096cf53ec4497e83defdb3a94ff62",
                         "installed_by": ["modules"]
                     },
                     "sortmerna": {
                         "branch": "master",
-                        "git_sha": "ce558e30784469b88a16923ca96d81899d240b42",
+                        "git_sha": "df05c8db5195867c0bc7b92c1788115b66f0d17d",
                         "installed_by": ["modules"]
                     },
                     "star/align": {
                         "branch": "master",
-                        "git_sha": "a64788f5ad388f1d2ac5bd5f1f3f8fc81476148c",
+                        "git_sha": "a21faa6a3481af92a343a10926f59c189a2c16c9",
                         "installed_by": ["modules"]
                     },
                     "star/genomegenerate": {
                         "branch": "master",
-                        "git_sha": "d87a6e2156c2099c09280fa70776eaf0a824817a",
+                        "git_sha": "a21faa6a3481af92a343a10926f59c189a2c16c9",
                         "installed_by": ["modules"]
                     },
                     "umitools/extract": {
                         "branch": "master",
-                        "git_sha": "65ad3e0b9a4099592e1102e92e10455dc661cf53",
+                        "git_sha": "d2c5e76f291379f3dd403e48e46ed7e6ba5da744",
                         "installed_by": ["fastq_fastqc_umitools_fastp"]
                     }
                 }
@@ -142,7 +142,7 @@
                 "nf-core": {
                     "fastq_fastqc_umitools_fastp": {
                         "branch": "master",
-                        "git_sha": "3e8b0c1144ccf60b7848efbdc2be285ff20b49ee",
+                        "git_sha": "cabcc0dadf8366aa7a9930066a7b3dd90d9825d5",
                         "installed_by": ["subworkflows"]
                     }
                 }
