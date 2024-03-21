@@ -1,5 +1,6 @@
 include { CAT_FASTQ                     } from '../../modules/nf-core/cat/fastq'
-include { SORTMERNA                     } from '../../modules/nf-core/sortmerna'
+include { SORTMERNA as SORTMERNA_INDEX  } from '../../modules/nf-core/sortmerna'
+include { SORTMERNA as SORTMERNA_READS  } from '../../modules/nf-core/sortmerna'
 include { EXTRACT_SAMPLES               } from '../../subworkflows/local/extract_samples'
 include { FASTQ_FASTQC_UMITOOLS_FASTP   } from '../../subworkflows/nf-core/fastq_fastqc_umitools_fastp'
 
@@ -15,7 +16,7 @@ workflow PREPROCESS_RNASEQ {
     sortmerna_fastas                // channel: [ [ fasta ] ]
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions                     = Channel.empty()
 
     // SUBWORKFLOW: EXTRACT_SAMPLES
     EXTRACT_SAMPLES(
@@ -81,17 +82,36 @@ workflow PREPROCESS_RNASEQ {
 
     ch_versions                     = ch_versions.mix(FASTQ_FASTQC_UMITOOLS_FASTP.out.versions.first())
 
-    // MODULE: SORTMERNA
-    SORTMERNA(
-        remove_ribo_rna ? ch_trim_reads : Channel.empty(),
-        sortmerna_fastas.map { fastas -> [ [], fastas ] },
+
+    // MODULE: SORTMERNA as SORTMERNA_INDEX
+    SORTMERNA_INDEX(
+        [ [ id: 'idx' ], [] ],
+        sortmerna_fastas.map { fastas -> [ [ id: 'fastas' ], fastas ] },
         [ [], [] ]
     )
 
+    ch_versions                     = ch_versions.mix(SORTMERNA_INDEX.out.versions)
+
+    // MODULE: SORTMERNA as SORTMERNA_READS
+    ch_sortmerna_inputs             = remove_ribo_rna
+                                    ? ch_trim_reads
+                                    | combine(
+                                        sortmerna_fastas
+                                        | map { fastas -> [ [ id: 'fastas' ], fastas ] }
+                                        | join(SORTMERNA_INDEX.out.index)
+                                    )
+                                    : Channel.empty()
+
+    SORTMERNA_READS(
+        ch_sortmerna_inputs.map { meta, reads, meta2, fastas, idx -> [ meta, reads ] },
+        ch_sortmerna_inputs.map { meta, reads, meta2, fastas, idx -> [ meta2, fastas ] },
+        ch_sortmerna_inputs.map { meta, reads, meta2, fastas, idx -> [ meta2, idx ] }
+    )
+
     ch_emitted_reads                = remove_ribo_rna
-                                    ? SORTMERNA.out.reads
+                                    ? SORTMERNA_READS.out.reads
                                     : ch_trim_reads
-    ch_versions                     = ch_versions.mix(SORTMERNA.out.versions.first())
+    ch_versions                     = ch_versions.mix(SORTMERNA_READS.out.versions.first())
 
 
 

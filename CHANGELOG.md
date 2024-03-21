@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.2+dev - [20-Mar-2024]
+## 0.2.0+dev - [21-Mar-2024]
 
 ### `Added`
 
@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 7. Added versioning checking
 8. Updated github workflow to use pre-commit instead of prettier and editorconfig check
 9. Added central singularity cache dir for pfr config
+10. Added `SORTMERNA_INDEX` before `SORTMERNA`
 
 ### `Fixed`
 
