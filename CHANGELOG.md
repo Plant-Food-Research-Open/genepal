@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 8. Updated github workflow to use pre-commit instead of prettier and editorconfig check
 9. Added central singularity cache dir for pfr config
 10. Added `SORTMERNA_INDEX` before `SORTMERNA`
+11. Fixed sample contamination bug introduced by `file.simpleName`
+12. Now using empty files for stub testing in CI
 
 ### `Fixed`
 

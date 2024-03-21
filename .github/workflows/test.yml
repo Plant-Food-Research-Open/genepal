@@ -45,12 +45,10 @@ jobs:
           ssh-key: ${{ secrets.PANGENE_TEST_DEPLOY_KEY }}
           path: pangene-test
 
-      - uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "17"
-      - name: Setup Nextflow
+      - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
+        with:
+          version: "23.04.4"
 
       - name: Run stub-test
         run: |
@@ -59,7 +57,7 @@ jobs:
             -profile local,docker \
             -resume \
             -stub \
-            -params-file conf/test_params.json
+            -c conf/test_stub.config
 
   confirm-pass:
     runs-on: ubuntu-latest

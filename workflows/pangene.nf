@@ -1,4 +1,5 @@
 include { validateParams                } from '../modules/local/validate_params'
+include { id_from_file_name             } from '../modules/local/validate_params'
 include { PREPARE_ASSEMBLY              } from '../subworkflows/local/prepare_assembly'
 include { PREPROCESS_RNASEQ             } from '../subworkflows/local/preprocess_rnaseq'
 include { ALIGN_RNASEQ                  } from '../subworkflows/local/align_rnaseq'
@@ -46,7 +47,7 @@ workflow PANGENE {
                                 ? Channel.fromList(params.external_protein_fastas)
                                 | map { filePath ->
                                     def fileHandle = file(filePath, checkIfExists: true)
-                                    [ [ id: fileHandle.getSimpleName() ], fileHandle]
+                                    [ [ id: id_from_file_name( fileHandle.baseName ) ], fileHandle]
                                 }
                                 : Channel.empty()
 
@@ -55,8 +56,8 @@ workflow PANGENE {
                                 | multiMap { fasta, gff ->
                                     def fastaFile = file(fasta, checkIfExists:true)
 
-                                    fasta: [ [ id: fastaFile.getSimpleName() ], fastaFile ]
-                                    gff: [ [ id: fastaFile.getSimpleName() ], file(gff, checkIfExists:true) ]
+                                    fasta: [ [ id: id_from_file_name( fastaFile.baseName ) ], fastaFile ]
+                                    gff: [ [ id: id_from_file_name( fastaFile.baseName ) ], file(gff, checkIfExists:true) ]
                                 }
                                 : Channel.empty()
 

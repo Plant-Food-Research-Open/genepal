@@ -102,3 +102,21 @@ def validateLiftoffXrefs(params) {
 def isNotListOfLists(thisOne, subListSize) {
     return (!(thisOne instanceof List) || thisOne.isEmpty() || thisOne.any { !(it instanceof List) || it.size() != subListSize })
 }
+
+def id_from_file_name(file_name) {
+
+    def trial = ( file_name
+        ).replaceFirst(
+            /\.f(ast)?q$/, ''
+        ).replaceFirst(
+            /\.f(asta|sa|a|as|aa)?$/, ''
+        ).replaceFirst(
+            /\.gff(3)?$/, ''
+        ).replaceFirst(
+            /\.gz$/, ''
+        )
+
+    if ( trial == file_name ) { return file_name }
+
+    return id_from_file_name ( trial )
+}

@@ -1,28 +1,29 @@
 {
     "target_assemblies": [
-        ["red5_v2p1", "pangene-test/target/red5_v2p1_chr1_1200k.fasta.gz"],
-        ["donghong", "pangene-test/target/donghong_chr1_600k.fsa.gz"]
+        ["red5_v2p1", "pangene-test/target/red5_v2p1_chr1.fasta.gz"],
+        ["donghong", "pangene-test/target/donghong.chr1.fsa.gz"]
     ],
 
-    "te_libraries": [["donghong", "pangene-test/te_lib/donghong.TElib.fa.gz"]],
+    "te_libraries": [
+        ["red5_v2p1", "pangene-test/te_lib/red5_v2p1.fa.gz"],
+        ["donghong", "pangene-test/te_lib/donghong.TElib.fa.gz"]
+    ],
 
-    "samplesheet": "pangene-test/samplesheet/samplesheet.csv",
+    "samplesheet": "pangene-test/fq/fastqsheet.csv",
 
     "remove_ribo_rna": true,
     "ribo_database_manifest": "assets/rrna-db-test.txt",
 
     "external_protein_fastas": [
-        "pangene-test/ext_prot/RU01_20221115150135_chr1_600k.pep.fasta.gz",
-        "pangene-test/ext_prot/RU01_20221115150135_chr2_600k.pep.fasta.gz"
+        "pangene-test/ext_prot/RU01.20221115150135.chr1.pep.fasta.gz",
+        "pangene-test/ext_prot/RU01.20221115150135.chr2.pep.fasta.gz"
     ],
-
-    "braker_extra_args": "--testMode --species=arabidopsis --useexisting",
 
     "liftoff_xref_annotations": [
-        ["pangene-test/liftoff/Russell_V2a_chr1_600k.fsa.gz", "pangene-test/liftoff/Russell_V2a_chr1_600k.gff3.gz"],
-        ["pangene-test/liftoff/TAIR10_chr1_600k.fas.gz", "pangene-test/liftoff/TAIR10_chr1_600k.gff3.gz"]
+        ["pangene-test/liftoff/Russell_V2a.chr1.fsa.gz", "pangene-test/liftoff/RU01.20221115150135.chr1.gff3.gz"],
+        ["pangene-test/liftoff/Russell_V2a.chr2.fsa.gz", "pangene-test/liftoff/RU01.20221115150135.chr2.gff3.gz"]
     ],
 
-    "max_cpus": 2,
-    "max_memory": "3.GB"
+    "max_cpus": 8,
+    "max_memory": "32.GB"
 }

@@ -47,13 +47,13 @@ workflow FASTA_LIFTOFF {
     // MODULE: GFFREAD
     ch_gffread_inputs               = ch_xref_gunzip_gff
                                     | map { meta, gff ->
-                                        [ gff.getSimpleName(), meta, gff ]
+                                        [ gff.baseName, meta, gff ]
                                     } // For meta insertion later, remove when GFFREAD has meta
 
     GFFREAD ( ch_gffread_inputs.map { name, meta, gff -> gff } )
 
     ch_gffread_gff                  = GFFREAD.out.gffread_gff
-                                    | map { gff -> [ gff.getSimpleName(), gff ] }
+                                    | map { gff -> [ gff.baseName - '.gffread', gff ] }
                                     | join(ch_gffread_inputs)
                                     | map { fid, gffread_gff, meta, gff -> [ meta, gffread_gff ] }
                                     // meta insertion
