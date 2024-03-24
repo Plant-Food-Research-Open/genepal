@@ -3,27 +3,22 @@
         ["red5_v2p1", "pangene-test/target/red5_v2p1_chr1.fasta.gz"],
         ["donghong", "pangene-test/target/donghong.chr1.fsa.gz"]
     ],
-
     "te_libraries": [
         ["red5_v2p1", "pangene-test/te_lib/red5_v2p1.fa.gz"],
         ["donghong", "pangene-test/te_lib/donghong.TElib.fa.gz"]
     ],
-
     "samplesheet": "pangene-test/fq/fastqsheet.csv",
-
     "remove_ribo_rna": true,
     "ribo_database_manifest": "assets/rrna-db-test.txt",
-
     "external_protein_fastas": [
         "pangene-test/ext_prot/RU01.20221115150135.chr1.pep.fasta.gz",
         "pangene-test/ext_prot/RU01.20221115150135.chr2.pep.fasta.gz"
     ],
-
+    "braker_extra_args": "--rounds=1",
     "liftoff_xref_annotations": [
         ["pangene-test/liftoff/Russell_V2a.chr1.fsa.gz", "pangene-test/liftoff/RU01.20221115150135.chr1.gff3.gz"],
         ["pangene-test/liftoff/Russell_V2a.chr2.fsa.gz", "pangene-test/liftoff/RU01.20221115150135.chr2.gff3.gz"]
     ],
-
     "max_cpus": 8,
     "max_memory": "32.GB"
 }
