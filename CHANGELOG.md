@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 12. Now using empty files for stub testing in CI
 13. Now BRAKER can be skipped by including BRAKER outputs from previous runs in the `target_assemblies` param
 14. Added `gffcompare` to merge liftoff annotations
+15. Renamed `samplesheet` param to `fastq`
 
 ### `Fixed`
 

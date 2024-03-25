@@ -6,7 +6,7 @@ include { FASTQ_FASTQC_UMITOOLS_FASTP   } from '../../subworkflows/nf-core/fastq
 
 workflow PREPROCESS_RNASEQ {
     take:
-    samplesheet                     // path: csv
+    fastqsheet                      // path: csv
     permissible_assemblies          // val: assembly_a,assembly_b
     exclude_assemblies              // channel: val(assembly_x,assembly_y)
     skip_fastqc                     // val: true|false
@@ -21,7 +21,7 @@ workflow PREPROCESS_RNASEQ {
 
     // SUBWORKFLOW: EXTRACT_SAMPLES
     EXTRACT_SAMPLES(
-        samplesheet,
+        fastqsheet,
         permissible_assemblies,
         exclude_assemblies
     )

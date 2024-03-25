@@ -48,8 +48,8 @@ workflow PANGENE {
                                     [ [ id:tag ], file(fasta, checkIfExists: true) ]
                                 }
 
-    ch_samplesheet              = params.samplesheet
-                                ? Channel.fromPath(params.samplesheet, checkIfExists: true)
+    ch_fastqsheet               = params.fastq
+                                ? Channel.fromPath(params.fastq, checkIfExists: true)
                                 : Channel.empty()
 
     ch_tar_assm_str             = Channel.of(
@@ -103,7 +103,7 @@ workflow PANGENE {
 
     // SUBWORKFLOW: PREPROCESS_RNASEQ
     PREPROCESS_RNASEQ(
-        ch_samplesheet,
+        ch_fastqsheet,
         ch_tar_assm_str,
         ch_braker_ex_asm_str,
         params.skip_fastqc,

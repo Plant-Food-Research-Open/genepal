@@ -17,7 +17,7 @@
         ["red5_v2p1", "pangene-test/te_lib/red5_v2p1.fa.gz"],
         ["donghong", "pangene-test/te_lib/donghong.TElib.fa.gz"]
     ],
-    "samplesheet": "pangene-test/fq/fastqsheet.csv",
+    "fastq": "pangene-test/fq/fastqsheet.csv",
     "remove_ribo_rna": true,
     "ribo_database_manifest": "assets/rrna-db-test.txt",
     "external_protein_fastas": [

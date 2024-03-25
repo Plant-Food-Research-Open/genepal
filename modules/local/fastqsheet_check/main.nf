@@ -5,8 +5,8 @@
 // Changes:
 // Added channel permissible_target_assemblies
 
-process SAMPLESHEET_CHECK {
-    tag "$samplesheet"
+process FASTQSHEET_CHECK {
+    tag "$fastqsheet"
     label 'process_single'
 
     conda "conda-forge::python=3.9.5"
@@ -15,7 +15,7 @@ process SAMPLESHEET_CHECK {
         'biocontainers/python:3.9--1' }"
 
     input:
-    path samplesheet
+    path fastqsheet
     val permissible_target_assemblies
 
     output:
@@ -27,10 +27,10 @@ process SAMPLESHEET_CHECK {
 
     script:
     """
-    check_samplesheet.py \\
-        $samplesheet \\
+    check_fastqsheet.py \\
+        $fastqsheet \\
         "$permissible_target_assemblies" \\
-        samplesheet.valid.csv
+        fastqsheet.valid.csv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

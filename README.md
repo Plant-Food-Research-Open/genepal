@@ -30,8 +30,8 @@ flowchart TD
     TE_LIBRARIES --> REPEATMASKER
     te_lib_absent_node --> REPEATMASKER
 
-    subgraph Samplesheet [ ]
-    SAMPLESHEET
+    subgraph Fastq [ ]
+    FASTQ
     CAT_FASTQ
     FASTQC
     FASTP
@@ -42,10 +42,10 @@ flowchart TD
     SAMTOOLS_CAT
     end
 
-    SAMPLESHEET([samplesheet])
-    SAMPLESHEET --> |Tech. reps|CAT_FASTQ
+    FASTQ([fastq])
+    FASTQ --> |Tech. reps|CAT_FASTQ
     CAT_FASTQ --> FASTQC
-    SAMPLESHEET --> FASTQC
+    FASTQ --> FASTQC
     FASTQC --> FASTP
     FASTP --> FASTP_FASTQC[FASTQC]
     FASTP_FASTQC --> SORTMERNA
@@ -67,7 +67,7 @@ flowchart TD
     end
 
     PrepareAssembly --> |Fasta, Masked fasta|Annotation
-    Samplesheet --> |RNASeq bam|Annotation
+    Fastq --> |RNASeq bam|Annotation
 
     XREF_ANNOTATIONS --> |xref_gff|GFFREAD
     XREF_ANNOTATIONS --> |xref_fasta|LIFTOFF
@@ -79,7 +79,7 @@ flowchart TD
     anno_bam --> |RNASeq bam|BRAKER3
     CAT --> BRAKER3
 
-    style Samplesheet fill:#00FFFF21,stroke:#00FFFF21
+    style Fastq fill:#00FFFF21,stroke:#00FFFF21
     style PrepareAssembly fill:#00FFFF21,stroke:#00FFFF21
     style Annotation fill:#00FFFF21,stroke:#00FFFF21
 ```
