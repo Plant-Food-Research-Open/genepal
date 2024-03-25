@@ -1,7 +1,9 @@
-include { GUNZIP as GUNZIP_FASTA    } from '../../modules/nf-core/gunzip'
-include { GUNZIP as GUNZIP_GFF      } from '../../modules/nf-core/gunzip'
-include { GFFREAD                   } from '../../modules/nf-core/gffread'
-include { LIFTOFF                   } from '../../modules/nf-core/liftoff'
+include { GUNZIP as GUNZIP_FASTA                    } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_GFF                      } from '../../modules/nf-core/gunzip/main'
+include { GFFREAD as GFFREAD_BEFORE_LIFTOFF         } from '../../modules/nf-core/gffread/main'
+include { LIFTOFF                                   } from '../../modules/nf-core/liftoff/main'
+include { GFFCOMPARE as COMBINE_LIFTOFF_ANNOTATIONS } from '../../modules/nf-core/gffcompare/main'
+include { GFFREAD as GFFREAD_AFTER_LIFTOFF          } from '../../modules/nf-core/gffread/main'
 
 workflow FASTA_LIFTOFF {
     take:
@@ -44,21 +46,21 @@ workflow FASTA_LIFTOFF {
 
     ch_versions                     = ch_versions.mix(GUNZIP_GFF.out.versions.first())
 
-    // MODULE: GFFREAD
+    // MODULE: GFFREAD as GFFREAD_BEFORE_LIFTOFF
     ch_gffread_inputs               = ch_xref_gunzip_gff
                                     | map { meta, gff ->
                                         [ gff.baseName, meta, gff ]
                                     } // For meta insertion later, remove when GFFREAD has meta
 
-    GFFREAD ( ch_gffread_inputs.map { name, meta, gff -> gff } )
+    GFFREAD_BEFORE_LIFTOFF ( ch_gffread_inputs.map { name, meta, gff -> gff } )
 
-    ch_gffread_gff                  = GFFREAD.out.gffread_gff
+    ch_gffread_gff                  = GFFREAD_BEFORE_LIFTOFF.out.gffread_gff
                                     | map { gff -> [ gff.baseName - '.gffread', gff ] }
                                     | join(ch_gffread_inputs)
                                     | map { fid, gffread_gff, meta, gff -> [ meta, gffread_gff ] }
                                     // meta insertion
 
-    ch_versions                     = ch_versions.mix(GFFREAD.out.versions.first())
+    ch_versions                     = ch_versions.mix(GFFREAD_BEFORE_LIFTOFF.out.versions.first())
 
     // MODULE: LIFTOFF
     ch_liftoff_inputs               = target_assemby
@@ -93,7 +95,40 @@ workflow FASTA_LIFTOFF {
 
     ch_versions                     = ch_versions.mix(LIFTOFF.out.versions.first())
 
+    // MODULE: GFFCOMPARE as COMBINE_LIFTOFF_ANNOTATIONS
+    ch_gffcompare_inputs            = ch_liftoff_gff3
+                                    | branch { meta, list_polished ->
+                                        one: list_polished.size() == 1
+                                        many: list_polished.size() > 1
+                                    }
+
+    COMBINE_LIFTOFF_ANNOTATIONS(
+        ch_gffcompare_inputs.many,
+        [ [], [], [] ],
+        [ [], [] ],
+    )
+
+    ch_combined_gtf                 = COMBINE_LIFTOFF_ANNOTATIONS.out.combined_gtf
+    ch_versions                     = ch_versions.mix(COMBINE_LIFTOFF_ANNOTATIONS.out.versions.first())
+
+    // MODULE: GFFREAD as GFFREAD_AFTER_LIFTOFF
+    ch_post_gffread_inputs          = ch_combined_gtf
+                                    | map { meta, gtf ->
+                                        [ gtf.baseName, meta, gtf ]
+                                    } // For meta insertion later, remove when GFFREAD has meta
+
+    GFFREAD_AFTER_LIFTOFF ( ch_post_gffread_inputs.map { name, meta, gtf -> gtf } )
+
+    ch_combined_gff3                = GFFREAD_AFTER_LIFTOFF.out.gffread_gff
+                                    | map { gff -> [ gff.baseName - '.gffread', gff ] }
+                                    | join(ch_post_gffread_inputs)
+                                    | map { fid, gffread_gff, meta, gtf -> [ meta, gffread_gff ] }
+                                    // meta insertion
+                                    | mix(ch_gffcompare_inputs.one)
+
+    ch_versions                     = ch_versions.mix(GFFREAD_AFTER_LIFTOFF.out.versions.first())
+
     emit:
-    gff3        = ch_liftoff_gff3               // [ meta, [ gff3 ] ]
+    gff3        = ch_combined_gff3              // [ meta, gff3 ]
     versions    = ch_versions                   // [ versions.yml ]
 }

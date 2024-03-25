@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.2.0+dev - [21-Mar-2024]
+## 0.2.0+dev - [25-Mar-2024]
 
 ### `Added`
 
@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 10. Added `SORTMERNA_INDEX` before `SORTMERNA`
 11. Fixed sample contamination bug introduced by `file.simpleName`
 12. Now using empty files for stub testing in CI
+13. Now BRAKER can be skipped by including BRAKER outputs from previous runs in the `target_assemblies` param
+14. Added `gffcompare` to merge liftoff annotations
 
 ### `Fixed`
 
