@@ -1,7 +1,17 @@
 {
     "target_assemblies": [
-        ["red5_v2p1", "pangene-test/target/red5_v2p1_chr1.fasta.gz"],
-        ["donghong", "pangene-test/target/donghong.chr1.fsa.gz"]
+        [
+            "red5_v2p1",
+            "pangene-test/target/red5_v2p1_chr1.fasta.gz",
+            "pangene-test/braker/red5_v2p1.gff3.gz",
+            "pangene-test/braker/red5_v2p1.hints.gff.gz"
+        ],
+        [
+            "donghong",
+            "pangene-test/target/donghong.chr1.fsa.gz",
+            "pangene-test/braker/donghong.gff3.gz",
+            "pangene-test/braker/donghong.hints.gff.gz"
+        ]
     ],
     "te_libraries": [
         ["red5_v2p1", "pangene-test/te_lib/red5_v2p1.fa.gz"],

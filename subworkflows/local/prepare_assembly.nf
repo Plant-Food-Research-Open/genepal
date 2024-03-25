@@ -13,6 +13,7 @@ workflow PREPARE_ASSEMBLY {
     target_assembly             // channel: [ meta, fasta ]
     te_library                  // channel: [ meta, fasta ]
     repeat_annotator            // val(String), 'repeatmodeler' or 'edta'
+    exclude_assemblies          // channel: val(assembly_x,assembly_y)
 
     main:
     ch_versions                 = Channel.empty()
@@ -74,6 +75,14 @@ workflow PREPARE_ASSEMBLY {
     ch_edta_inputs              = repeat_annotator != 'edta'
                                 ? Channel.empty()
                                 : ch_annotator_inputs
+                                | combine( exclude_assemblies )
+                                | map { meta, fasta, ex_assemblies ->
+                                    def ex_list = ex_assemblies.split(",")
+
+                                    if ( !( ex_list.contains( meta.id ) ) ) {
+                                        [ meta, fasta ]
+                                    }
+                                }
 
     FASTA_EDTA_LAI(
         ch_edta_inputs,
@@ -87,6 +96,14 @@ workflow PREPARE_ASSEMBLY {
     ch_repeatmodeler_inputs     = repeat_annotator != 'repeatmodeler'
                                 ? Channel.empty()
                                 : ch_annotator_inputs
+                                | combine( exclude_assemblies )
+                                | map { meta, fasta, ex_assemblies ->
+                                    def ex_list = ex_assemblies.split(",")
+
+                                    if ( !( ex_list.contains( meta.id ) ) ) {
+                                        [ meta, fasta ]
+                                    }
+                                }
 
     REPEATMODELER_BUILDDATABASE ( ch_repeatmodeler_inputs )
 
@@ -113,9 +130,20 @@ workflow PREPARE_ASSEMBLY {
     ch_versions                 = ch_versions.mix(REPEATMASKER.out.versions.first())
 
     // MODULE: STAR_GENOMEGENERATE
+    ch_genomegenerate_inputs    = ch_validated_assembly
+                                | combine( exclude_assemblies )
+                                | map { meta, fasta, ex_assemblies ->
+                                    def ex_list = ex_assemblies.split(",")
+
+                                    if ( !( ex_list.contains( meta.id ) ) ) {
+                                        [ meta, fasta ]
+                                    }
+                                }
+
+
     STAR_GENOMEGENERATE(
-        ch_validated_assembly,
-        ch_validated_assembly.map { meta, fasta -> [ [], [] ] }
+        ch_genomegenerate_inputs,
+        ch_genomegenerate_inputs.map { meta, fasta -> [ [], [] ] }
     )
 
     ch_assembly_index           = STAR_GENOMEGENERATE.out.index

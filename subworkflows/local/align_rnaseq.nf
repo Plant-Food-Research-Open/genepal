@@ -71,6 +71,6 @@ workflow ALIGN_RNASEQ {
     ch_versions                 = ch_versions.mix(SAMTOOLS_CAT.out.versions.first())
 
     emit:
-    bam                         = ch_samtools_bam   // channel: [ [ id, single_end, target_assembly ], [ bam ] ]
+    bam                         = ch_samtools_bam   // channel: [ [ id: target_assembly, single_end ], [ bam ] ]
     versions                    = ch_versions       // channel: [ versions.yml ]
 }

@@ -1,12 +1,12 @@
-include { validateParams                } from '../modules/local/validate_params'
-include { id_from_file_name             } from '../modules/local/validate_params'
-include { PREPARE_ASSEMBLY              } from '../subworkflows/local/prepare_assembly'
-include { PREPROCESS_RNASEQ             } from '../subworkflows/local/preprocess_rnaseq'
-include { ALIGN_RNASEQ                  } from '../subworkflows/local/align_rnaseq'
-include { PREPARE_EXT_PROTS             } from '../subworkflows/local/prepare_ext_prots'
-include { BRAKER3                       } from '../modules/kherronism/braker3'
-include { FASTA_LIFTOFF                 } from '../subworkflows/local/fasta_liftoff'
-include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions'
+include { validateParams                        } from '../modules/local/validate_params'
+include { id_from_file_name                     } from '../modules/local/validate_params'
+include { PREPARE_ASSEMBLY                      } from '../subworkflows/local/prepare_assembly'
+include { PREPROCESS_RNASEQ                     } from '../subworkflows/local/preprocess_rnaseq'
+include { ALIGN_RNASEQ                          } from '../subworkflows/local/align_rnaseq'
+include { PREPARE_EXT_PROTS                     } from '../subworkflows/local/prepare_ext_prots'
+include { FASTA_BRAKER3                         } from '../subworkflows/local/fasta_braker3'
+include { FASTA_LIFTOFF                         } from '../subworkflows/local/fasta_liftoff'
+include { CUSTOM_DUMPSOFTWAREVERSIONS           } from '../modules/nf-core/custom/dumpsoftwareversions'
 
 validateParams(params)
 
@@ -15,13 +15,37 @@ workflow PANGENE {
     ch_versions                 = Channel.empty()
 
     ch_target_assembly          = Channel.fromList(params.target_assemblies)
-                                | map { tag, filePath ->
-                                    [ [ id: tag ], file(filePath, checkIfExists: true) ]
+                                | map { it ->
+                                    def tag     = it[0]
+                                    def fasta   = it[1]
+
+                                    [ [ id: tag ], file(fasta, checkIfExists: true) ]
                                 }
 
+    ch_braker_annotation        = Channel.fromList(params.target_assemblies)
+                                | map { it ->
+                                    if ( it.size() == 4 ) {
+                                        def tag         = it[0]
+                                        def braker_gff3 = it[2]
+                                        def hints_gff   = it[3]
+
+                                        [
+                                            [ id: tag ],
+                                            file(braker_gff3, checkIfExists: true),
+                                            file(hints_gff, checkIfExists: true)
+                                        ]
+                                    }
+                                }
+
+    ch_braker_ex_asm_str        = ch_braker_annotation
+                                | map { meta, braker_gff3, hints_gff -> meta.id }
+                                | collect
+                                | map { it.join(",") }
+                                | ifEmpty( "" )
+
     ch_te_library               = Channel.fromList(params.te_libraries)
-                                | map { tag, filePath ->
-                                    [ [ id:tag ], file(filePath, checkIfExists: true) ]
+                                | map { tag, fasta ->
+                                    [ [ id:tag ], file(fasta, checkIfExists: true) ]
                                 }
 
     ch_samplesheet              = params.samplesheet
@@ -30,7 +54,7 @@ workflow PANGENE {
 
     ch_tar_assm_str             = Channel.of(
                                     params.target_assemblies
-                                    .collect { tag, fastaPath -> tag.strip() }.join(",")
+                                    .collect { it -> it[0].strip() }.join(",") // it[0] = tag
                                 )
 
     ch_ribo_db                  = params.remove_ribo_rna
@@ -68,7 +92,8 @@ workflow PANGENE {
     PREPARE_ASSEMBLY(
         ch_target_assembly,
         ch_te_library,
-        params.repeat_annotator
+        params.repeat_annotator,
+        ch_braker_ex_asm_str
     )
 
     ch_valid_target_assembly    = PREPARE_ASSEMBLY.out.target_assemby
@@ -80,6 +105,7 @@ workflow PANGENE {
     PREPROCESS_RNASEQ(
         ch_samplesheet,
         ch_tar_assm_str,
+        ch_braker_ex_asm_str,
         params.skip_fastqc,
         params.skip_fastp,
         params.save_trimmed,
@@ -96,7 +122,7 @@ workflow PANGENE {
     ALIGN_RNASEQ(
         ch_reads_target,
         ch_trim_reads,
-        ch_target_assemby_index
+        ch_target_assemby_index,
     )
 
     ch_rnaseq_bam               = ALIGN_RNASEQ.out.bam
@@ -110,29 +136,18 @@ workflow PANGENE {
     ch_ext_prots_fasta          = PREPARE_EXT_PROTS.out.ext_prots_fasta
     ch_versions                 = ch_versions.mix(PREPARE_EXT_PROTS.out.versions)
 
-    // MODULE: BRAKER3
-    ch_braker_inputs            = ch_masked_target_assembly
-                                | join(ch_rnaseq_bam, remainder: true)
-                                | combine(
-                                    ch_ext_prots_fasta.map { meta, filePath -> filePath }.ifEmpty(null)
-                                )
-                                | map { meta, fasta, bam, prots -> [ meta, fasta, bam ?: [], prots ?: [] ] }
-
-    def rnaseq_sets_dirs        = []
-    def rnaseq_sets_ids         = []
-    def hintsfile               = []
-
-    BRAKER3(
-        ch_braker_inputs.map { meta, fasta, bam, prots -> [meta, fasta] },
-        ch_braker_inputs.map { meta, fasta, bam, prots -> bam },
-        rnaseq_sets_dirs,
-        rnaseq_sets_ids,
-        ch_braker_inputs.map { meta, fasta, bam, prots -> prots },
-        hintsfile
+    // SUBWORKFLOW: FASTA_BRAKER3
+    FASTA_BRAKER3(
+        ch_masked_target_assembly,
+        ch_braker_ex_asm_str,
+        ch_rnaseq_bam,
+        ch_ext_prots_fasta,
+        ch_braker_annotation
     )
 
-    ch_braker_gff3              = BRAKER3.out.gff3
-    ch_versions                 = ch_versions.mix(BRAKER3.out.versions.first())
+    ch_braker_gff3              = FASTA_BRAKER3.out.braker_gff3
+    ch_braker_hints             = FASTA_BRAKER3.out.braker_hints
+    ch_versions                 = ch_versions.mix(FASTA_BRAKER3.out.versions)
 
     // SUBWORKFLOW: FASTA_LIFTOFF
     FASTA_LIFTOFF(

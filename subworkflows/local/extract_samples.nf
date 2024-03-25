@@ -17,6 +17,7 @@ workflow EXTRACT_SAMPLES {
     take:
     samplesheet                     // file: /path/to/samplesheet.csv
     permissible_target_assemblies   // val: assembly_a,assembly_b
+    exclude_assemblies              // channel: val(assembly_x,assembly_y)
 
     main:
     SAMPLESHEET_CHECK ( samplesheet, permissible_target_assemblies )
@@ -28,13 +29,27 @@ workflow EXTRACT_SAMPLES {
     }
     | set { ch_reads }
 
-    reads = ch_reads.map { meta, fastq -> [[id:meta.id, single_end:meta.single_end], fastq]}
+    reads                           = ch_reads
+                                    | combine( exclude_assemblies )
+                                    | map { meta, fastq, ex_assemblies ->
+                                        def ex_list = ex_assemblies.split(",")
 
-    ch_reads
-    | flatMap { meta, fastq ->
-        meta.target_assemblies.collect { assembly -> [[id:meta.id, single_end:meta.single_end], assembly] }
-    }
-    | set { assemblies }
+                                        if ( !( meta.target_assemblies.every { ex_list.contains( it ) } ) ) {
+                                            [ [ id:meta.id, single_end:meta.single_end ], fastq ]
+                                        }
+                                    }
+
+
+    assemblies                      = ch_reads
+                                    | combine( exclude_assemblies )
+                                    | flatMap { meta, fastq, ex_assemblies ->
+                                        def ex_list = ex_assemblies.split(",")
+
+                                        meta
+                                        .target_assemblies
+                                        .collect { assembly -> [ [ id:meta.id, single_end:meta.single_end ], assembly ] }
+                                        .findAll { _meta, assembly -> !( ex_list.contains( assembly ) ) }
+                                    }
 
     emit:
     reads                                       // channel: [ val(meta), [ reads ] ]

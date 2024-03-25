@@ -8,6 +8,7 @@ workflow PREPROCESS_RNASEQ {
     take:
     samplesheet                     // path: csv
     permissible_assemblies          // val: assembly_a,assembly_b
+    exclude_assemblies              // channel: val(assembly_x,assembly_y)
     skip_fastqc                     // val: true|false
     skip_fastp                      // val: true|false
     save_trimmed                    // val: true|false
@@ -21,7 +22,8 @@ workflow PREPROCESS_RNASEQ {
     // SUBWORKFLOW: EXTRACT_SAMPLES
     EXTRACT_SAMPLES(
         samplesheet,
-        permissible_assemblies
+        permissible_assemblies,
+        exclude_assemblies
     )
 
     ch_fastq                        = EXTRACT_SAMPLES.out.reads

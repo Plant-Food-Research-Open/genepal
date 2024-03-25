@@ -20,8 +20,8 @@ def validateParams(params) {
 def validateFastaTags(params) {
     def listOfFastaTuples   = params["target_assemblies"]
 
-    if (isNotListOfLists(listOfFastaTuples, 2)) {
-        error 'Error: target_assemblies must be a list of sublists, with each sublist containing 2 elements'
+    if ( isNotListOfLists(listOfFastaTuples, [ 2, 4 ] ) ) {
+        error 'Error: target_assemblies must be a list of sublists, with each sublist containing 2 or 4 elements'
     }
 
     def fastaTags = listOfFastaTuples.collect { it[0] }
@@ -100,7 +100,12 @@ def validateLiftoffXrefs(params) {
 }
 
 def isNotListOfLists(thisOne, subListSize) {
-    return (!(thisOne instanceof List) || thisOne.isEmpty() || thisOne.any { !(it instanceof List) || it.size() != subListSize })
+
+    if ( subListSize instanceof Integer ) {
+        return (!(thisOne instanceof List) || thisOne.isEmpty() || thisOne.any { !(it instanceof List) || it.size() != subListSize })
+    }
+
+    return (!(thisOne instanceof List) || thisOne.isEmpty() || thisOne.any { !( it instanceof List ) || !( subListSize.contains( it.size() ) ) })
 }
 
 def id_from_file_name(file_name) {
