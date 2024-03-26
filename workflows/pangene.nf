@@ -1,3 +1,4 @@
+include { fromSamplesheet                       } from 'plugin/nf-validation'
 include { validateParams                        } from '../modules/local/validate_params'
 include { id_from_file_name                     } from '../modules/local/validate_params'
 include { PREPARE_ASSEMBLY                      } from '../subworkflows/local/prepare_assembly'
@@ -12,23 +13,56 @@ validateParams(params)
 
 workflow PANGENE {
 
+    // Versions channel
     ch_versions                 = Channel.empty()
 
-    ch_target_assembly          = Channel.fromList(params.target_assemblies)
+    // Input channels
+    ch_input                    = Channel.fromSamplesheet('input')
+
+    ch_target_assembly          = ch_input
                                 | map { it ->
-                                    def tag     = it[0]
-                                    def fasta   = it[1]
+                                    def tag         = it[0]
+                                    def fasta       = it[1]
 
                                     [ [ id: tag ], file(fasta, checkIfExists: true) ]
                                 }
 
-    ch_braker_annotation        = Channel.fromList(params.target_assemblies)
+    ch_tar_assm_str             = ch_input
                                 | map { it ->
-                                    if ( it.size() == 4 ) {
-                                        def tag         = it[0]
-                                        def braker_gff3 = it[2]
-                                        def hints_gff   = it[3]
+                                    def tag         = it[0].strip()
 
+                                    tag
+                                }
+                                | collect
+                                | map { it ->
+                                    it.join(",")
+                                }
+
+    ch_masked                   = ch_input
+                                | map { it ->
+                                    def tag         = it[0]
+                                    def is_masked   = it[2]
+
+                                    [ [ id: tag ], is_masked == "yes" ]
+                                }
+
+    ch_te_library               = ch_input
+                                | map { it ->
+                                    def tag         = it[0]
+                                    def te_fasta    = it[3]
+
+                                    if ( te_fasta ) {
+                                        [ [ id:tag ], file(te_fasta, checkIfExists: true) ]
+                                    }
+                                }
+
+    ch_braker_annotation        = ch_input
+                                | map { it ->
+                                    def tag         = it[0]
+                                    def braker_gff3 = it[4]
+                                    def hints_gff   = it[5]
+
+                                    if ( braker_gff3 ) {
                                         [
                                             [ id: tag ],
                                             file(braker_gff3, checkIfExists: true),
@@ -43,19 +77,9 @@ workflow PANGENE {
                                 | map { it.join(",") }
                                 | ifEmpty( "" )
 
-    ch_te_library               = Channel.fromList(params.te_libraries)
-                                | map { tag, fasta ->
-                                    [ [ id:tag ], file(fasta, checkIfExists: true) ]
-                                }
-
     ch_fastqsheet               = params.fastq
                                 ? Channel.fromPath(params.fastq, checkIfExists: true)
                                 : Channel.empty()
-
-    ch_tar_assm_str             = Channel.of(
-                                    params.target_assemblies
-                                    .collect { it -> it[0].strip() }.join(",") // it[0] = tag
-                                )
 
     ch_ribo_db                  = params.remove_ribo_rna
                                 ? file(params.ribo_database_manifest, checkIfExists: true)

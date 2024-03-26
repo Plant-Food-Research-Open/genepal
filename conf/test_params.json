@@ -1,22 +1,5 @@
 {
-    "target_assemblies": [
-        [
-            "red5_v2p1",
-            "pangene-test/target/red5_v2p1_chr1.fasta.gz",
-            "pangene-test/braker/red5_v2p1.gff3.gz",
-            "pangene-test/braker/red5_v2p1.hints.gff.gz"
-        ],
-        [
-            "donghong",
-            "pangene-test/target/donghong.chr1.fsa.gz",
-            "pangene-test/braker/donghong.gff3.gz",
-            "pangene-test/braker/donghong.hints.gff.gz"
-        ]
-    ],
-    "te_libraries": [
-        ["red5_v2p1", "pangene-test/te_lib/red5_v2p1.fa.gz"],
-        ["donghong", "pangene-test/te_lib/donghong.TElib.fa.gz"]
-    ],
+    "input": "pangene-test/assemblysheet.csv",
     "fastq": "pangene-test/fq/fastqsheet.csv",
     "remove_ribo_rna": true,
     "ribo_database_manifest": "assets/rrna-db-test.txt",

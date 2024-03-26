@@ -1,5 +1,4 @@
 def validateParams(params) {
-    validateFastaTags(params)
 
     if (!params['repeat_annotator']) {
         error "Error: repeat_annotator must be either 'repeatmodeler' or 'edta'"
@@ -9,76 +8,8 @@ def validateParams(params) {
         error "Error: repeat_annotator must be either 'repeatmodeler' or 'edta'"
     }
 
-    validateTETags(params)
-    validateTEFastaCorrespondence(params)
-
     validateRiboDBManifest(params)
-
     validateLiftoffXrefs(params)
-}
-
-def validateFastaTags(params) {
-    def listOfFastaTuples   = params["target_assemblies"]
-
-    if ( isNotListOfLists(listOfFastaTuples, [ 2, 4 ] ) ) {
-        error 'Error: target_assemblies must be a list of sublists, with each sublist containing 2 or 4 elements'
-    }
-
-    def fastaTags = listOfFastaTuples.collect { it[0] }
-
-    fastaTags.each {
-        if (!(it =~ /^\w+$/)) {
-            error "Error: $it is not a valid tag in target_assemblies"
-        }
-    }
-
-    if (fastaTags.size() != (fastaTags as Set).size()) {
-        error "All the tags in target_assemblies should be unique"
-    }
-}
-
-def validateTETags(params) {
-
-    if(!params["te_libraries"]) {
-        return
-    }
-
-    def listOfTETuples   = params["te_libraries"]
-
-    if (listOfTETuples.isEmpty()) {
-        return
-    }
-
-    if (isNotListOfLists(listOfTETuples, 2)) {
-        error 'Error: te_libraries must be a list of sublists, with each sublist containing 2 elements'
-    }
-
-    def teTags = listOfTETuples.collect { it[0] }
-
-    teTags.each {
-        if (!(it =~ /^\w+$/)) {
-            error "Error: $it is not a valid tag in te_libraries"
-        }
-    }
-}
-
-def validateTEFastaCorrespondence(params) {
-
-    if(!params["te_libraries"]) {
-        return
-    }
-
-    def listOfTETuples   = params["te_libraries"]
-    def listOfFastaTuples   = params["target_assemblies"]
-
-    def fastaTags = listOfFastaTuples.collect { it[0] }
-    def teTags = listOfTETuples.collect { it[0] }
-
-    teTags.each {
-        if(!fastaTags.contains(it)) {
-            error "Error: $it in te_libraries does not have a corresponding tag in target_assemblies"
-        }
-    }
 }
 
 def validateRiboDBManifest(params) {

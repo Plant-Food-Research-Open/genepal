@@ -1,0 +1,3 @@
+tag,fasta,is_masked,te_lib
+red5_v2p1,tests/stub/target/red5_v2p1_chr1.fasta.gz,no,
+donghong,tests/stub/target/donghong.chr1.fsa.gz,no,tests/stub/te_lib/donghong.TElib.fa.gz

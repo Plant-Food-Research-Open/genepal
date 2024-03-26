@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 13. Now BRAKER can be skipped by including BRAKER outputs from previous runs in the `target_assemblies` param
 14. Added `gffcompare` to merge liftoff annotations
 15. Renamed `samplesheet` param to `fastq`
+16. Now using assemblysheet in combination with nf-validation for assembly input
+17. Added nextflow_schema.json
 
 ### `Fixed`
 
