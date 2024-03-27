@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-config_version=$(sed -n "s/.*version.*= '\(.*\)'.*/\1/p" conf/manifest.config)
+config_version=$(sed -n "s/.*version.*= '\(.*\)'.*/\1/p" nextflow.config)
 
 # Check CHANGELOG version
 
