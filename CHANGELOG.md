@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 17. Added nextflow_schema.json
 18. Now using nf-validation to validate fastqsheet provided by params.fastq
 19. Moved `manifest.config` and `reporting_defaults.config` content to `nextflow.config`
+20. Now using a txt file for `params.external_protein_fastas`
 
 ### `Fixed`
 

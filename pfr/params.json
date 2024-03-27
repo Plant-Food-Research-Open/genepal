@@ -1,0 +1,6 @@
+{
+    "external_protein_fastas": [
+        "/workspace/ComparativeDataSources/OrthoDB11/Viridiplantae.fa.gz",
+        "/output/genomic/fairGenomes/Plant/Actinidia/chinensis/var_chinensis/male/2x/assembly_russell/v2.1/RU01.20221115150135.pep.fasta"
+    ]
+}

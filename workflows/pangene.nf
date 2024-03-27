@@ -104,13 +104,14 @@ workflow PANGENE {
                                 | collect
                                 : Channel.empty()
 
-    ch_ext_prot_fastas          = params.external_protein_fastas
-                                ? Channel.fromList(params.external_protein_fastas)
-                                | map { filePath ->
-                                    def file_handle = file(filePath, checkIfExists: true)
-                                    [ [ id: idFromFileName( file_handle.baseName ) ], file_handle]
+    ch_ext_prot_fastas          = ! params.external_protein_fastas
+                                ? Channel.empty()
+                                : Channel.fromPath(params.external_protein_fastas)
+                                | splitText
+                                | map { file_path ->
+                                    def file_handle = file(file_path.strip(), checkIfExists: true)
+                                    [ [ id: idFromFileName( file_handle.baseName ) ], file_handle ]
                                 }
-                                : Channel.empty()
 
     ch_xref_mm                  = params.liftoff_xref_annotations
                                 ? Channel.fromList(params.liftoff_xref_annotations)

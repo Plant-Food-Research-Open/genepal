@@ -3,10 +3,7 @@
     "fastq": "pangene-test/fastqsheet.csv",
     "remove_ribo_rna": true,
     "ribo_database_manifest": "assets/rrna-db-test.txt",
-    "external_protein_fastas": [
-        "pangene-test/ext_prot/RU01.20221115150135.chr1.pep.fasta.gz",
-        "pangene-test/ext_prot/RU01.20221115150135.chr2.pep.fasta.gz"
-    ],
+    "external_protein_fastas": "pangene-test/external-protein-fastas.txt",
     "braker_extra_args": "--rounds=1",
     "liftoff_xref_annotations": [
         ["pangene-test/liftoff/Russell_V2a.chr1.fsa.gz", "pangene-test/liftoff/RU01.20221115150135.chr1.gff3.gz"],
