@@ -16,7 +16,7 @@ def validateRiboDBManifest(params) {
     if (params.remove_ribo_rna) {
         file_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
 
-        if (file_ribo_db.isEmpty()) {exit 1, "File provided with --ribo_database_manifest is empty: ${file_ribo_db.getName()}!"}
+        if (file_ribo_db.isEmpty()) { exit 1, "File provided with --ribo_database_manifest is empty: ${file_ribo_db.getName()}!" }
     }
 }
 
@@ -39,9 +39,9 @@ def isNotListOfLists(thisOne, subListSize) {
     return (!(thisOne instanceof List) || thisOne.isEmpty() || thisOne.any { !( it instanceof List ) || !( subListSize.contains( it.size() ) ) })
 }
 
-def id_from_file_name(file_name) {
+def idFromFileName(fileName) {
 
-    def trial = ( file_name
+    def trial = ( fileName
         ).replaceFirst(
             /\.f(ast)?q$/, ''
         ).replaceFirst(
@@ -52,7 +52,30 @@ def id_from_file_name(file_name) {
             /\.gz$/, ''
         )
 
-    if ( trial == file_name ) { return file_name }
+    if ( trial == fileName ) { return fileName }
 
-    return id_from_file_name ( trial )
+    return idFromFileName ( trial )
+}
+
+def validateFastqMetadata(metas, fqs, permAssString) {
+    def permAssList = permAssString.split(",")
+
+    // Check if each listed assembly is permissible
+    metas.each { meta ->
+        if ( meta.target_assemblies.any { !permAssList.contains( it ) } ) {
+            exit 1, "Sample ${meta.id} targets ${meta.target_assemblies} which are not in $permAssList"
+        }
+    }
+
+    // Check if multiple runs of a sample have the same target assemblies
+    if ( metas.collect { meta -> meta.target_assemblies }.unique().size() > 1 ) {
+        error "Multiple runs of sample ${metas.first().id} must target same assemblies"
+    }
+
+    // Check if multiple runs of a sample have the same endedness
+    if ( metas.collect { meta -> meta.single_end }.unique().size() > 1 ) {
+        error "Multiple runs of sample ${metas.first().id} must have same endedness"
+    }
+
+    [ metas.first(), fqs ]
 }

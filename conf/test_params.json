@@ -1,6 +1,6 @@
 {
     "input": "pangene-test/assemblysheet.csv",
-    "fastq": "pangene-test/fq/fastqsheet.csv",
+    "fastq": "pangene-test/fastqsheet.csv",
     "remove_ribo_rna": true,
     "ribo_database_manifest": "assets/rrna-db-test.txt",
     "external_protein_fastas": [

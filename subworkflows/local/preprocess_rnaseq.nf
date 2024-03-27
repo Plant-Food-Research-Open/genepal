@@ -1,12 +1,11 @@
 include { CAT_FASTQ                     } from '../../modules/nf-core/cat/fastq'
 include { SORTMERNA as SORTMERNA_INDEX  } from '../../modules/nf-core/sortmerna'
 include { SORTMERNA as SORTMERNA_READS  } from '../../modules/nf-core/sortmerna'
-include { EXTRACT_SAMPLES               } from '../../subworkflows/local/extract_samples'
 include { FASTQ_FASTQC_UMITOOLS_FASTP   } from '../../subworkflows/nf-core/fastq_fastqc_umitools_fastp'
 
 workflow PREPROCESS_RNASEQ {
     take:
-    fastqsheet                      // path: csv
+    ch_reads                        // channel: [ [ id, single_end, target_assemblies ], [ [ fq ] ] ]
     permissible_assemblies          // val: assembly_a,assembly_b
     exclude_assemblies              // channel: val(assembly_x,assembly_y)
     skip_fastqc                     // val: true|false
@@ -19,34 +18,34 @@ workflow PREPROCESS_RNASEQ {
     main:
     ch_versions                     = Channel.empty()
 
-    // SUBWORKFLOW: EXTRACT_SAMPLES
-    EXTRACT_SAMPLES(
-        fastqsheet,
-        permissible_assemblies,
-        exclude_assemblies
-    )
+    ch_fastq                        = ch_reads
+                                    | combine( exclude_assemblies )
+                                    | map { meta, fqs, ex_assemblies ->
+                                        def ex_list = ex_assemblies.split(",")
 
-    ch_fastq                        = EXTRACT_SAMPLES.out.reads
-                                    | map { meta, fastq ->
-                                        groupID = meta.id - ~/_T\d+/
-                                        [ meta + [id: groupID], fastq ]
+                                        if ( !( meta.target_assemblies.every { ex_list.contains( it ) } ) ) {
+                                            [ [ id:meta.id, single_end:meta.single_end ], fqs ]
+                                        }
                                     }
-                                    | groupTuple()
-                                    | branch { meta, fastq ->
-                                        single  : fastq.size() == 1
-                                            return [ meta, fastq.flatten() ]
-                                        multiple: fastq.size() > 1
-                                            return [ meta, fastq.flatten() ]
+                                    | branch { meta, fqs ->
+                                        single  : fqs.size() == 1
+                                            return [ meta, fqs.flatten() ]
+                                        multiple: fqs.size() > 1
+                                            return [ meta, fqs.flatten() ]
                                     }
 
-    ch_reads_target                 = EXTRACT_SAMPLES.out.assemblies
-                                    | map { meta, assembly ->
-                                        groupID = meta.id - ~/_T\d+/
-                                        [ meta + [id: groupID], assembly ]
+
+    ch_reads_target                 = ch_reads
+                                    | combine( exclude_assemblies )
+                                    | flatMap { meta, fqs, ex_assemblies ->
+                                        def ex_list = ex_assemblies.split(",")
+
+                                        meta
+                                        .target_assemblies
+                                        .collect { assembly -> [ [ id:meta.id, single_end:meta.single_end ], assembly ] }
+                                        .findAll { _meta, assembly -> !( ex_list.contains( assembly ) ) }
                                     }
                                     | unique
-
-    ch_versions                     = ch_versions.mix(EXTRACT_SAMPLES.out.versions)
 
     // MODULES: CAT_FASTQ
     CAT_FASTQ ( ch_fastq.multiple )
@@ -118,7 +117,7 @@ workflow PREPROCESS_RNASEQ {
 
 
     emit:
-    trim_reads                      = ch_emitted_reads  // channel: [ meta, [ fq ] ]
-    reads_target                    = ch_reads_target   // channel: [ meta, assembly_id ]
+    trim_reads                      = ch_emitted_reads  // channel: [ [ id, single_end ], [ fq ] ]
+    reads_target                    = ch_reads_target   // channel: [ [ id, single_end ], assembly_id ]
     versions                        = ch_versions       // channel: [ versions.yml ]
 }

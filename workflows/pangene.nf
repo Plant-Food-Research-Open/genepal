@@ -1,6 +1,6 @@
 include { fromSamplesheet                       } from 'plugin/nf-validation'
 include { validateParams                        } from '../modules/local/validate_params'
-include { id_from_file_name                     } from '../modules/local/validate_params'
+include { idFromFileName; validateFastqMetadata } from '../modules/local/validate_params'
 include { PREPARE_ASSEMBLY                      } from '../subworkflows/local/prepare_assembly'
 include { PREPROCESS_RNASEQ                     } from '../subworkflows/local/preprocess_rnaseq'
 include { ALIGN_RNASEQ                          } from '../subworkflows/local/align_rnaseq'
@@ -77,9 +77,22 @@ workflow PANGENE {
                                 | map { it.join(",") }
                                 | ifEmpty( "" )
 
-    ch_fastqsheet               = params.fastq
-                                ? Channel.fromPath(params.fastq, checkIfExists: true)
-                                : Channel.empty()
+    ch_reads                    = ! params.fastq
+                                ? Channel.empty()
+                                : Channel.fromSamplesheet('fastq')
+                                | map { meta, fq1, fq2 ->
+                                    fq2
+                                    ? [ meta + [ single_end: false ], [ file(fq1, checkIfExists:true), file(fq2, checkIfExists:true) ] ]
+                                    : [ meta + [ single_end: true ], [ file(fq1, checkIfExists:true) ] ]
+                                }
+                                | map { meta, fqs ->
+                                    [ meta.id, meta + [ target_assemblies: meta.target_assemblies.split(';').sort() ], fqs ]
+                                }
+                                | groupTuple
+                                | combine(ch_tar_assm_str)
+                                | map { id, metas, fqs, tar_assm_str ->
+                                    validateFastqMetadata(metas, fqs, tar_assm_str)
+                                }
 
     ch_ribo_db                  = params.remove_ribo_rna
                                 ? file(params.ribo_database_manifest, checkIfExists: true)
@@ -94,8 +107,8 @@ workflow PANGENE {
     ch_ext_prot_fastas          = params.external_protein_fastas
                                 ? Channel.fromList(params.external_protein_fastas)
                                 | map { filePath ->
-                                    def fileHandle = file(filePath, checkIfExists: true)
-                                    [ [ id: id_from_file_name( fileHandle.baseName ) ], fileHandle]
+                                    def file_handle = file(filePath, checkIfExists: true)
+                                    [ [ id: idFromFileName( file_handle.baseName ) ], file_handle]
                                 }
                                 : Channel.empty()
 
@@ -104,8 +117,8 @@ workflow PANGENE {
                                 | multiMap { fasta, gff ->
                                     def fastaFile = file(fasta, checkIfExists:true)
 
-                                    fasta: [ [ id: id_from_file_name( fastaFile.baseName ) ], fastaFile ]
-                                    gff: [ [ id: id_from_file_name( fastaFile.baseName ) ], file(gff, checkIfExists:true) ]
+                                    fasta: [ [ id: idFromFileName( fastaFile.baseName ) ], fastaFile ]
+                                    gff: [ [ id: idFromFileName( fastaFile.baseName ) ], file(gff, checkIfExists:true) ]
                                 }
                                 : Channel.empty()
 
@@ -127,7 +140,7 @@ workflow PANGENE {
 
     // SUBWORKFLOW: PREPROCESS_RNASEQ
     PREPROCESS_RNASEQ(
-        ch_fastqsheet,
+        ch_reads,
         ch_tar_assm_str,
         ch_braker_ex_asm_str,
         params.skip_fastqc,

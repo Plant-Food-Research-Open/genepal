@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.2.0+dev - [25-Mar-2024]
+## 0.2.0+dev - [27-Mar-2024]
 
 ### `Added`
 
@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 15. Renamed `samplesheet` param to `fastq`
 16. Now using assemblysheet in combination with nf-validation for assembly input
 17. Added nextflow_schema.json
+18. Now using nf-validation to validate fastqsheet provided by params.fastq
 
 ### `Fixed`
 

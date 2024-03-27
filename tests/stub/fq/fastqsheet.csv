@@ -1,4 +1,0 @@
-sample,fastq_1,fastq_2,target_assemblies
-Root1,1505KHS-0090_Root1_162bp_C728RACXX_Lane1_R1.1k.fastq.gz,1505KHS-0090_Root1_162bp_C728RACXX_Lane1_R2.1k.fastq.gz,red5_v2p1
-Root1,1505KHS-0090_Root2_156bp_C728RACXX_Lane1_R1.1k.fastq.gz,1505KHS-0090_Root2_156bp_C728RACXX_Lane1_R2.1k.fastq.gz,red5_v2p1
-cane3,1505KHS-0090_cane3_165bp_C728RACXX_Lane1_R1.1k.fastq.gz,1505KHS-0090_cane3_165bp_C728RACXX_Lane1_R2.1k.fastq.gz,red5_v2p1;donghong

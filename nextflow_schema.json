@@ -22,6 +22,16 @@
                     "help_text": "Input assembly sheet in CSV format",
                     "fa_icon": "fas fa-file-csv"
                 },
+                "fastq": {
+                    "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/csv",
+                    "schema": "assets/schema_fastq.json",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "FASTQ files for RNASeq samples corresponding to each target assembly provided as a formatted CSV file",
+                    "help_text": "FASTQ sample sheet in CSV format",
+                    "fa_icon": "fas fa-file-csv"
+                },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
