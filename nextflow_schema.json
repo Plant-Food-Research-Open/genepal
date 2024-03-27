@@ -32,6 +32,16 @@
                     "help_text": "FASTQ sample sheet in CSV format",
                     "fa_icon": "fas fa-file-csv"
                 },
+                "liftoff_annotations": {
+                    "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/csv",
+                    "schema": "assets/schema_liftoff.json",
+                    "pattern": "^\\S+\\.csv$",
+                    "description": "FASTA and GFF3 files for annotations to use for liftoff",
+                    "help_text": "Reference annotations to use for liftoff listed in CSV format",
+                    "fa_icon": "fas fa-file-csv"
+                },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",

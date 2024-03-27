@@ -9,7 +9,6 @@ def validateParams(params) {
     }
 
     validateRiboDBManifest(params)
-    validateLiftoffXrefs(params)
 }
 
 def validateRiboDBManifest(params) {
@@ -18,25 +17,6 @@ def validateRiboDBManifest(params) {
 
         if (file_ribo_db.isEmpty()) { exit 1, "File provided with --ribo_database_manifest is empty: ${file_ribo_db.getName()}!" }
     }
-}
-
-def validateLiftoffXrefs(params) {
-    if(!params["liftoff_xref_annotations"]) {
-        return
-    }
-
-    if(isNotListOfLists(params["liftoff_xref_annotations"]), 2) {
-        error "Error: liftoff_xref_annotations must be a list of sublists, with each sublist containing 2 elements"
-    }
-}
-
-def isNotListOfLists(thisOne, subListSize) {
-
-    if ( subListSize instanceof Integer ) {
-        return (!(thisOne instanceof List) || thisOne.isEmpty() || thisOne.any { !(it instanceof List) || it.size() != subListSize })
-    }
-
-    return (!(thisOne instanceof List) || thisOne.isEmpty() || thisOne.any { !( it instanceof List ) || !( subListSize.contains( it.size() ) ) })
 }
 
 def idFromFileName(fileName) {

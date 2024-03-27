@@ -2,5 +2,15 @@
     "external_protein_fastas": [
         "/workspace/ComparativeDataSources/OrthoDB11/Viridiplantae.fa.gz",
         "/output/genomic/fairGenomes/Plant/Actinidia/chinensis/var_chinensis/male/2x/assembly_russell/v2.1/RU01.20221115150135.pep.fasta"
+    ],
+    "liftoff": [
+        [
+            "/output/genomic/fairGenomes/Plant/Actinidia/chinensis/var_chinensis/male/2x/assembly_russell/v2.1/Russell_V2a.chromosomes.and.unassiged.and.haplotigs.fsa",
+            "/output/genomic/fairGenomes/Plant/Actinidia/chinensis/var_chinensis/male/2x/assembly_russell/v2.1/RU01.20221115150135.gff3"
+        ],
+        [
+            "/output/genomic/fairGenomes/Plant/Arabidopsis/thaliana/var_na/sex_na/2x/assembly_tair/v10/TAIR10_chr_all.fas",
+            "/output/genomic/fairGenomes/Plant/Arabidopsis/thaliana/var_na/sex_na/2x/assembly_tair/v10/TAIR10_GFF3_genes_transposons.fixed.gff3"
+        ]
     ]
 }

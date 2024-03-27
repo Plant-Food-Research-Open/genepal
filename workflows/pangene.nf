@@ -113,18 +113,18 @@ workflow PANGENE {
                                     [ [ id: idFromFileName( file_handle.baseName ) ], file_handle ]
                                 }
 
-    ch_xref_mm                  = params.liftoff_xref_annotations
-                                ? Channel.fromList(params.liftoff_xref_annotations)
+    ch_liftoff_mm               = ! params.liftoff_annotations
+                                ? Channel.empty()
+                                : Channel.fromSamplesheet('liftoff_annotations')
                                 | multiMap { fasta, gff ->
                                     def fastaFile = file(fasta, checkIfExists:true)
 
                                     fasta: [ [ id: idFromFileName( fastaFile.baseName ) ], fastaFile ]
                                     gff: [ [ id: idFromFileName( fastaFile.baseName ) ], file(gff, checkIfExists:true) ]
                                 }
-                                : Channel.empty()
 
-    ch_xref_fasta               = ch_xref_mm.fasta
-    ch_xref_gff                 = ch_xref_mm.gff
+    ch_liftoff_fasta               = ch_liftoff_mm.fasta
+    ch_liftoff_gff                 = ch_liftoff_mm.gff
 
     // SUBWORKFLOW: PREPARE_ASSEMBLY
     PREPARE_ASSEMBLY(
@@ -190,8 +190,8 @@ workflow PANGENE {
     // SUBWORKFLOW: FASTA_LIFTOFF
     FASTA_LIFTOFF(
         ch_valid_target_assembly,
-        ch_xref_fasta,
-        ch_xref_gff
+        ch_liftoff_fasta,
+        ch_liftoff_gff
     )
 
     ch_liftoff_gff3             = FASTA_LIFTOFF.out.gff3
