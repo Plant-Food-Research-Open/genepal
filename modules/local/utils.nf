@@ -1,24 +1,3 @@
-def validateParams(params) {
-
-    if (!params['repeat_annotator']) {
-        error "Error: repeat_annotator must be either 'repeatmodeler' or 'edta'"
-    }
-
-    if ( !(params['repeat_annotator'] in ['repeatmodeler', 'edta']) ) {
-        error "Error: repeat_annotator must be either 'repeatmodeler' or 'edta'"
-    }
-
-    validateRiboDBManifest(params)
-}
-
-def validateRiboDBManifest(params) {
-    if (params.remove_ribo_rna) {
-        file_ribo_db = file(params.ribo_database_manifest, checkIfExists: true)
-
-        if (file_ribo_db.isEmpty()) { exit 1, "File provided with --ribo_database_manifest is empty: ${file_ribo_db.getName()}!" }
-    }
-}
-
 def idFromFileName(fileName) {
 
     def trial = ( fileName

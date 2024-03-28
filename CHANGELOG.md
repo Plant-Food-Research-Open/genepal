@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 19. Moved `manifest.config` and `reporting_defaults.config` content to `nextflow.config`
 20. Now using a txt file for `params.external_protein_fastas`
 21. Now using nf-validation for `params.liftoff_annotations`
+22. Now using nf-validation for all the parameters
 
 ### `Fixed`
 

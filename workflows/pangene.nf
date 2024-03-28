@@ -1,6 +1,5 @@
-include { fromSamplesheet                       } from 'plugin/nf-validation'
-include { validateParams                        } from '../modules/local/validate_params'
-include { idFromFileName; validateFastqMetadata } from '../modules/local/validate_params'
+include { fromSamplesheet; paramsSummaryLog     } from 'plugin/nf-validation'
+include { idFromFileName; validateFastqMetadata } from '../modules/local/utils'
 include { PREPARE_ASSEMBLY                      } from '../subworkflows/local/prepare_assembly'
 include { PREPROCESS_RNASEQ                     } from '../subworkflows/local/preprocess_rnaseq'
 include { ALIGN_RNASEQ                          } from '../subworkflows/local/align_rnaseq'
@@ -9,7 +8,7 @@ include { FASTA_BRAKER3                         } from '../subworkflows/local/fa
 include { FASTA_LIFTOFF                         } from '../subworkflows/local/fasta_liftoff'
 include { CUSTOM_DUMPSOFTWAREVERSIONS           } from '../modules/nf-core/custom/dumpsoftwareversions'
 
-validateParams(params)
+log.info paramsSummaryLog(workflow)
 
 workflow PANGENE {
 

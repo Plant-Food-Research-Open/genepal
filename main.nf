@@ -2,7 +2,11 @@
 
 nextflow.enable.dsl=2
 
-include { PANGENE } from './workflows/pangene.nf'
+include { validateParameters    } from 'plugin/nf-validation'
+
+validateParameters()
+
+include { PANGENE               } from './workflows/pangene.nf'
 
 workflow {
     PFR_PANGENE()

@@ -4,7 +4,7 @@
     "title": "plantandfoodresearch/pangene pipeline parameters",
     "description": "A NextFlow pipeline for pan-genome annotation",
     "type": "object",
-    "defs": {
+    "definitions": {
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -18,9 +18,9 @@
                     "mimetype": "text/csv",
                     "schema": "assets/schema_input.json",
                     "pattern": "^\\S+\\.csv$",
-                    "description": "FASTA and other associated files for input assemblies provided as a formatted CSV file",
-                    "help_text": "Input assembly sheet in CSV format",
-                    "fa_icon": "fas fa-file-csv"
+                    "description": "Target assemblies listed in a CSV sheet",
+                    "fa_icon": "fas fa-file-csv",
+                    "help_text": "FASTA and other associated files for target assemblies provided as a CSV sheet"
                 },
                 "fastq": {
                     "type": "string",
@@ -28,9 +28,17 @@
                     "mimetype": "text/csv",
                     "schema": "assets/schema_fastq.json",
                     "pattern": "^\\S+\\.csv$",
-                    "description": "FASTQ files for RNASeq samples corresponding to each target assembly provided as a formatted CSV file",
-                    "help_text": "FASTQ sample sheet in CSV format",
-                    "fa_icon": "fas fa-file-csv"
+                    "help_text": "FASTQ files for RNASeq samples corresponding to each target assembly provided in a CSV sheet",
+                    "fa_icon": "fas fa-file-csv",
+                    "description": "FASTQ samples listed in a CSV sheet"
+                },
+                "external_protein_fastas": {
+                    "type": "string",
+                    "description": "External protein fastas listed in a text sheet",
+                    "help_text": "A text file listing FASTA files to provide protein evidence for annotation",
+                    "format": "file-path",
+                    "mimetype": "text/txt",
+                    "fa_icon": "far fa-file-alt"
                 },
                 "liftoff_annotations": {
                     "type": "string",
@@ -38,23 +46,217 @@
                     "mimetype": "text/csv",
                     "schema": "assets/schema_liftoff.json",
                     "pattern": "^\\S+\\.csv$",
-                    "description": "FASTA and GFF3 files for annotations to use for liftoff",
-                    "help_text": "Reference annotations to use for liftoff listed in CSV format",
+                    "description": "Reference annotations listed in a CSV sheet",
+                    "help_text": "FASTA and GFF3 files for reference annotations for liftoff listed in a CSV sheet",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
-                    "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
+                    "description": "The output directory where the results will be saved",
                     "fa_icon": "fas fa-folder-open",
-                    "default": "./results"
+                    "default": "./results",
+                    "help_text": " Use absolute paths to storage on Cloud infrastructure"
+                }
+            }
+        },
+        "repeat_annotation_options": {
+            "title": "Repeat annotation options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "repeat_annotator": {
+                    "type": "string",
+                    "default": "repeatmodeler",
+                    "enum": ["edta", "repeatmodeler"],
+                    "description": "'edta' or 'repeatmodeler'"
+                },
+                "save_annotated_te_lib": {
+                    "type": "boolean",
+                    "description": "Save annotated TE library or not?"
+                },
+                "edta_is_sensitive": {
+                    "type": "boolean",
+                    "description": "Use '--sensitive 1' flag with EDTA or not?"
+                },
+                "repeatmasker_save_outputs": {
+                    "type": "boolean",
+                    "description": "Save the repeat-masked genome or not?"
+                }
+            }
+        },
+        "rnaseq_pre_processing_options": {
+            "title": "RNASeq pre-processing options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "skip_fastqc": {
+                    "type": "boolean",
+                    "description": "Skip FASTQC or not?"
+                },
+                "skip_fastp": {
+                    "type": "boolean",
+                    "description": "Skip trimming by FASTQP or not?"
+                },
+                "min_trimmed_reads": {
+                    "type": "integer",
+                    "default": 10000,
+                    "description": "Exclude a sample if its reads after trimming are below this number",
+                    "minimum": 0
+                },
+                "extra_fastp_args": {
+                    "type": "string",
+                    "description": "Extra FASTP arguments"
+                },
+                "save_trimmed": {
+                    "type": "boolean",
+                    "description": "Save FASTQ files after trimming or not?"
+                },
+                "remove_ribo_rna": {
+                    "type": "boolean",
+                    "description": "Remove Ribosomal RNA or not?"
+                },
+                "save_non_ribo_reads": {
+                    "type": "boolean",
+                    "description": "Save FASTQ files after Ribosomal RNA removal or not?"
+                },
+                "ribo_database_manifest": {
+                    "type": "string",
+                    "default": "${projectDir}/assets/rrna-db-defaults.txt",
+                    "description": "Ribosomal RNA fastas listed in a text sheet",
+                    "format": "file-path",
+                    "mimetype": "text/txt"
+                }
+            }
+        },
+        "rnaseq_alignment_options": {
+            "title": "RNAseq alignment options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "star_max_intron_length": {
+                    "type": "integer",
+                    "default": 16000,
+                    "minimum": 0,
+                    "description": "Maximum intron length for STAR alignment"
+                },
+                "star_align_extra_args": {
+                    "type": "string",
+                    "description": "EXTRA arguments for STAR"
+                },
+                "star_save_outputs": {
+                    "type": "boolean",
+                    "description": "Save BAM files from STAR or not?"
+                },
+                "save_cat_bam": {
+                    "type": "boolean",
+                    "description": "SAVE a concatenated BAM file per assembly or not?"
+                }
+            }
+        },
+        "annotation_options": {
+            "title": "Annotation options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "braker_extra_args": {
+                    "type": "string",
+                    "description": "Extra arguments for BRAKER"
+                },
+                "liftoff_coverage": {
+                    "type": "number",
+                    "default": 0.9,
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Liftoff coverage parameter"
+                },
+                "liftoff_identity": {
+                    "type": "number",
+                    "default": 0.9,
+                    "description": "Liftoff identity parameter"
+                }
+            }
+        },
+        "max_job_request_options": {
+            "title": "Max job request options",
+            "type": "object",
+            "fa_icon": "fab fa-acquisitions-incorporated",
+            "description": "Set the top limit for requested resources for any single job.",
+            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
+            "properties": {
+                "max_cpus": {
+                    "type": "integer",
+                    "description": "Maximum number of CPUs that can be requested for any single job.",
+                    "default": 12,
+                    "fa_icon": "fas fa-microchip",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
+                },
+                "max_memory": {
+                    "type": "string",
+                    "description": "Maximum amount of memory that can be requested for any single job.",
+                    "default": "200.GB",
+                    "fa_icon": "fas fa-memory",
+                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
+                },
+                "max_time": {
+                    "type": "string",
+                    "description": "Maximum amount of time that can be requested for any single job.",
+                    "default": "1.day",
+                    "fa_icon": "far fa-clock",
+                    "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
+                    "hidden": true,
+                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
+                }
+            }
+        },
+        "infrastructure_options": {
+            "title": "Infrastructure options",
+            "type": "object",
+            "fa_icon": "fas fa-file-import",
+            "description": "",
+            "help_text": "",
+            "properties": {
+                "validationSkipDuplicateCheck": {
+                    "type": "boolean",
+                    "default": true,
+                    "hidden": true
+                },
+                "validationS3PathCheck": {
+                    "type": "boolean",
+                    "default": true,
+                    "hidden": true
                 }
             }
         }
     },
     "allOf": [
         {
-            "$ref": "#/defs/input_output_options"
+            "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/repeat_annotation_options"
+        },
+        {
+            "$ref": "#/definitions/rnaseq_pre_processing_options"
+        },
+        {
+            "$ref": "#/definitions/rnaseq_alignment_options"
+        },
+        {
+            "$ref": "#/definitions/annotation_options"
+        },
+        {
+            "$ref": "#/definitions/max_job_request_options"
+        },
+        {
+            "$ref": "#/definitions/infrastructure_options"
         }
     ]
 }
