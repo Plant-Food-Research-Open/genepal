@@ -6,6 +6,7 @@ include { ALIGN_RNASEQ                          } from '../subworkflows/local/al
 include { PREPARE_EXT_PROTS                     } from '../subworkflows/local/prepare_ext_prots'
 include { FASTA_BRAKER3                         } from '../subworkflows/local/fasta_braker3'
 include { FASTA_LIFTOFF                         } from '../subworkflows/local/fasta_liftoff'
+include { MERGE_ANNOTATIONS                     } from '../subworkflows/local/merge_annotations'
 include { CUSTOM_DUMPSOFTWAREVERSIONS           } from '../modules/nf-core/custom/dumpsoftwareversions'
 
 log.info paramsSummaryLog(workflow)
@@ -195,6 +196,12 @@ workflow PANGENE {
 
     ch_liftoff_gff3             = FASTA_LIFTOFF.out.gff3
     ch_versions                 = ch_versions.mix(FASTA_LIFTOFF.out.versions)
+
+    // SUBWORKFLOW: MERGE_ANNOTATIONS
+    MERGE_ANNOTATIONS ( ch_braker_gff3, ch_liftoff_gff3 )
+
+    ch_merged_gff               = MERGE_ANNOTATIONS.out.merged_gff
+    ch_versions                 = ch_versions.mix(MERGE_ANNOTATIONS.out.versions)
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (

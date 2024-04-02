@@ -5,6 +5,11 @@
         "git@github.com:PlantandFoodResearch/nxf-modules.git": {
             "modules": {
                 "pfr": {
+                    "agat/spfilterfeaturefromkilllist": {
+                        "branch": "main",
+                        "git_sha": "7a9a63b7727b0d3b3943f217809059e8116cee2b",
+                        "installed_by": ["modules"]
+                    },
                     "custom/restoregffids": {
                         "branch": "main",
                         "git_sha": "e9f6bdd634bdbcd52c5568ba82f16176ec06631f",
@@ -104,6 +109,11 @@
                     "gffread": {
                         "branch": "master",
                         "git_sha": "b1b959609bda44341120aed1766329909f54b8d0",
+                        "installed_by": ["modules"]
+                    },
+                    "gt/gff3": {
+                        "branch": "master",
+                        "git_sha": "3c77ca9aac783e76c3614a06db3bfe4fef619bde",
                         "installed_by": ["modules"]
                     },
                     "gunzip": {
