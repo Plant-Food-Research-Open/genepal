@@ -10,6 +10,11 @@
                         "git_sha": "7a9a63b7727b0d3b3943f217809059e8116cee2b",
                         "installed_by": ["modules"]
                     },
+                    "agat/spmergeannotations": {
+                        "branch": "main",
+                        "git_sha": "e2ee3129519098451ef60f8a8ca3b9efcecf2d69",
+                        "installed_by": ["modules"]
+                    },
                     "custom/restoregffids": {
                         "branch": "main",
                         "git_sha": "e9f6bdd634bdbcd52c5568ba82f16176ec06631f",

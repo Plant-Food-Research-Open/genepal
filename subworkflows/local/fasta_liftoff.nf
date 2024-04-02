@@ -1,9 +1,8 @@
-include { GUNZIP as GUNZIP_FASTA                    } from '../../modules/nf-core/gunzip/main'
-include { GUNZIP as GUNZIP_GFF                      } from '../../modules/nf-core/gunzip/main'
-include { GFFREAD as GFFREAD_BEFORE_LIFTOFF         } from '../../modules/nf-core/gffread/main'
-include { LIFTOFF                                   } from '../../modules/nf-core/liftoff/main'
-include { GFFCOMPARE as COMBINE_LIFTOFF_ANNOTATIONS } from '../../modules/nf-core/gffcompare/main'
-include { GFFREAD as GFFREAD_AFTER_LIFTOFF          } from '../../modules/nf-core/gffread/main'
+include { GUNZIP as GUNZIP_FASTA                                } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_GFF                                  } from '../../modules/nf-core/gunzip/main'
+include { GFFREAD as GFFREAD_BEFORE_LIFTOFF                     } from '../../modules/nf-core/gffread/main'
+include { LIFTOFF                                               } from '../../modules/nf-core/liftoff/main'
+include { AGAT_SPMERGEANNOTATIONS as MERGE_LIFTOFF_ANNOTATIONS  } from '../../modules/pfr/agat/spmergeannotations/main'
 
 workflow FASTA_LIFTOFF {
     take:
@@ -95,40 +94,22 @@ workflow FASTA_LIFTOFF {
 
     ch_versions                     = ch_versions.mix(LIFTOFF.out.versions.first())
 
-    // MODULE: GFFCOMPARE as COMBINE_LIFTOFF_ANNOTATIONS
-    ch_gffcompare_inputs            = ch_liftoff_gff3
+    // MODULE: AGAT_SPMERGEANNOTATIONS as MERGE_LIFTOFF_ANNOTATIONS
+    ch_merge_inputs                 = ch_liftoff_gff3
                                     | branch { meta, list_polished ->
                                         one: list_polished.size() == 1
                                         many: list_polished.size() > 1
                                     }
 
-    COMBINE_LIFTOFF_ANNOTATIONS(
-        ch_gffcompare_inputs.many,
-        [ [], [], [] ],
-        [ [], [] ],
+    MERGE_LIFTOFF_ANNOTATIONS(
+        ch_merge_inputs.many,
+        []
     )
 
-    ch_combined_gtf                 = COMBINE_LIFTOFF_ANNOTATIONS.out.combined_gtf
-    ch_versions                     = ch_versions.mix(COMBINE_LIFTOFF_ANNOTATIONS.out.versions.first())
-
-    // MODULE: GFFREAD as GFFREAD_AFTER_LIFTOFF
-    ch_post_gffread_inputs          = ch_combined_gtf
-                                    | map { meta, gtf ->
-                                        [ gtf.baseName, meta, gtf ]
-                                    } // For meta insertion later, remove when GFFREAD has meta
-
-    GFFREAD_AFTER_LIFTOFF ( ch_post_gffread_inputs.map { name, meta, gtf -> gtf } )
-
-    ch_combined_gff3                = GFFREAD_AFTER_LIFTOFF.out.gffread_gff
-                                    | map { gff -> [ gff.baseName - '.gffread', gff ] }
-                                    | join(ch_post_gffread_inputs)
-                                    | map { fid, gffread_gff, meta, gtf -> [ meta, gffread_gff ] }
-                                    // meta insertion
-                                    | mix(ch_gffcompare_inputs.one)
-
-    ch_versions                     = ch_versions.mix(GFFREAD_AFTER_LIFTOFF.out.versions.first())
+    ch_merged_gff                   = MERGE_LIFTOFF_ANNOTATIONS.out.gff.mix(ch_merge_inputs.one)
+    ch_versions                     = ch_versions.mix(MERGE_LIFTOFF_ANNOTATIONS.out.versions.first())
 
     emit:
-    gff3        = ch_combined_gff3              // [ meta, gff3 ]
-    versions    = ch_versions                   // [ versions.yml ]
+    gff3        = ch_merged_gff     // [ meta, gff3 ]
+    versions    = ch_versions       // [ versions.yml ]
 }

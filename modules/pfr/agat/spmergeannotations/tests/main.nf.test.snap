@@ -1,0 +1,47 @@
+{
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,0ae449590befbaac9269ad8a7a84b66d"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-02T17:08:15.459625"
+    },
+    "candidatus_portiera_aleyrodidarum-multi_gffs-stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gff:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,0ae449590befbaac9269ad8a7a84b66d"
+                ],
+                "gff": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gff:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0ae449590befbaac9269ad8a7a84b66d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-04-02T17:08:20.581403"
+    }
+}
