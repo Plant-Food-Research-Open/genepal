@@ -17,4 +17,6 @@ nextflow \
     -profile local,docker \
     -resume \
     $stub \
-    -params-file conf/test_params.json
+    -params-file conf/test_params.json \
+    --eggnogmapper_db_dir ../../dbs/emapperdb/5.0.2 \
+    --eggnogmapper_tax_scope 33090

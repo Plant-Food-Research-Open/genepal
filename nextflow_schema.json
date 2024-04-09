@@ -178,6 +178,16 @@
                     "type": "number",
                     "default": 0.9,
                     "description": "Liftoff identity parameter"
+                },
+                "eggnogmapper_db_dir": {
+                    "type": "string",
+                    "description": "Eggnogmapper database directory",
+                    "format": "directory-path"
+                },
+                "eggnogmapper_tax_scope": {
+                    "type": "integer",
+                    "description": "Eggnogmapper taxonomy scopre",
+                    "minimum": 0
                 }
             }
         },

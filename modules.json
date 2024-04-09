@@ -91,6 +91,11 @@
                         "git_sha": "de45447d060b8c8b98575bc637a4a575fd0638e1",
                         "installed_by": ["modules"]
                     },
+                    "eggnogmapper": {
+                        "branch": "master",
+                        "git_sha": "9be0d5f9aeb31bded6780b5b589de7158ccf2c7b",
+                        "installed_by": ["modules"]
+                    },
                     "fastavalidator": {
                         "branch": "master",
                         "git_sha": "89ff95427f695086369d7927a3c17cea2a37a382",

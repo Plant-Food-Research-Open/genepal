@@ -1,7 +1,7 @@
-name: gffread
+name: eggnogmapper
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::gffread=0.12.7
+  - bioconda::eggnog-mapper=2.1.12

@@ -46,19 +46,9 @@ workflow FASTA_LIFTOFF {
     ch_versions                     = ch_versions.mix(GUNZIP_GFF.out.versions.first())
 
     // MODULE: GFFREAD as GFFREAD_BEFORE_LIFTOFF
-    ch_gffread_inputs               = ch_xref_gunzip_gff
-                                    | map { meta, gff ->
-                                        [ gff.baseName, meta, gff ]
-                                    } // For meta insertion later, remove when GFFREAD has meta
-
-    GFFREAD_BEFORE_LIFTOFF ( ch_gffread_inputs.map { name, meta, gff -> gff } )
+    GFFREAD_BEFORE_LIFTOFF ( ch_xref_gunzip_gff, [] )
 
     ch_gffread_gff                  = GFFREAD_BEFORE_LIFTOFF.out.gffread_gff
-                                    | map { gff -> [ gff.baseName - '.gffread', gff ] }
-                                    | join(ch_gffread_inputs)
-                                    | map { fid, gffread_gff, meta, gff -> [ meta, gffread_gff ] }
-                                    // meta insertion
-
     ch_versions                     = ch_versions.mix(GFFREAD_BEFORE_LIFTOFF.out.versions.first())
 
     // MODULE: LIFTOFF

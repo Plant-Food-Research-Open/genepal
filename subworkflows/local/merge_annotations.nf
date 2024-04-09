@@ -114,6 +114,7 @@ workflow MERGE_ANNOTATIONS {
     ch_versions                 = ch_versions.mix(MERGE_BRAKER_LIFTOFF.out.versions.first())
 
     emit:
-    merged_gff                  = ch_merged_gff
-    versions                    = ch_versions
+    braker_purged               = ch_braker_purged  // [ meta, gff3 ]
+    merged_gff                  = ch_merged_gff     // [ meta, gff3 ]
+    versions                    = ch_versions       // [ versions.yml ]
 }

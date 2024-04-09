@@ -7,6 +7,7 @@ include { PREPARE_EXT_PROTS                     } from '../subworkflows/local/pr
 include { FASTA_BRAKER3                         } from '../subworkflows/local/fasta_braker3'
 include { FASTA_LIFTOFF                         } from '../subworkflows/local/fasta_liftoff'
 include { MERGE_ANNOTATIONS                     } from '../subworkflows/local/merge_annotations'
+include { GFF_EGGNOGMAPPER                      } from '../subworkflows/local/gff_eggnogmapper'
 include { CUSTOM_DUMPSOFTWAREVERSIONS           } from '../modules/nf-core/custom/dumpsoftwareversions'
 
 log.info paramsSummaryLog(workflow)
@@ -201,7 +202,17 @@ workflow PANGENE {
     MERGE_ANNOTATIONS ( ch_braker_gff3, ch_liftoff_gff3 )
 
     ch_merged_gff               = MERGE_ANNOTATIONS.out.merged_gff
+    ch_braker_purged            = MERGE_ANNOTATIONS.out.braker_purged
     ch_versions                 = ch_versions.mix(MERGE_ANNOTATIONS.out.versions)
+
+    // SUBWORKFLOW: GFF_EGGNOGMAPPER
+    GFF_EGGNOGMAPPER(
+        ch_braker_purged,
+        ch_valid_target_assembly,
+        params.eggnogmapper_db_dir,
+    )
+
+    ch_versions                 = ch_versions.mix(GFF_EGGNOGMAPPER.out.versions)
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
