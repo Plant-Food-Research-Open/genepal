@@ -109,7 +109,8 @@
                     "eggnogmapper": {
                         "branch": "master",
                         "git_sha": "9be0d5f9aeb31bded6780b5b589de7158ccf2c7b",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/eggnogmapper/eggnogmapper.diff"
                     },
                     "fastavalidator": {
                         "branch": "master",
@@ -134,7 +135,8 @@
                     "gffread": {
                         "branch": "master",
                         "git_sha": "b1b959609bda44341120aed1766329909f54b8d0",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/gffread/gffread.diff"
                     },
                     "gt/gff3": {
                         "branch": "master",
