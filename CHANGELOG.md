@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 24. Added `GFF_EGGNOGMAPPER` sub-workflow
 25. Now using a custom version of `GFFREAD` which supports `meta` and `fasta`
 26. Now using TSEBRA to purge models which do not have full intron support from BRAKER hints
+27. Added params `eggnogmapper_evalue` and `eggnogmapper_pident`
 
 ### `Fixed`
 
