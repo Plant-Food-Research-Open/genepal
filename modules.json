@@ -7,42 +7,42 @@
                 "pfr": {
                     "agat/spfilterfeaturefromkilllist": {
                         "branch": "main",
-                        "git_sha": "7a9a63b7727b0d3b3943f217809059e8116cee2b",
+                        "git_sha": "10b046eaac396f279c08e7e2bb067482ccd9c74e",
                         "installed_by": ["modules"]
                     },
                     "agat/spmergeannotations": {
                         "branch": "main",
-                        "git_sha": "e2ee3129519098451ef60f8a8ca3b9efcecf2d69",
+                        "git_sha": "10b046eaac396f279c08e7e2bb067482ccd9c74e",
                         "installed_by": ["modules"]
                     },
                     "custom/restoregffids": {
                         "branch": "main",
-                        "git_sha": "e9f6bdd634bdbcd52c5568ba82f16176ec06631f",
+                        "git_sha": "10b046eaac396f279c08e7e2bb067482ccd9c74e",
                         "installed_by": ["fasta_edta_lai"]
                     },
                     "custom/shortenfastaids": {
                         "branch": "main",
-                        "git_sha": "5e0e41b51d7fc7f68ae43692b6fe19b95d7f3a8c",
+                        "git_sha": "10b046eaac396f279c08e7e2bb067482ccd9c74e",
                         "installed_by": ["fasta_edta_lai"]
                     },
                     "edta/edta": {
                         "branch": "main",
-                        "git_sha": "35468dbb1f35eb17a43d7e05544601c7c3f8cd90",
+                        "git_sha": "10b046eaac396f279c08e7e2bb067482ccd9c74e",
                         "installed_by": ["fasta_edta_lai"]
                     },
                     "ltrretriever/lai": {
                         "branch": "main",
-                        "git_sha": "154661d7c1769532ff7b5f11259644ec200dd47d",
+                        "git_sha": "10b046eaac396f279c08e7e2bb067482ccd9c74e",
                         "installed_by": ["fasta_edta_lai"]
                     },
                     "repeatmodeler/builddatabase": {
                         "branch": "main",
-                        "git_sha": "9da0567f685b2772f65290f2bd6d6347671c8310",
+                        "git_sha": "10b046eaac396f279c08e7e2bb067482ccd9c74e",
                         "installed_by": ["modules"]
                     },
                     "repeatmodeler/repeatmodeler": {
                         "branch": "main",
-                        "git_sha": "9da0567f685b2772f65290f2bd6d6347671c8310",
+                        "git_sha": "10b046eaac396f279c08e7e2bb067482ccd9c74e",
                         "installed_by": ["modules"]
                     },
                     "tsebra": {
@@ -56,7 +56,7 @@
                 "pfr": {
                     "fasta_edta_lai": {
                         "branch": "main",
-                        "git_sha": "ba9c14555adf50c193f326dc91f48b770fe9b1ae",
+                        "git_sha": "10b046eaac396f279c08e7e2bb067482ccd9c74e",
                         "installed_by": ["subworkflows"]
                     }
                 }
@@ -123,7 +123,7 @@
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "f4ae1d942bd50c5c0b9bd2de1393ce38315ba57c",
+                        "git_sha": "285a50500f9e02578d90b3ce6382ea3c30216acd",
                         "installed_by": ["fastq_fastqc_umitools_fastp", "modules"]
                     },
                     "gffcompare": {
