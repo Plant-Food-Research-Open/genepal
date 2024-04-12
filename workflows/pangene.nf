@@ -213,14 +213,14 @@ workflow PANGENE {
     ch_braker_purged_gff        = PURGE_BREAKER_MODELS.out.braker_purged_gff | view
     ch_versions                 = ch_versions.mix(PURGE_BREAKER_MODELS.out.versions)
 
-    // // SUBWORKFLOW: GFF_EGGNOGMAPPER
-    // GFF_EGGNOGMAPPER(
-    //     ch_braker_purged,
-    //     ch_valid_target_assembly,
-    //     params.eggnogmapper_db_dir,
-    // )
+    // SUBWORKFLOW: GFF_EGGNOGMAPPER
+    GFF_EGGNOGMAPPER(
+        ch_braker_purged,
+        ch_valid_target_assembly,
+        params.eggnogmapper_db_dir,
+    )
 
-    // ch_versions                 = ch_versions.mix(GFF_EGGNOGMAPPER.out.versions)
+    ch_versions                 = ch_versions.mix(GFF_EGGNOGMAPPER.out.versions)
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
