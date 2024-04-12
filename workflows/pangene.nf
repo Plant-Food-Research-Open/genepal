@@ -6,7 +6,7 @@ include { ALIGN_RNASEQ                          } from '../subworkflows/local/al
 include { PREPARE_EXT_PROTS                     } from '../subworkflows/local/prepare_ext_prots'
 include { FASTA_BRAKER3                         } from '../subworkflows/local/fasta_braker3'
 include { FASTA_LIFTOFF                         } from '../subworkflows/local/fasta_liftoff'
-include { MERGE_ANNOTATIONS                     } from '../subworkflows/local/merge_annotations'
+include { PURGE_BREAKER_MODELS                  } from '../subworkflows/local/purge_breaker_models'
 include { GFF_EGGNOGMAPPER                      } from '../subworkflows/local/gff_eggnogmapper'
 include { CUSTOM_DUMPSOFTWAREVERSIONS           } from '../modules/nf-core/custom/dumpsoftwareversions'
 
@@ -124,8 +124,12 @@ workflow PANGENE {
                                     gff: [ [ id: idFromFileName( fastaFile.baseName ) ], file(gff, checkIfExists:true) ]
                                 }
 
-    ch_liftoff_fasta               = ch_liftoff_mm.fasta
-    ch_liftoff_gff                 = ch_liftoff_mm.gff
+    ch_liftoff_fasta            = ch_liftoff_mm.fasta
+    ch_liftoff_gff              = ch_liftoff_mm.gff
+
+    val_tsebra_config           = params.braker_allow_isoforms
+                                ? "${projectDir}/assets/tsebra-default.cfg"
+                                : "${projectDir}/assets/tsebra-1form.cfg"
 
     // SUBWORKFLOW: PREPARE_ASSEMBLY
     PREPARE_ASSEMBLY(
@@ -198,21 +202,25 @@ workflow PANGENE {
     ch_liftoff_gff3             = FASTA_LIFTOFF.out.gff3
     ch_versions                 = ch_versions.mix(FASTA_LIFTOFF.out.versions)
 
-    // SUBWORKFLOW: MERGE_ANNOTATIONS
-    MERGE_ANNOTATIONS ( ch_braker_gff3, ch_liftoff_gff3 )
-
-    ch_merged_gff               = MERGE_ANNOTATIONS.out.merged_gff
-    ch_braker_purged            = MERGE_ANNOTATIONS.out.braker_purged
-    ch_versions                 = ch_versions.mix(MERGE_ANNOTATIONS.out.versions)
-
-    // SUBWORKFLOW: GFF_EGGNOGMAPPER
-    GFF_EGGNOGMAPPER(
-        ch_braker_purged,
-        ch_valid_target_assembly,
-        params.eggnogmapper_db_dir,
+    // SUBWORKFLOW: PURGE_BREAKER_MODELS
+    PURGE_BREAKER_MODELS(
+        ch_braker_gff3,
+        ch_braker_hints,
+        ch_liftoff_gff3,
+        val_tsebra_config
     )
 
-    ch_versions                 = ch_versions.mix(GFF_EGGNOGMAPPER.out.versions)
+    ch_braker_purged_gff        = PURGE_BREAKER_MODELS.out.braker_purged_gff | view
+    ch_versions                 = ch_versions.mix(PURGE_BREAKER_MODELS.out.versions)
+
+    // // SUBWORKFLOW: GFF_EGGNOGMAPPER
+    // GFF_EGGNOGMAPPER(
+    //     ch_braker_purged,
+    //     ch_valid_target_assembly,
+    //     params.eggnogmapper_db_dir,
+    // )
+
+    // ch_versions                 = ch_versions.mix(GFF_EGGNOGMAPPER.out.versions)
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (

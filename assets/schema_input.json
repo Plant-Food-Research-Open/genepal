@@ -36,7 +36,7 @@
                 ],
                 "errorMessage": "TE library FASTA file path cannot contain spaces and must have extension '.f(a|asta|as|sa|na)' or '.f(a|asta|as|sa|na).gz'"
             },
-            "annotation_gff3": {
+            "braker_gff3": {
                 "anyOf": [
                     {
                         "type": "string",
@@ -47,10 +47,10 @@
                         "maxLength": 0
                     }
                 ],
-                "errorMessage": "Annotation GFF3 file path cannot contain spaces and must have extension '.gff.gz', '.gff3.gz', '.gff' or '.gff3'",
-                "dependentRequired": ["annotation_hints"]
+                "errorMessage": "BRAKER GFF3 file path cannot contain spaces and must have extension '.gff.gz', '.gff3.gz', '.gff' or '.gff3'",
+                "dependentRequired": ["braker_hints"]
             },
-            "annotation_hints": {
+            "braker_hints": {
                 "anyOf": [
                     {
                         "type": "string",
@@ -61,7 +61,7 @@
                         "maxLength": 0
                     }
                 ],
-                "errorMessage": "Annotation hints GFF/GFF3 file path cannot contain spaces and must have extension '.gff.gz', '.gff3.gz', '.gff' or '.gff3'"
+                "errorMessage": "BRAKER hints GFF/GFF3 file path cannot contain spaces and must have extension '.gff.gz', '.gff3.gz', '.gff' or '.gff3'"
             }
         },
         "required": ["tag", "fasta", "is_masked"]

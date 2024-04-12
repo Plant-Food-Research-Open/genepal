@@ -167,6 +167,11 @@
                     "type": "string",
                     "description": "Extra arguments for BRAKER"
                 },
+                "braker_allow_isoforms": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Allow multiple isoforms for gene models"
+                },
                 "liftoff_coverage": {
                     "type": "number",
                     "default": 0.9,

@@ -55,7 +55,7 @@ workflow FASTA_BRAKER3 {
     // WORKFLOW: FILE_GUNZIP as BRAKER_HINTS_GUNZIP
     BRAKER_HINTS_GUNZIP ( ch_braker_hints )
 
-    ch_braker_hints             = BRAKER_GFF3_GUNZIP.out.gunzip
+    ch_braker_hints             = BRAKER_HINTS_GUNZIP.out.gunzip
     ch_versions                 = ch_versions.mix(BRAKER_HINTS_GUNZIP.out.versions)
 
     emit:
