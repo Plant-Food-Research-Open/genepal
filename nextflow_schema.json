@@ -197,14 +197,19 @@
                 "eggnogmapper_evalue": {
                     "type": "number",
                     "default": 1e-5,
-                    "description": "Report only alignments below or equal the e-value threshold"
+                    "description": "Only report alignments below or equal the e-value threshold"
                 },
                 "eggnogmapper_pident": {
                     "type": "integer",
                     "default": 35,
-                    "description": "Report only alignments above or equal to the given percentage of identity (0-100)",
+                    "description": "Only report alignments above or equal to the given percentage of identity (0-100)",
                     "minimum": 0,
                     "maximum": 100
+                },
+                "eggnogmapper_purge_nohits": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Purge predicted transcripts which do not have a hit against eggnog"
                 }
             }
         },

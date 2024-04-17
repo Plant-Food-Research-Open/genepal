@@ -8,7 +8,6 @@ workflow GFF_EGGNOGMAPPER {
     db_folder                   // val(db_folder)
 
     main:
-
     // Versions
     ch_versions                 = Channel.empty()
 
@@ -35,8 +34,14 @@ workflow GFF_EGGNOGMAPPER {
         [ [], [] ]
     )
 
+    ch_eggnogmapper_annotations = EGGNOGMAPPER.out.annotations
+    ch_eggnogmapper_orthologs   = EGGNOGMAPPER.out.orthologs
+    ch_eggnogmapper_hits        = EGGNOGMAPPER.out.hits
     ch_versions                 = ch_versions.mix(EGGNOGMAPPER.out.versions.first())
 
     emit:
+    eggnogmapper_annotations    = ch_eggnogmapper_annotations
+    eggnogmapper_orthologs      = ch_eggnogmapper_orthologs
+    eggnogmapper_hits           = ch_eggnogmapper_hits
     versions                    = ch_versions
 }
