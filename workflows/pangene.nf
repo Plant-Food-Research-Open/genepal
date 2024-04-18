@@ -7,8 +7,9 @@ include { PREPARE_EXT_PROTS                     } from '../subworkflows/local/pr
 include { FASTA_BRAKER3                         } from '../subworkflows/local/fasta_braker3'
 include { FASTA_LIFTOFF                         } from '../subworkflows/local/fasta_liftoff'
 include { PURGE_BREAKER_MODELS                  } from '../subworkflows/local/purge_breaker_models'
+include { AGAT_SPMERGEANNOTATIONS               } from '../modules/pfr/agat/spmergeannotations/main'
 include { GFF_EGGNOGMAPPER                      } from '../subworkflows/local/gff_eggnogmapper'
-include { PURGE_NOHIT_BRAKER_MODELS             } from '../subworkflows/local/purge_nohit_braker_models'
+include { PURGE_NOHIT_MODELS                    } from '../subworkflows/local/purge_nohit_models'
 include { CUSTOM_DUMPSOFTWAREVERSIONS           } from '../modules/nf-core/custom/dumpsoftwareversions'
 
 log.info paramsSummaryLog(workflow)
@@ -214,25 +215,44 @@ workflow PANGENE {
     ch_braker_purged_gff        = PURGE_BREAKER_MODELS.out.braker_purged_gff
     ch_versions                 = ch_versions.mix(PURGE_BREAKER_MODELS.out.versions)
 
-    // // SUBWORKFLOW: GFF_EGGNOGMAPPER
-    // GFF_EGGNOGMAPPER(
-    //     ch_braker_purged_gff,
-    //     ch_valid_target_assembly,
-    //     params.eggnogmapper_db_dir,
-    // )
+    // MODULE: AGAT_SPMERGEANNOTATIONS
+    ch_gff_branch               = ch_liftoff_gff3
+                                | join(ch_braker_purged_gff, remainder:true)
+                                | branch { meta, liftoff_gff, braker_gff ->
+                                    both        : ( liftoff_gff && braker_gff )
+                                    liftoff_only: ( liftoff_gff && ( ! braker_gff ) )
+                                    braker_only : ( ( ! liftoff_gff ) && braker_gff )
+                                }
 
-    // ch_eggnogmapper_hits        = GFF_EGGNOGMAPPER.out.eggnogmapper_hits
-    // ch_versions                 = ch_versions.mix(GFF_EGGNOGMAPPER.out.versions)
+    AGAT_SPMERGEANNOTATIONS(
+        ch_gff_branch.both.map { meta, lg, bg -> [ meta, [ lg, bg ] ] },
+        []
+    )
 
-    // // SUBWORKFLOW: PURGE_NOHIT_BRAKER_MODELS
-    // PURGE_NOHIT_BRAKER_MODELS(
-    //     ch_braker_purged_gff,
-    //     ch_eggnogmapper_hits,
-    //     params.eggnogmapper_purge_nohits
-    // )
+    ch_merged_gff               = AGAT_SPMERGEANNOTATIONS.out.gff
+                                | mix(ch_gff_branch.liftoff_only)
+                                | mix(ch_gff_branch.braker_only)
+    ch_versions                 = ch_versions.mix(AGAT_SPMERGEANNOTATIONS.out.versions.first())
 
-    // ch_braker_purged_marked_gff = PURGE_NOHIT_BRAKER_MODELS.out.purged_or_marked_gff
-    // ch_versions                 = ch_versions.mix(PURGE_NOHIT_BRAKER_MODELS.out.versions)
+    // SUBWORKFLOW: GFF_EGGNOGMAPPER
+    GFF_EGGNOGMAPPER(
+        ch_merged_gff,
+        ch_valid_target_assembly,
+        params.eggnogmapper_db_dir,
+    )
+
+    ch_eggnogmapper_hits        = GFF_EGGNOGMAPPER.out.eggnogmapper_hits
+    ch_versions                 = ch_versions.mix(GFF_EGGNOGMAPPER.out.versions)
+
+    // SUBWORKFLOW: PURGE_NOHIT_MODELS
+    PURGE_NOHIT_MODELS(
+        ch_merged_gff,
+        ch_eggnogmapper_hits,
+        params.eggnogmapper_purge_nohits
+    )
+
+    ch_purged_marked_gff        = PURGE_NOHIT_MODELS.out.purged_or_marked_gff
+    ch_versions                 = ch_versions.mix(PURGE_NOHIT_MODELS.out.versions)
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (

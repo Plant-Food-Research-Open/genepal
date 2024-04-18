@@ -209,7 +209,7 @@
                 "eggnogmapper_purge_nohits": {
                     "type": "boolean",
                     "default": true,
-                    "description": "Purge predicted transcripts which do not have a hit against eggnog"
+                    "description": "Purge transcripts which do not have a hit against eggnog"
                 }
             }
         },
