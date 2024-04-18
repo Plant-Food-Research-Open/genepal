@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 26. Now using TSEBRA to purge models which do not have full intron support from BRAKER hints
 27. Added params `eggnogmapper_evalue` and `eggnogmapper_pident`
 28. Added `PURGE_NOHIT_BRAKER_MODELS` sub-workflow
+29. Removed liftoff models with `valid_ORF=False`
 
 ### `Fixed`
 

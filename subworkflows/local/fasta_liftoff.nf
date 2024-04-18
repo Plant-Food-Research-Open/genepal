@@ -3,6 +3,8 @@ include { GUNZIP as GUNZIP_GFF                                  } from '../../mo
 include { GFFREAD as GFFREAD_BEFORE_LIFTOFF                     } from '../../modules/nf-core/gffread/main'
 include { LIFTOFF                                               } from '../../modules/nf-core/liftoff/main'
 include { AGAT_SPMERGEANNOTATIONS as MERGE_LIFTOFF_ANNOTATIONS  } from '../../modules/pfr/agat/spmergeannotations/main'
+include { AGAT_SPFILTERFEATUREFROMKILLLIST                      } from '../../modules/pfr/agat/spfilterfeaturefromkilllist/main'
+include { GFFREAD as GFFREAD_AFTER_LIFTOFF                      } from '../../modules/nf-core/gffread/main'
 
 workflow FASTA_LIFTOFF {
     take:
@@ -99,7 +101,58 @@ workflow FASTA_LIFTOFF {
     ch_merged_gff                   = MERGE_LIFTOFF_ANNOTATIONS.out.gff.mix(ch_merge_inputs.one)
     ch_versions                     = ch_versions.mix(MERGE_LIFTOFF_ANNOTATIONS.out.versions.first())
 
+    // COLLECTFILE: Transcript level kill list
+    ch_kill_list                    = ch_merged_gff
+                                    | map { meta, gff ->
+
+                                        def tx_from_gff = gff.readLines()
+                                            .findAll { it ->
+                                                if ( it.startsWith('#') ) { return false }
+
+                                                def cols = it.split('\t')
+                                                def feat = cols[2]
+                                                if ( ! ( feat == 'transcript' || feat == 'mRNA' ) ) { return false }
+
+                                                def attrs = cols[8]
+                                                attrs.contains('valid_ORF=False')
+                                            }
+                                            .collect {
+                                                def cols    = it.split('\t')
+                                                def attrs   = cols[8]
+
+                                                def matches = attrs =~ /ID=([^;]*)/
+
+                                                return matches[0][1]
+                                            }
+
+                                        [ "${meta.id}.kill.list.txt" ] + tx_from_gff.join('\n')
+                                    }
+                                    | collectFile(newLine: true)
+                                    | map { file ->
+                                        [ [ id: file.baseName.replace('.kill.list', '') ], file ]
+                                    }
+
+    // MODULE: AGAT_SPFILTERFEATUREFROMKILLLIST
+    ch_agat_kill_inputs             = ch_merged_gff
+                                    | join(ch_kill_list)
+
+
+    AGAT_SPFILTERFEATUREFROMKILLLIST(
+        ch_agat_kill_inputs.map { meta, gff, kill -> [ meta, gff ] },
+        ch_agat_kill_inputs.map { meta, gff, kill -> kill },
+        [] // default config
+    )
+
+    ch_liftoff_purged_gff           = AGAT_SPFILTERFEATUREFROMKILLLIST.out.gff
+    ch_versions                     = ch_versions.mix(AGAT_SPFILTERFEATUREFROMKILLLIST.out.versions.first())
+
+    // MODULE: GFFREAD as GFFREAD_AFTER_LIFTOFF
+    GFFREAD_AFTER_LIFTOFF ( ch_liftoff_purged_gff, [] )
+
+    ch_attr_trimmed_gff             = GFFREAD_AFTER_LIFTOFF.out.gffread_gff
+    ch_versions                     = ch_versions.mix(GFFREAD_AFTER_LIFTOFF.out.versions.first())
+
     emit:
-    gff3        = ch_merged_gff     // [ meta, gff3 ]
-    versions    = ch_versions       // [ versions.yml ]
+    gff3                            = ch_attr_trimmed_gff   // [ meta, gff3 ]
+    versions                        = ch_versions           // [ versions.yml ]
 }

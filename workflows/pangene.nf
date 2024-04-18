@@ -214,25 +214,25 @@ workflow PANGENE {
     ch_braker_purged_gff        = PURGE_BREAKER_MODELS.out.braker_purged_gff
     ch_versions                 = ch_versions.mix(PURGE_BREAKER_MODELS.out.versions)
 
-    // SUBWORKFLOW: GFF_EGGNOGMAPPER
-    GFF_EGGNOGMAPPER(
-        ch_braker_purged_gff,
-        ch_valid_target_assembly,
-        params.eggnogmapper_db_dir,
-    )
+    // // SUBWORKFLOW: GFF_EGGNOGMAPPER
+    // GFF_EGGNOGMAPPER(
+    //     ch_braker_purged_gff,
+    //     ch_valid_target_assembly,
+    //     params.eggnogmapper_db_dir,
+    // )
 
-    ch_eggnogmapper_hits        = GFF_EGGNOGMAPPER.out.eggnogmapper_hits
-    ch_versions                 = ch_versions.mix(GFF_EGGNOGMAPPER.out.versions)
+    // ch_eggnogmapper_hits        = GFF_EGGNOGMAPPER.out.eggnogmapper_hits
+    // ch_versions                 = ch_versions.mix(GFF_EGGNOGMAPPER.out.versions)
 
-    // SUBWORKFLOW: PURGE_NOHIT_BRAKER_MODELS
-    PURGE_NOHIT_BRAKER_MODELS(
-        ch_braker_purged_gff,
-        ch_eggnogmapper_hits,
-        params.eggnogmapper_purge_nohits
-    )
+    // // SUBWORKFLOW: PURGE_NOHIT_BRAKER_MODELS
+    // PURGE_NOHIT_BRAKER_MODELS(
+    //     ch_braker_purged_gff,
+    //     ch_eggnogmapper_hits,
+    //     params.eggnogmapper_purge_nohits
+    // )
 
-    ch_braker_purged_marked_gff = PURGE_NOHIT_BRAKER_MODELS.out.purged_or_marked_gff
-    ch_versions                 = ch_versions.mix(PURGE_NOHIT_BRAKER_MODELS.out.versions)
+    // ch_braker_purged_marked_gff = PURGE_NOHIT_BRAKER_MODELS.out.purged_or_marked_gff
+    // ch_versions                 = ch_versions.mix(PURGE_NOHIT_BRAKER_MODELS.out.versions)
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
