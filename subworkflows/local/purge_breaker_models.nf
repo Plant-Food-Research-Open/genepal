@@ -96,9 +96,9 @@ workflow PURGE_BREAKER_MODELS {
 
     // COLLECTFILE: Format AGAT_CONVERTSPGXF2GXF output
     ch_tsebra_gff               = ch_tsebra_formatted_gff
-                                | map { meta, gtf ->
+                                | map { meta, gff ->
 
-                                    def lines = gtf.readLines()
+                                    def lines = gff.readLines()
                                         .collect { line ->
                                             if ( line.startsWith('#') ) { return line }
 

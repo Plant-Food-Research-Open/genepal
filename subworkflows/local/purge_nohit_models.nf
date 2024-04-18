@@ -85,7 +85,7 @@ workflow PURGE_NOHIT_MODELS {
                                             return ( line + ';note=No%20eggnog%20hit' )
                                         }
 
-                                    [ "${meta.id}.marked.gff3" ] + marked_gff_lines.join('\n')
+                                    [ "${meta.id}.marked.gff" ] + marked_gff_lines.join('\n')
                                 }
                                 | collectFile(newLine: true)
                                 | map { file ->

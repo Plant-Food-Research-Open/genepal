@@ -7,7 +7,7 @@ include { PREPARE_EXT_PROTS                     } from '../subworkflows/local/pr
 include { FASTA_BRAKER3                         } from '../subworkflows/local/fasta_braker3'
 include { FASTA_LIFTOFF                         } from '../subworkflows/local/fasta_liftoff'
 include { PURGE_BREAKER_MODELS                  } from '../subworkflows/local/purge_breaker_models'
-include { AGAT_SPMERGEANNOTATIONS               } from '../modules/pfr/agat/spmergeannotations/main'
+include { GFF_MERGE_CLEANUP                     } from '../subworkflows/local/gff_merge_cleanup'
 include { GFF_EGGNOGMAPPER                      } from '../subworkflows/local/gff_eggnogmapper'
 include { PURGE_NOHIT_MODELS                    } from '../subworkflows/local/purge_nohit_models'
 include { CUSTOM_DUMPSOFTWAREVERSIONS           } from '../modules/nf-core/custom/dumpsoftwareversions'
@@ -215,24 +215,14 @@ workflow PANGENE {
     ch_braker_purged_gff        = PURGE_BREAKER_MODELS.out.braker_purged_gff
     ch_versions                 = ch_versions.mix(PURGE_BREAKER_MODELS.out.versions)
 
-    // MODULE: AGAT_SPMERGEANNOTATIONS
-    ch_gff_branch               = ch_liftoff_gff3
-                                | join(ch_braker_purged_gff, remainder:true)
-                                | branch { meta, liftoff_gff, braker_gff ->
-                                    both        : ( liftoff_gff && braker_gff )
-                                    liftoff_only: ( liftoff_gff && ( ! braker_gff ) )
-                                    braker_only : ( ( ! liftoff_gff ) && braker_gff )
-                                }
-
-    AGAT_SPMERGEANNOTATIONS(
-        ch_gff_branch.both.map { meta, lg, bg -> [ meta, [ lg, bg ] ] },
-        []
+    // SUBWORKFLOW: GFF_MERGE_CLEANUP
+    GFF_MERGE_CLEANUP(
+        ch_braker_purged_gff,
+        ch_liftoff_gff3
     )
 
-    ch_merged_gff               = AGAT_SPMERGEANNOTATIONS.out.gff
-                                | mix(ch_gff_branch.liftoff_only)
-                                | mix(ch_gff_branch.braker_only)
-    ch_versions                 = ch_versions.mix(AGAT_SPMERGEANNOTATIONS.out.versions.first())
+    ch_merged_gff               = GFF_MERGE_CLEANUP.out.gff
+    ch_versions                 = ch_versions.mix(GFF_MERGE_CLEANUP.out.versions)
 
     // SUBWORKFLOW: GFF_EGGNOGMAPPER
     GFF_EGGNOGMAPPER(

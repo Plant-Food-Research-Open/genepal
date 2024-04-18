@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 28. Added `PURGE_NOHIT_BRAKER_MODELS` sub-workflow
 29. Removed liftoff models with `valid_ORF=False`
 30. Now merging BRAKER and liftoff models before running eggnogmapper
+31. Added `GFF_MERGE_CLEANUP` sub-workflow
 
 ### `Fixed`
 
