@@ -1,0 +1,71 @@
+---
+title: "Splice_sites"
+author: "Jason Shiller"
+format: html
+editor: visual
+---
+
+Workflow to find a tool or method to identify and quantify splice sites given a gff/gtf and a fasta file so we can track the behaviour of our tools in the pangene pipeline with genes containing non canonical splice sites
+
+"The average composition of splice sites across all investigated species is 98.7% for GT-AG, 1.2% for GC-AG, 0.06% for AT-AC, and 0.09% for minor non-canonical splice sites" (This is from 121 species of plants)
+
+**from: https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-018-5360-z**
+
+```{r}
+Sys.setenv(refgff = "/workspace/hrtjbs/Annotation_Pipeline_2023/liftOff_tests/refseqs/RU01.20221117162301.no.extras.primary.gff3",refgn = "/workspace/hrtjbs/Annotation_Pipeline_2023/liftOff_tests/refseqs/Russell_V2a.chromosomes.only.fsa")
+```
+
+#Run on powerplant interactive session
+
+```{bash}
+
+mkdir -p /workspace/hrtjbs/pangene_2024/pangene/prototyping/splice_sites
+cd /workspace/hrtjbs/pangene_2024/pangene/prototyping/splice_sites
+module load conda
+conda activate /powerplant/workspace/hrtjbs/agat
+
+
+agat_sp_add_introns.pl --gff $refgff -o Russell_plus_introns.gff3
+agat_sp_extract_sequences.pl --gff Russell_plus_introns.gff3 --fasta $refgn -t intron -o Russell.introns.fasta
+
+
+#run script to extract splice sites from each intron and count them. This outputs the summary of the number of canononical splice sites (stdout) and the gene names associted with each non canon splice site which goes into non_canonical.txt below
+python intron_summarise.py Russell.introns.fasta non_canonical.txt
+
+```
+
+Canonical splice site frequencies:
+
+```         
+GTAG: 163260
+GCAG: 2187
+AGAC: 3
+```
+
+Clean up the output and get some cleaner summaries
+
+```{r}
+library(dplyr)
+
+#read in the output summary file from intron_summarise.py which contains all the non canonical splice sites and the associated genes
+non_can_raw = read.table(file = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/splice_sites/non_canonical.txt")
+
+#reheader and remove extra strings and columns just keeping gene id, chr and the splice sites 
+splice_summary = non_can_raw %>% select(V3,V4,V6) %>% 
+  rename("GeneID" = V3,"Chr" = V4,"SpliceSites" = V6)
+splice_summary$GeneID = gsub(x = splice_summary$GeneID,pattern = "gene=",replacement = "")
+splice_summary$Chr = gsub(x = splice_summary$Chr,pattern = "seq_id=",replacement = "")
+
+#create freq tabl of non canonical splice sites and write to file 
+write.table(x =  as.data.frame(table(splice_summary$SpliceSites)) %>% arrange(desc(Freq)),file = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/splice_sites/non_canonical.frequency.txt",quote = FALSE,sep = "\t",row.names = FALSE)
+
+#write the summary of non canonical splice site contaoining genes
+write.table(x = splice_summary,file = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/splice_sites/non.canonical.splice.sites.by.gene.txt",sep = "\t",quote = FALSE,row.names = FALSE)
+
+
+```
+
+```         
+914 introns
+842 genes
+```
