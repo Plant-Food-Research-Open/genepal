@@ -53,8 +53,11 @@ workflow GFF_MERGE_CLEANUP {
                                             // Remove attributes and use AGAT_CONVERTSPGXF2GXF
                                             // to create attributes based on sequential layout
 
+                                            def feat_r  = feat == 'transcript' ? 'mRNA' : feat
+                                            // Use mRNA inplace of transcript
+
                                             if ( feat != 'gene' || program != 'Liftoff' ) {
-                                                return ( cols[0..7] + [ atts_r ] ).join('\t')
+                                                return ( cols[0..1] + [ feat_r ] + cols[3..7] + [ atts_r ] ).join('\t')
                                             }
 
                                             def gene_id = ( atts =~ /ID=([^;]*)/ )[0][1]

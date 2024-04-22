@@ -58,7 +58,7 @@ workflow PURGE_NOHIT_MODELS {
     ch_target_purged_gff        = AGAT_SPFILTERFEATUREFROMKILLLIST.out.gff
     ch_versions                 = ch_versions.mix(AGAT_SPFILTERFEATUREFROMKILLLIST.out.versions.first())
 
-    // COLLECTFILE: Mark transcripts with note=No%20eggnog%20hit
+    // COLLECTFILE: Mark transcripts with description=hypothetical%20protein%20%7C%20no%20eggnog%20hit
     ch_marked_gff               = val_purge_nohits
                                 ? Channel.empty()
                                 : ch_target_gff
@@ -82,7 +82,7 @@ workflow PURGE_NOHIT_MODELS {
 
                                             if ( ! ( tx_id in tx_without_hits ) ) { return line }
 
-                                            return ( line + ';note=No%20eggnog%20hit' )
+                                            return ( line + ';description=hypothetical%20protein%20%7C%20no%20eggnog%20hit' )
                                         }
 
                                     [ "${meta.id}.marked.gff" ] + marked_gff_lines.join('\n')

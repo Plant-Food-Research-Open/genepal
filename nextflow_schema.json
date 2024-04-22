@@ -208,7 +208,7 @@
                 },
                 "eggnogmapper_purge_nohits": {
                     "type": "boolean",
-                    "default": true,
+                    "default": false,
                     "description": "Purge transcripts which do not have a hit against eggnog"
                 }
             }

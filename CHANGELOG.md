@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.2.0+dev - [18-April-2024]
+## 0.2.0+dev - [22-April-2024]
 
 ### `Added`
 
@@ -38,11 +38,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 29. Removed liftoff models with `valid_ORF=False`
 30. Now merging BRAKER and liftoff models before running eggnogmapper
 31. Added `GFF_MERGE_CLEANUP` sub-workflow
+32. Now using `description` field to store notes and textual annotations in the gff files
+33. Now using `mRNA` in place of `transcript` in gff files
+34. Now `eggnogmapper_purge_nohits` is set to `false` by default
 
 ### `Fixed`
 
 ### `Dependencies`
 
 1. NextFlow!>=23.04.4
+2. nf-validation=1.1.3
 
 ### `Deprecated`
