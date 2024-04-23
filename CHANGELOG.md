@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 32. Now using `description` field to store notes and textual annotations in the gff files
 33. Now using `mRNA` in place of `transcript` in gff files
 34. Now `eggnogmapper_purge_nohits` is set to `false` by default
+35. Added `GFF_STORE` sub workflow
 
 ### `Fixed`
 

@@ -10,6 +10,7 @@ include { PURGE_BREAKER_MODELS                  } from '../subworkflows/local/pu
 include { GFF_MERGE_CLEANUP                     } from '../subworkflows/local/gff_merge_cleanup'
 include { GFF_EGGNOGMAPPER                      } from '../subworkflows/local/gff_eggnogmapper'
 include { PURGE_NOHIT_MODELS                    } from '../subworkflows/local/purge_nohit_models'
+include { GFF_STORE                             } from '../subworkflows/local/gff_store'
 include { CUSTOM_DUMPSOFTWAREVERSIONS           } from '../modules/nf-core/custom/dumpsoftwareversions'
 
 log.info paramsSummaryLog(workflow)
@@ -232,6 +233,7 @@ workflow PANGENE {
     )
 
     ch_eggnogmapper_hits        = GFF_EGGNOGMAPPER.out.eggnogmapper_hits
+    ch_eggnogmapper_annotations = GFF_EGGNOGMAPPER.out.eggnogmapper_annotations
     ch_versions                 = ch_versions.mix(GFF_EGGNOGMAPPER.out.versions)
 
     // SUBWORKFLOW: PURGE_NOHIT_MODELS
@@ -241,8 +243,14 @@ workflow PANGENE {
         params.eggnogmapper_purge_nohits
     )
 
-    ch_purged_marked_gff        = PURGE_NOHIT_MODELS.out.purged_or_marked_gff
+    ch_purged_gff               = PURGE_NOHIT_MODELS.out.purged_gff
     ch_versions                 = ch_versions.mix(PURGE_NOHIT_MODELS.out.versions)
+
+    // SUBWORKFLOW: GFF_STORE
+    GFF_STORE(
+        ch_purged_gff,
+        ch_eggnogmapper_annotations
+    )
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS
     CUSTOM_DUMPSOFTWAREVERSIONS (
