@@ -1,0 +1,108 @@
+---
+title: "orthofinder_db"
+format: html
+editor: visual
+---
+
+```{r}
+
+Sys.setenv(hdir = "/workspace/hrtjbs/pangene_2024/pangene/prototyping/orthofinder",
+           r5_prots = "/output/genomic/fairGenomes/Plant/Actinidia/chinensis/var_chinensis/female/2x/assembly_red5/v2.1/MA20.20221117170434.primary.pep.fasta",
+           rus_prots = "/output/genomic/fairGenomes/Plant/Actinidia/chinensis/var_chinensis/male/2x/assembly_russell/v2.1/RU01.20221115150135.pep.fasta")
+```
+
+#### Prepare proteins from chr1 from each genome
+
+```{bash}
+mkdir -p $hdir/refs
+cp $r5_prots $hdir/refs/
+cp $rus_prots $hdir/refs/
+
+module load samtools
+samtools faidx $hdir/refs/MA20.20221117170434.primary.pep.fasta
+samtools faidx $hdir/refs/RU01.20221115150135.pep.fasta
+
+grep "location=chr1:" $hdir/refs/MA20.20221117170434.primary.pep.fasta  | sed 's/>//g'| awk '{print$1}' > $hdir/refs/r5.chr1.prots.names
+grep "location=chr1:" $hdir/refs/RU01.20221115150135.pep.fasta  | sed 's/>//g'| awk '{print$1}' > $hdir/refs/russell.chr1.prots.names
+
+xargs samtools faidx $hdir/refs/MA20.20221117170434.primary.pep.fasta < $hdir/refs/r5.chr1.prots.names > $hdir/refs/r5.chr1.prots.fasta
+xargs samtools faidx $hdir/refs/RU01.20221115150135.pep.fasta < $hdir/refs/russell.chr1.prots.names > $hdir/refs/russell.chr1.prots.fasta
+
+rm $hdir/refs/*.pep.fasta
+rm $hdir/refs/*.names
+rm $hdir/refs/*.fai
+```
+
+#### Run orthofinder
+
+```{bash}
+
+cd $hdir
+cat << EOF  > Orthofinder.sl
+#!/bin/bash -e
+#SBATCH -J orthofind
+#SBATCH --output=%x_%J.out
+#SBATCH --error=%x_%J.err
+#SBATCH --cpus-per-task=12
+#SBATCH --mem=24G
+#SBATCH --time=04:00:00
+
+module load orthofinder/2.5.4
+
+orthofinder -t 12 -f $hdir/refs/
+EOF
+sbatch Orthofinder.sl
+```
+
+#### Explore results
+
+```{r}
+
+library(dplyr)
+library(stringr)
+phos = read.csv("/workspace/hrtjbs/pangene_2024/pangene/prototyping/orthofinder/refs/OrthoFinder/Results_Apr23/Phylogenetic_Hierarchical_Orthogroups/N0.tsv",header = TRUE,sep = "\t")
+
+phos_plus = phos %>%
+  dplyr::mutate(Core_Accessory = case_when(
+    russell.chr1.prots == "" ~ "Accessory",  
+    TRUE ~ "Core"                      
+  )) %>%  mutate(
+    Russell_orths = if_else(is.na(russell.chr1.prots) |
+                              russell.chr1.prots == "",
+                            0,str_count(russell.chr1.prots, ",") + 1),
+    Red_orths = if_else(is.na(r5.chr1.prots) |
+                              r5.chr1.prots == "",
+                            0,str_count(r5.chr1.prots, ",") + 1),
+)
+
+
+
+red_sum = phos_plus %>% group_by(Red_orths) %>%
+  summarise(count = n())
+
+rus.sum = phos_plus %>% group_by(  Russell_orths) %>%
+  summarise(count = n())
+
+
+
+```
+
+Problem with including multiple isoforms: here is the tree informing "OG0000000"
+
+```         
+
+
+                                  +===================== russell_chr1_prots_RUSV2a.040209.1.PC                                            
+                                  |                                                                                                       
++=================================|                   +=== russell_chr1_prots_RUSV2a.040210.1.PC                                          
+|                                 +===================|                                                                                   
+|                                                     +====== r5_chr1_prots_RED5V2.001022.1.1.PC                                          
+|                                                                                                                                         
+|                                     +== r5_chr1_prots_RED5V2.001019.1.1.PC                                                              
+|                                 +===|                                                                                                   
+|                                 |   +===== r5_chr1_prots_RED5V2.001021.1.1.PC                                                           
++=================================|                                                                                                       
+                                  |                                                               + r5_chr1_prots_RED5V2.001018.1.1.PC    
+                                  +===============================================================|                                       
+                                                                                                  += russell_chr1_prots_RUSV2a.001018.1.PC
+```
