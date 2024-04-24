@@ -60,6 +60,10 @@ indent_style = unset
 [*.{pl,pm}]
 indent_size = unset
 
+# ignore drawio
+[*.drawio]
+indent_size = unset
+
 # ignore LICENSE
 [LICENSE]
 indent_size = unset
