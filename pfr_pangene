@@ -2,7 +2,7 @@
 
 
 #SBATCH --job-name PANGENE
-#SBATCH --time=1-00:00:00
+#SBATCH --time=7-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
@@ -10,13 +10,40 @@
 #SBATCH --error pfr_pangene.stderr
 #SBATCH --mem=4G
 
+full_test_flag=0
+
+# Parse command line options
+while getopts "t" opt; do
+    case ${opt} in
+    t )
+        full_test_flag=1
+        ;;
+    \? )
+        echo "Invalid option: $OPTARG" 1>&2
+        exit 1
+        ;;
+    esac
+done
+shift $((OPTIND -1))
+
+ml unload perl
 ml apptainer/1.1
 ml nextflow/23.04.4
 
 export TMPDIR="/workspace/$USER/tmp"
 export APPTAINER_BINDPATH="$APPTAINER_BINDPATH,$TMPDIR:$TMPDIR,$TMPDIR:/tmp"
 
-nextflow \
-    main.nf \
-    -profile pfr,apptainer \
-    -resume
+if [ $full_test_flag -eq 1 ]; then
+    nextflow \
+        main.nf \
+        -c pfr/profile.config \
+        -profile pfr,apptainer,test_full \
+        -resume
+else
+    nextflow \
+        main.nf \
+        -c pfr/profile.config \
+        -profile pfr,apptainer \
+        -params-file pfr/params.json \
+        -resume
+fi

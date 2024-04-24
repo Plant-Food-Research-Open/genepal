@@ -127,8 +127,13 @@ workflow PANGENE {
                                     gff: [ [ id: idFromFileName( fastaFile.baseName ) ], file(gff, checkIfExists:true) ]
                                 }
 
-    ch_liftoff_fasta            = ch_liftoff_mm.fasta
-    ch_liftoff_gff              = ch_liftoff_mm.gff
+    ch_liftoff_fasta            = params.liftoff_annotations
+                                ? ch_liftoff_mm.fasta
+                                : Channel.empty()
+
+    ch_liftoff_gff              = params.liftoff_annotations
+                                ? ch_liftoff_mm.gff
+                                : Channel.empty()
 
     val_tsebra_config           = params.braker_allow_isoforms
                                 ? "${projectDir}/assets/tsebra-default.cfg"

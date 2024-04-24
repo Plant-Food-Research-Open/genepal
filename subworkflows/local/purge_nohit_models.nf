@@ -20,9 +20,10 @@ workflow PURGE_NOHIT_MODELS {
                                         .unique()
 
                                     def tx_in_gff = gff.readLines()
-                                        .findAll { it ->
-                                            if ( it.startsWith('#') ) { return false }
-                                            def feat = it.split('\t')[2]
+                                        .findAll { line ->
+                                            if ( line.startsWith('#') || line == '' ) { return false }
+
+                                            def feat = line.split('\t')[2]
                                             ( feat == 'transcript' || feat == 'mRNA' )
                                         }
                                         .collect { it ->

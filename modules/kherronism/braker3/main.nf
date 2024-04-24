@@ -62,9 +62,11 @@ process BRAKER3 {
     """
 
     stub:
+    def args        = task.ext.args                         ?: ''
     prefix          = task.ext.prefix                       ?: "${meta.id}"
     def rna_ids     = rnaseq_sets_ids                       ? "--rnaseq_sets_ids=${rnaseq_sets_ids}"    : ''
     def touch_hints = (rna_ids || bam || proteins || hints) ? "touch ${prefix}/hintsfile.gff"           : ''
+    def touch_gff   = args.contains('--gff3')               ? "touch ${prefix}/braker.gff3"             : ''
     """
     mkdir "$prefix"
 
@@ -74,6 +76,7 @@ process BRAKER3 {
     $touch_hints
     touch "${prefix}/braker.log"
     touch "${prefix}/what-to-cite.txt"
+    $touch_gff
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

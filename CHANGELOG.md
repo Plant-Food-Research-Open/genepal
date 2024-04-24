@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.2.0+dev - [22-April-2024]
+## 0.2.0 - [24-April-2024]
 
 ### `Added`
 
@@ -35,15 +35,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 26. Now using TSEBRA to purge models which do not have full intron support from BRAKER hints
 27. Added params `eggnogmapper_evalue` and `eggnogmapper_pident`
 28. Added `PURGE_NOHIT_BRAKER_MODELS` sub-workflow
-29. Removed liftoff models with `valid_ORF=False`
-30. Now merging BRAKER and liftoff models before running eggnogmapper
-31. Added `GFF_MERGE_CLEANUP` sub-workflow
-32. Now using `description` field to store notes and textual annotations in the gff files
-33. Now using `mRNA` in place of `transcript` in gff files
-34. Now `eggnogmapper_purge_nohits` is set to `false` by default
-35. Added `GFF_STORE` sub workflow
+29. Now merging BRAKER and liftoff models before running eggnogmapper
+30. Added `GFF_MERGE_CLEANUP` sub-workflow
+31. Now using `description` field to store notes and textual annotations in the gff files
+32. Now using `mRNA` in place of `transcript` in gff files
+33. Now `eggnogmapper_purge_nohits` is set to `false` by default
+34. Added `GFF_STORE` sub workflow
+35. `external_protein_fastas` and `eggnogmapper_db_dir` are not mandatory parameters
+36. Added contributors
+37. Add a document for the pipeline parameters
+38. Updated `pfr_pangene` and `pfr/profile.config`
+39. Now using local tests/stub files for GitHub CI
 
 ### `Fixed`
+
+1. Removed liftoff models with `valid_ORF=False`
+2. Updated license text to include 'Copyright (c) 2024 The New Zealand Institute for Plant and Food Research Limited'
 
 ### `Dependencies`
 

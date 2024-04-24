@@ -1,0 +1,9 @@
+{
+    "input": "tests/stub/assemblysheet.csv",
+    "eggnogmapper_db_dir": "tests/stub/emapperdb/5.0.2",
+    "external_protein_fastas": "tests/stub/external-protein-fastas.txt",
+    "fastq": "tests/stub/fastqsheet.csv",
+    "liftoff_annotations": "tests/stub/liftoffannotations.csv",
+    "max_cpus": 2,
+    "max_memory": "3.GB"
+}

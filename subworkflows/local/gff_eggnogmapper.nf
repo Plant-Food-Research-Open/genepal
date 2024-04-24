@@ -25,7 +25,7 @@ workflow GFF_EGGNOGMAPPER {
 
 
     ch_eggnogmapper_inputs      = ch_gffread_fasta
-                                | combine(db_folder ? Channel.fromPath(db_folder) : [])
+                                | combine(Channel.fromPath(db_folder))
 
     EGGNOGMAPPER(
         ch_eggnogmapper_inputs.map { meta, fasta, db -> [ meta, fasta ] },

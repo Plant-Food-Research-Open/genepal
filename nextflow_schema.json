@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "",
-            "required": ["input", "outdir"],
+            "required": ["input", "outdir", "external_protein_fastas", "eggnogmapper_db_dir", "eggnogmapper_tax_scope"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -22,6 +22,24 @@
                     "fa_icon": "fas fa-file-csv",
                     "help_text": "FASTA and other associated files for target assemblies provided as a CSV sheet"
                 },
+                "external_protein_fastas": {
+                    "type": "string",
+                    "description": "External protein fastas listed in a text sheet",
+                    "help_text": "A text file listing FASTA files to provide protein evidence for annotation",
+                    "format": "file-path",
+                    "mimetype": "text/txt",
+                    "fa_icon": "far fa-file-alt"
+                },
+                "eggnogmapper_db_dir": {
+                    "type": "string",
+                    "description": "Eggnogmapper database directory",
+                    "format": "directory-path"
+                },
+                "eggnogmapper_tax_scope": {
+                    "type": "integer",
+                    "description": "Eggnogmapper taxonomy scopre",
+                    "minimum": 0
+                },
                 "fastq": {
                     "type": "string",
                     "format": "file-path",
@@ -31,14 +49,6 @@
                     "help_text": "FASTQ files for RNASeq samples corresponding to each target assembly provided in a CSV sheet",
                     "fa_icon": "fas fa-file-csv",
                     "description": "FASTQ samples listed in a CSV sheet"
-                },
-                "external_protein_fastas": {
-                    "type": "string",
-                    "description": "External protein fastas listed in a text sheet",
-                    "help_text": "A text file listing FASTA files to provide protein evidence for annotation",
-                    "format": "file-path",
-                    "mimetype": "text/txt",
-                    "fa_icon": "far fa-file-alt"
                 },
                 "liftoff_annotations": {
                     "type": "string",
@@ -184,16 +194,6 @@
                     "default": 0.9,
                     "description": "Liftoff identity parameter"
                 },
-                "eggnogmapper_db_dir": {
-                    "type": "string",
-                    "description": "Eggnogmapper database directory",
-                    "format": "directory-path"
-                },
-                "eggnogmapper_tax_scope": {
-                    "type": "integer",
-                    "description": "Eggnogmapper taxonomy scopre",
-                    "minimum": 0
-                },
                 "eggnogmapper_evalue": {
                     "type": "number",
                     "default": 1e-5,
@@ -208,7 +208,6 @@
                 },
                 "eggnogmapper_purge_nohits": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Purge transcripts which do not have a hit against eggnog"
                 }
             }
@@ -240,7 +239,7 @@
                 "max_time": {
                     "type": "string",
                     "description": "Maximum amount of time that can be requested for any single job.",
-                    "default": "1.day",
+                    "default": "7.day",
                     "fa_icon": "far fa-clock",
                     "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
                     "hidden": true,

@@ -12,11 +12,11 @@ F_BOLD="\033[1m"
     && echo 'Executing with -stub' \
     || echo -e "${C_RED}${F_BOLD}Executing without -stub${NO_FORMAT}"
 
-nextflow \
+nextflow run \
     main.nf \
     -profile local,docker \
     -resume \
     $stub \
-    -params-file conf/test_params.json \
+    -params-file pangene-test/test_params.json \
     --eggnogmapper_db_dir ../../dbs/emapperdb/5.0.2 \
     --eggnogmapper_tax_scope 33090

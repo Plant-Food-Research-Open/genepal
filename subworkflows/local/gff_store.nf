@@ -32,7 +32,7 @@ workflow GFF_STORE {
                                     def gene_tx_annotations = [:]
                                     gff.readLines()
                                         .findAll { line ->
-                                            if ( line.startsWith('#') ) { return false }
+                                            if ( line.startsWith('#') || line == '' ) { return false }
 
                                             def cols    = line.split('\t')
                                             def feat    = cols[2]
@@ -76,7 +76,7 @@ workflow GFF_STORE {
                                     def gff_lines = gff.readLines()
                                         .collect { line ->
 
-                                            if ( line.startsWith('#') ) { return line }
+                                            if ( line.startsWith('#') || line == '' ) { return line }
 
                                             def cols    = line.split('\t')
                                             def feat    = cols[2]

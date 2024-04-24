@@ -1,2 +1,2 @@
-pangene-test/ext_prot/RU01.20221115150135.chr1.pep.fasta.gz
-pangene-test/ext_prot/RU01.20221115150135.chr2.pep.fasta.gz
+tests/stub/ext_prot/RU01.20221115150135.chr1.pep.fasta.gz
+tests/stub/ext_prot/RU01.20221115150135.chr2.pep.fasta.gz

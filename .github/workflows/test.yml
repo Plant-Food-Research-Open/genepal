@@ -39,12 +39,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/checkout@v4
-        with:
-          repository: PlantandFoodResearch/pangene-test
-          ssh-key: ${{ secrets.PANGENE_TEST_DEPLOY_KEY }}
-          path: pangene-test
-
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1
         with:
@@ -52,12 +46,11 @@ jobs:
 
       - name: Run stub-test
         run: |
-          nextflow \
+          nextflow run \
             main.nf \
             -profile local,docker \
-            -resume \
             -stub \
-            -c conf/test_stub.config
+            -params-file tests/stub/test_stub.json
 
   confirm-pass:
     runs-on: ubuntu-latest

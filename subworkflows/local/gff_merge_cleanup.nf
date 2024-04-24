@@ -25,8 +25,8 @@ workflow GFF_MERGE_CLEANUP {
     )
 
     ch_merged_gff               = AGAT_SPMERGEANNOTATIONS.out.gff
-                                | mix(ch_gff_branch.liftoff_only)
-                                | mix(ch_gff_branch.braker_only)
+                                | mix ( ch_gff_branch.liftoff_only.map { meta, braker_gff, liftoff_gff -> [ meta, liftoff_gff ] } )
+                                | mix ( ch_gff_branch.braker_only.map { meta, braker_gff, liftoff_gff -> [ meta, braker_gff ] } )
     ch_versions                 = ch_versions.mix(AGAT_SPMERGEANNOTATIONS.out.versions.first())
 
     // MODULE: GT_GFF3
