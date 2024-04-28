@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 37. Add a document for the pipeline parameters
 38. Updated `pfr_pangene` and `pfr/profile.config`
 39. Now using local tests/stub files for GitHub CI
+40. Now removing iso-forms left by TSEBRA using `AGAT_SPFILTERFEATUREFROMKILLLIST`
 
 ### `Fixed`
 

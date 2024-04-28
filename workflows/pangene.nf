@@ -215,7 +215,8 @@ workflow PANGENE {
         ch_braker_gff3,
         ch_braker_hints,
         ch_liftoff_gff3,
-        val_tsebra_config
+        val_tsebra_config,
+        params.braker_allow_isoforms
     )
 
     ch_braker_purged_gff        = PURGE_BREAKER_MODELS.out.braker_purged_gff

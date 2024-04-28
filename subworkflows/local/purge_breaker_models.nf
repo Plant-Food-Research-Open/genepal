@@ -1,10 +1,11 @@
-include { AGAT_CONVERTSPGFF2GTF                             } from '../../modules/nf-core/agat/convertspgff2gtf/main'
-include { TSEBRA                                            } from '../../modules/pfr/tsebra/main'
-include { AGAT_CONVERTSPGXF2GXF                             } from '../../modules/nf-core/agat/convertspgxf2gxf/main'
-include { GFFCOMPARE as COMPARE_BRAKER_TO_LIFTOFF           } from '../../modules/nf-core/gffcompare/main'
-include { AGAT_SPFILTERFEATUREFROMKILLLIST                  } from '../../modules/pfr/agat/spfilterfeaturefromkilllist/main'
-include { GFFCOMPARE as VALIDATE_PURGING_BY_AGAT            } from '../../modules/nf-core/gffcompare/main'
-include { AGAT_SPMERGEANNOTATIONS as MERGE_BRAKER_LIFTOFF   } from '../../modules/pfr/agat/spmergeannotations/main'
+include { AGAT_CONVERTSPGFF2GTF                                     } from '../../modules/nf-core/agat/convertspgff2gtf/main'
+include { TSEBRA                                                    } from '../../modules/pfr/tsebra/main'
+include { AGAT_CONVERTSPGXF2GXF                                     } from '../../modules/nf-core/agat/convertspgxf2gxf/main'
+include { AGAT_SPFILTERFEATUREFROMKILLLIST as KILL_TSEBRA_ISOFORMS  } from '../../modules/pfr/agat/spfilterfeaturefromkilllist/main'
+include { GFFCOMPARE as COMPARE_BRAKER_TO_LIFTOFF                   } from '../../modules/nf-core/gffcompare/main'
+include { AGAT_SPFILTERFEATUREFROMKILLLIST                          } from '../../modules/pfr/agat/spfilterfeaturefromkilllist/main'
+include { GFFCOMPARE as VALIDATE_PURGING_BY_AGAT                    } from '../../modules/nf-core/gffcompare/main'
+include { AGAT_SPMERGEANNOTATIONS as MERGE_BRAKER_LIFTOFF           } from '../../modules/pfr/agat/spmergeannotations/main'
 
 workflow PURGE_BREAKER_MODELS {
     take:
@@ -12,6 +13,7 @@ workflow PURGE_BREAKER_MODELS {
     braker_hints                // [ meta, gff ]
     liftoff_gff3                // [ meta, gff3 ]
     tsebra_config               // val(tsebra_config)
+    braker_allow_isoforms       // val(true|false)
 
     main:
     ch_versions                 = Channel.empty()
@@ -115,8 +117,63 @@ workflow PURGE_BREAKER_MODELS {
                                     [ [ id: file.baseName ], file ]
                                 }
 
+    // COLLECTFILE: Iso-form kill list if braker_allow_isoforms=true
+    ch_post_tsebra_kill_list    = braker_allow_isoforms
+                                ? Channel.empty()
+                                : ch_tsebra_gff
+                                | map { meta, gff ->
+                                    def kill_list = gff.readLines()
+                                        .findAll { line ->
+                                            if ( line.startsWith('#') ) { return false }
+
+                                            def cols    = line.split('\t')
+                                            def feat    = cols[2]
+
+                                            ( feat == 'mRNA' || feat == 'transcript' )
+                                        }
+                                        .collect { line ->
+                                            def cols    = line.split('\t')
+                                            def atts    = cols[8]
+                                            def tx_id   = ( atts =~ /ID=([^;]*)/ )[0][1]
+                                            def g_id    = ( atts =~ /Parent=([^;]*)/ )[0][1]
+
+                                            [ g_id, tx_id ]
+                                        }
+                                        .groupBy { g_id, tx_id -> g_id }
+                                        .findAll { key, value -> value.size() > 1 }
+                                        .collect { key, value ->
+                                            value.collect { it[1] }[1..-1]
+                                        }
+                                        .flatten()
+                                        .join('\n')
+
+                                    [ "${meta.id}.kill.list.txt" ] + [ kill_list ]
+                                }
+                                | collectFile(newLine: true)
+                                | map { file ->
+                                    [ [ id: file.baseName.replace('.kill.list', '') ], file ]
+                                }
+
+    // MODULE: AGAT_SPFILTERFEATUREFROMKILLLIST as KILL_TSEBRA_ISOFORMS
+    ch_tsebra_kill_inputs       = ch_tsebra_gff
+                                | join(ch_post_tsebra_kill_list)
+
+
+    KILL_TSEBRA_ISOFORMS(
+        ch_tsebra_kill_inputs.map { meta, gff, kill -> [ meta, gff ] },
+        ch_tsebra_kill_inputs.map { meta, gff, kill -> kill },
+        [] // default config
+    )
+
+    ch_tsebra_killed_gff        = ch_tsebra_gff
+                                | join(KILL_TSEBRA_ISOFORMS.out.gff, remainder: true)
+                                | map { meta, tsebra, killed ->
+                                    if ( tsebra ) { [ meta, killed ?: tsebra ] }
+                                }
+    ch_versions                 = ch_versions.mix(KILL_TSEBRA_ISOFORMS.out.versions.first())
+
     // MODULE: GFFCOMPARE as COMPARE_BRAKER_TO_LIFTOFF
-    ch_comparison_inputs        = ch_tsebra_gff
+    ch_comparison_inputs        = ch_tsebra_killed_gff
                                 | join(liftoff_gff3)
 
 
@@ -157,7 +214,7 @@ workflow PURGE_BREAKER_MODELS {
                                 }
 
     // MODULE: AGAT_SPFILTERFEATUREFROMKILLLIST
-    ch_agat_kill_inputs         = ch_tsebra_gff
+    ch_agat_kill_inputs         = ch_tsebra_killed_gff
                                 | join(ch_kill_list)
 
 
@@ -171,7 +228,7 @@ workflow PURGE_BREAKER_MODELS {
     ch_versions                 = ch_versions.mix(AGAT_SPFILTERFEATUREFROMKILLLIST.out.versions.first())
 
     // Handle case where liftoff is not present
-    ch_all_braker_gff           = ch_tsebra_gff
+    ch_all_braker_gff           = ch_tsebra_killed_gff
                                 | join(ch_braker_purged_gff, remainder:true)
                                 | map { meta, tsebra_gff, purged_gff ->
                                     if ( purged_gff ) { return [ meta, purged_gff ] }
