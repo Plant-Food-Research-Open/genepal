@@ -1,10 +1,10 @@
 # PANGENE
 
-[![Lint and -stub on Linux/Docker](https://github.com/PlantandFoodResearch/pangene/actions/workflows/test.yml/badge.svg)](https://github.com/PlantandFoodResearch/pangene/actions/workflows/test.yml)
+[![Lint/stub on Linux/Docker](https://github.com/PlantandFoodResearch/pangene/actions/workflows/test.yml/badge.svg)](https://github.com/PlantandFoodResearch/pangene/actions/workflows/test.yml)
 
 A NextFlow pipeline for pan-genome annotation. It can also be used for annotation of a single genome.
 
-## Pipeline Flowchart
+## Flowchart
 
 <p align="center"><img src="docs/img/pangene.png" height="600px"></p>
 
@@ -14,7 +14,7 @@ This release is not fully documented and under alpha testing by the Bioinformati
 
 ## Plant&Food Users
 
-Download the pipeline to your `/workspace/$USER` folder. Change the parameters defined in the [pfr/params.json](./pfr/params.json) file. Submit the pipeline to SLURM for execution. For a description of the parameters, see [parameters](./docs/parameters.md).
+Download the pipeline to your `/workspace/$USER` folder. Change the parameters defined in the [pfr/params.json](./pfr/params.json) file. Submit the pipeline to SLURM for execution. For a description of the parameters, see [parameters.md](./docs/parameters.md).
 
 ```bash
 sbatch ./pfr_pangene
@@ -22,7 +22,7 @@ sbatch ./pfr_pangene
 
 ## Credits
 
-plantandfoodresearch/pangene scripts were originally written by Jason Shiller. Usman Rashid wrote the NextFLow pipeline.
+plantandfoodresearch/pangene workflows were originally scripted by Jason Shiller. Usman Rashid wrote the NextFLow pipeline.
 
 We thank the following people for their extensive assistance in the development of this pipeline.
 
