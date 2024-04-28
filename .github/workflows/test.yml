@@ -50,7 +50,7 @@ jobs:
             main.nf \
             -profile local,docker \
             -stub \
-            -params-file tests/stub/test_stub.json
+            -params-file tests/stub/params.json
 
   confirm-pass:
     runs-on: ubuntu-latest

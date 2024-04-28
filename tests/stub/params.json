@@ -1,7 +1,8 @@
 {
     "input": "tests/stub/assemblysheet.csv",
-    "eggnogmapper_db_dir": "tests/stub/emapperdb/5.0.2",
     "external_protein_fastas": "tests/stub/external-protein-fastas.txt",
+    "eggnogmapper_db_dir": "tests/stub/emapperdb/5.0.2",
+    "eggnogmapper_tax_scope": 33090,
     "fastq": "tests/stub/fastqsheet.csv",
     "liftoff_annotations": "tests/stub/liftoffannotations.csv",
     "max_cpus": 2,

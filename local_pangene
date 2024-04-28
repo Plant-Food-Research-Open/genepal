@@ -17,6 +17,5 @@ nextflow run \
     -profile local,docker \
     -resume \
     $stub \
-    -params-file pangene-test/test_params.json \
-    --eggnogmapper_db_dir ../../dbs/emapperdb/5.0.2 \
-    --eggnogmapper_tax_scope 33090
+    -params-file pangene-test/params.json \
+    --eggnogmapper_db_dir ../dbs/emapperdb/5.0.2
