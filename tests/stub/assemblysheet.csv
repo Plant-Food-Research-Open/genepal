@@ -1,3 +1,3 @@
-tag,fasta,is_masked,te_lib
-red5_v2p1,tests/stub/target/red5_v2p1_chr1.fasta.gz,no,
-donghong,tests/stub/target/donghong.chr1.fsa.gz,no,tests/stub/te_lib/donghong.TElib.fa.gz
+tag,fasta,is_masked,te_lib,braker_gff3,braker_hints
+red5_v2p1,tests/stub/target/red5_v2p1_chr1.fasta.gz,no,,tests/stub/braker/red5_v2p1.gff3.gz,tests/stub/braker/red5_v2p1.hints.gff.gz
+donghong,tests/stub/target/donghong.chr1.fsa.gz,no,tests/stub/te_lib/donghong.TElib.fa.gz,tests/stub/braker/red5_v2p1.gff3.gz,tests/stub/braker/red5_v2p1.hints.gff.gz
