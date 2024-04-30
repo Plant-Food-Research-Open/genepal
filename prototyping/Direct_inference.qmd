@@ -1,0 +1,266 @@
+---
+title: "DirectInference"
+format: html
+editor: visual
+---
+
+Exploring direct inference gene prediction (Modified from the MIND \| BIND method)
+
+Run CLASS
+
+Note the singularity container doesn't work because of a samtools issue. So installed the program separately
+
+```{bash}
+
+cd /workspace/hrtjbs/pangene_2024/pangene/prototyping
+
+cat << EOF  > class.sl
+#!/bin/bash -e
+#SBATCH -J class2
+#SBATCH --output=%x_%J.out
+#SBATCH --error=%x_%J.err
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=48G
+#SBATCH --time=08:00:00
+
+
+cd /workspace/hrtjbs/pangene_2024/pangene/prototyping
+
+/workspace/hrtjbs/software/CLASS-2.1.7/run_class.pl \
+   -a /workspace/hrtjbs/pangene_2024/mapping/sorted_fsrclf_merged.bam \
+   -o sorted_fsrclf_merged_class.gtf \
+   -p 8 \
+   --verbose \
+   --clean
+EOF
+sbatch class.sl
+```
+
+Run PORTICULLIS
+
+```{bash}
+
+cat << EOF  > porticullis.sl
+#!/bin/bash -e
+#SBATCH -J pcull
+#SBATCH --output=%x_%J.out
+#SBATCH --error=%x_%J.err
+#SBATCH --cpus-per-task=12
+#SBATCH --mem=24G
+#SBATCH --time=08:00:00
+
+module load singularity
+
+singularity exec -B /workspace/hrtjbs/pangene_2024/mapping/:/workspace/hrtjbs/pangene_2024/mapping/ \
+-B /workspace/hrtjbs/pangene_2024/pangene/prototyping:/workspace/hrtjbs/pangene_2024/pangene/prototyping \
+-B /workspace/hrtjbs/pangene_2024/refGenome/:/workspace/hrtjbs/pangene_2024/refGenome/ \
+/workspace/hrtjbs/software/evidence.sif \
+portcullis full \
+--threads 12 --verbose --use_csi --output portcullis_out \
+/workspace/hrtjbs/pangene_2024/refGenome/Red5_V2.chromosomes.only.fsa \
+/workspace/hrtjbs/pangene_2024/mapping/sorted_fsrclf_merged.bam
+EOF
+sbatch porticullis.sl
+```
+
+Create mikado conda environment (Note need python 3.10 and also we need conda install sqlalchemy=1.4 and conda install sqlalchemy-utils=0.37 otherwise it cause errors. I did this after the creation of the conda env )
+
+```{bash}
+
+cd /workspace/hrtjbs/software
+cat << EOF  > install.mkdo.sl
+#!/bin/bash -e
+#SBATCH -J pcull
+#SBATCH --output=%x_%J.out
+#SBATCH --error=%x_%J.err
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=4G
+#SBATCH --time=08:00:00
+
+module load conda
+conda create --name hrtjbs_mikado5 python=3.10
+conda activate hrtjbs_mikado5
+conda install -c bioconda mikado
+conda install -c bioconda prodigal blast transdecoder diamond
+conda deactivate 
+EOF
+sbatch install.mkdo.sl
+```
+
+Run Mikado
+
+```{bash}
+
+cd /workspace/hrtjbs/pangene_2024/pangene/prototyping
+cat << EOF  > runMikado_1.sl
+#!/bin/bash -e
+#SBATCH -J mikado
+#SBATCH --output=%x_%J.out
+#SBATCH --error=%x_%J.err
+#SBATCH --cpus-per-task=12
+#SBATCH --mem=24G
+#SBATCH --time=08:00:00
+
+module load conda
+conda activate hrtjbs_mikado5
+
+mikado configure \
+   --list list.txt \
+   --reference /workspace/hrtjbs/pangene_2024/refGenome/Red5_V2.chromosomes.only.fsa \
+   --mode nosplit \
+   --scoring plant.yaml \
+   --copy-scoring plant.yaml \
+   --junctions /workspace/hrtjbs/pangene_2024/pangene/prototyping/portcullis_out/3-filt/portcullis_filtered.pass.junctions.bed configuration.yaml
+   
+   
+mikado prepare \
+   --json-conf configuration.yaml \
+   -of ptest_prepared.fasta   
+
+conda deactivate
+EOF
+
+sbatch  runMikado_1.sl
+```
+
+Run transdecoder
+
+```{bash}
+cd /workspace/hrtjbs/pangene_2024/pangene/prototyping
+cat << EOF  > trandec_1.sl
+#!/bin/bash -e
+#SBATCH -J trandec
+#SBATCH --output=%x_%J.out
+#SBATCH --error=%x_%J.err
+#SBATCH --cpus-per-task=12
+#SBATCH --mem=24G
+#SBATCH --time=08:00:00
+
+module load conda
+conda activate hrtjbs_mikado5
+module load seqtk
+
+cd /workspace/hrtjbs/pangene_2024/pangene/prototyping
+
+TransDecoder.LongOrfs -t ptest_prepared.fasta
+
+cd ptest_prepared.fasta.transdecoder_dir
+
+grep "complete" longest_orfs.cds | cut -f1 -d" " | sed 's/>//' > complete.id
+
+# Select complete ORFs from CDS, pep, and gff3 files, and replace them to the original longest_orfs files for next step.
+
+seqtk subseq longest_orfs.cds complete.id > complete.cds
+
+mv complete.cds longest_orfs.cds
+
+seqtk subseq longest_orfs.pep complete.id > complete.pep
+
+mv complete.pep longest_orfs.pep
+
+grep -Fwf complete.id longest_orfs.gff3 > complete.gff3
+mv complete.gff3 longest_orfs.gff3
+cd ..
+
+# Predict potential CDS.
+TransDecoder.Predict -t ptest_prepared.fasta --cpu 12
+
+EOF
+sbatch trandec_1.sl
+```
+
+Run Mikado2
+
+```{bash}
+cd /workspace/hrtjbs/pangene_2024/pangene/prototyping
+cat << EOF  > mikado2.sl
+#!/bin/bash -e
+#SBATCH -J trandec
+#SBATCH --output=%x_%J.out
+#SBATCH --error=%x_%J.err
+#SBATCH --cpus-per-task=12
+#SBATCH --mem=24G
+#SBATCH --time=08:00:00
+
+module load conda
+conda activate hrtjbs_mikado5
+
+
+cd /workspace/hrtjbs/pangene_2024/pangene/prototyping
+
+# Serialise
+#mikado serialise \
+#   --procs 12 \
+#   --genome_fai /workspace/hrtjbs/pangene_2024/refGenome/Red5_V2.chromosomes.only.fsa.fai \
+#   --genome /workspace/hrtjbs/pangene_2024/refGenome/Red5_V2.chromosomes.only.fsa \
+#   --transcripts ptest_prepared.fasta \
+#   --json-conf configuration.yaml \
+#   --orfs ptest_prepared.fasta.transdecoder.bed \
+#   -mr 1
+   
+# Pick
+# The final gene model is ${prefix}.loci.gff3
+mikado pick \
+   --loci-out ptest.loci.gff3 \
+   --procs 12 \
+   --json-conf configuration.yaml \
+   --subloci-out ptest.subloci.gff3 \
+   --pad
+EOF
+sbatch mikado2.sl   
+```
+
+Remove non-redundants and non primary transcripts: Don't really think the nr removal is required. It is better just picking the primary trasncript as i ended up doing below.
+
+```{bash}
+
+cd /workspace/hrtjbs/pangene_2024/pangene/prototyping
+cat << EOF  > removeNR.sl
+#!/bin/bash -e
+#SBATCH -J rmnr
+#SBATCH --output=%x_%J.out
+#SBATCH --error=%x_%J.err
+#SBATCH --cpus-per-task=12
+#SBATCH --mem=24G
+#SBATCH --time=08:00:00
+
+# Load tools or install in your local computer
+module load cd-hit/4.6.1
+module load gffread
+module load genometools/1.5.10
+
+# Extract predicted protein squence from gene models
+gffread  ptest.loci.gff3 -g /workspace/hrtjbs/pangene_2024/refGenome/Red5_V2.chromosomes.only.fsa -y pep.fa
+
+# gffread mark stop codon as ".", should change "." to "*" for cd-hit
+sed -i 's/\.$/*/' pep.fa
+
+# You could find cd-hit in the transdecoder bin, or install cd-hit seperately.
+# Here remove the identically protein by define "-c" as 1. You can also change the identical as you need, -c is identity from 0 to 1.
+cd-hit -i pep.fa -T 0 -c 1 -M 0 -d 0 -o filter.pep.fa
+
+# Get filtered transcript and gene ID.
+grep ">" filter.pep.fa | cut -f1 -d" " | sed 's/>//' > nr-trans.txt
+cut -f1-2 -d"." nr-trans.txt | sort -u > nr-gene.txt
+
+#Standard wflow to get the non redundant transcripts
+grep -Fwf nr-trans.txt ptest.loci.gff3 > trans.gff3
+awk '$3=="gene"' ptest.loci.gff3 | grep -Fwf nr-gene.txt - > gene.gff3
+cat gene.gff3 trans.gff3 | sed '1 i\##gff-version 3' | gt gff3 -sort -tidy -retainids > nr.gff3
+
+#wflow to get the primary transcripts 
+# first extract the names of non coding RNA genes
+grep "\.1" ptest.loci.gff3  | awk '$3 == "ncRNA"' | awk '{print$9}' | awk -F ";" '{print$1}' | sed s'/ID=//g' | sort | uniq > nc.genes
+
+#select only feature associated with the ".1" primary transcript and ignore the non coding rna genes
+grep "\.1" ptest.loci.gff3 | grep -vFwf nc.genes  > ptest.primary.transcripts.gff3
+awk '$3=="gene"' ptest.loci.gff3   > genes.only.gff3
+
+#put the genes and feature back into gff3
+cat genes.only.gff3 ptest.primary.transcripts.gff3 | sed '1 i\##gff-version 3' | gt gff3 -sort -tidy -retainids > primary.all.gff3
+
+
+
+EOF
+sbatch removeNR.sl
+```
