@@ -20,12 +20,17 @@ workflow GFF_STORE {
                                             def cols    = line.split('\t')
                                             def id      = cols[0]
                                             def txt     = cols[7]
+                                            def pfams   = cols[20]
 
-                                            [ id, txt ]
+                                            [ id, txt, pfams ]
                                         }
-                                        .findAll { id, txt ->
-                                            txt != '-'
-                                        }.collectEntries { id, txt ->
+                                        .collect { id, txt, pfams ->
+                                            if ( txt != '-' ) { return [ id, txt ] }
+                                            if ( pfams != '-' ) { return [ id, "PFAMs: $pfams" ] }
+
+                                            [ id, 'No eggnog description and PFAMs' ]
+                                        }
+                                        .collectEntries { id, txt ->
                                             [ id, txt ]
                                         }
 
@@ -57,7 +62,7 @@ workflow GFF_STORE {
 
                                             def anno    = tx_annotations.containsKey(tx_id)
                                                         ? URLEncoder.encode(tx_annotations[tx_id], "UTF-8").replace('+', '%20')
-                                                        : URLEncoder.encode('hypothetical protein | no eggnog hit', "UTF-8").replace('+', '%20')
+                                                        : URLEncoder.encode('Hypothetical protein | no eggnog hit', "UTF-8").replace('+', '%20')
 
                                             gene_tx_annotations[gene_id] += [ ( tx_id ): anno ]
                                         }
@@ -67,7 +72,7 @@ workflow GFF_STORE {
                                             def default_anno = tx_annos.values().first()
 
                                             if ( tx_annos.values().findAll { it != default_anno }.size() > 0 ) {
-                                                return [ gene_id, ( tx_annos + [ 'default': 'differing%20isoform%20descriptions' ] ) ]
+                                                return [ gene_id, ( tx_annos + [ 'default': 'Differing%20isoform%20descriptions' ] ) ]
                                             }
 
                                             [ gene_id, ( tx_annos + [ 'default': default_anno ] ) ]

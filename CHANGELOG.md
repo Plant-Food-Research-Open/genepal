@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.3.0 - [29-April-2024]
+## 0.3.0 - [30-April-2024]
 
 ### `Added`
 
@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 39. Now using local tests/stub files for GitHub CI
 40. Now removing iso-forms left by TSEBRA using `AGAT_SPFILTERFEATUREFROMKILLLIST`
 41. Added `pyproject.toml`
+42. Now using PFAMs from eggnog if description is '-'
 
 ### `Fixed`
 
