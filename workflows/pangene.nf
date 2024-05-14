@@ -11,6 +11,7 @@ include { GFF_MERGE_CLEANUP                     } from '../subworkflows/local/gf
 include { GFF_EGGNOGMAPPER                      } from '../subworkflows/local/gff_eggnogmapper'
 include { PURGE_NOHIT_MODELS                    } from '../subworkflows/local/purge_nohit_models'
 include { GFF_STORE                             } from '../subworkflows/local/gff_store'
+include { PROTEINORTHO                          } from '../modules/nf-core/proteinortho/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS           } from '../modules/nf-core/custom/dumpsoftwareversions'
 
 log.info paramsSummaryLog(workflow)
@@ -255,7 +256,23 @@ workflow PANGENE {
     // SUBWORKFLOW: GFF_STORE
     GFF_STORE(
         ch_purged_gff,
-        ch_eggnogmapper_annotations
+        ch_eggnogmapper_annotations,
+        ch_valid_target_assembly
+    )
+
+    ch_final_proteins           = GFF_STORE.out.final_proteins
+    ch_proteins_gff             = GFF_STORE.out.proteins_gff
+    ch_versions                 = ch_versions.mix(GFF_STORE.out.versions)
+
+    // MODULE: PROTEINORTHO
+    PROTEINORTHO(
+        ch_final_proteins
+        | map { meta, fasta -> fasta }
+        | collect
+        | map { fastas -> [ [ id: 'pangene' ], fastas ] },
+        ch_proteins_gff
+        | map { meta, gff -> gff }
+        | collect
     )
 
     // MODULE: CUSTOM_DUMPSOFTWAREVERSIONS

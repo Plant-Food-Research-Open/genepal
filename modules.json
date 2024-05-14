@@ -134,9 +134,8 @@
                     },
                     "gffread": {
                         "branch": "master",
-                        "git_sha": "b1b959609bda44341120aed1766329909f54b8d0",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/gffread/gffread.diff"
+                        "git_sha": "6c996d7fbe0816dcbb68ce587ad5f873313682a1",
+                        "installed_by": ["modules"]
                     },
                     "gt/gff3": {
                         "branch": "master",
@@ -151,6 +150,11 @@
                     "liftoff": {
                         "branch": "master",
                         "git_sha": "8ce34a40589137b75b65dfe8bb334c9b94f1d6c8",
+                        "installed_by": ["modules"]
+                    },
+                    "proteinortho": {
+                        "branch": "master",
+                        "git_sha": "5a03d98d876cc02100e00189e98989deb78b9c81",
                         "installed_by": ["modules"]
                     },
                     "samtools/cat": {

@@ -1,11 +1,13 @@
 import java.net.URLEncoder
 
 include { GT_GFF3 as FINAL_GFF_CHECK    } from '../../modules/nf-core/gt/gff3/main'
+include { GFFREAD as EXTRACT_PROTEINS   } from '../../modules/nf-core/gffread/main'
 
 workflow GFF_STORE {
     take:
     ch_target_gff               // [ meta, gff ]
     ch_eggnogmapper_annotations // [ meta, annotations ]
+    ch_fasta                    // [ meta, fasta ]
 
     main:
     ch_versions                 = Channel.empty()
@@ -112,8 +114,53 @@ workflow GFF_STORE {
     ch_final_gff                = FINAL_GFF_CHECK.out.gt_gff3
     ch_versions                 = ch_versions.mix(FINAL_GFF_CHECK.out.versions.first())
 
+    // MODULE: GFFREAD as EXTRACT_PROTEINS
+    ch_extraction_inputs        = ch_final_gff
+                                | join(ch_fasta)
+
+    EXTRACT_PROTEINS(
+        ch_extraction_inputs.map { meta, gff, fasta -> [ meta, gff ] },
+        ch_extraction_inputs.map { meta, gff, fasta -> fasta }
+    )
+
+    ch_final_proteins           = EXTRACT_PROTEINS.out.gffread_fasta
+    ch_versions                 = ch_versions.mix(FINAL_GFF_CHECK.out.versions.first())
+
+    // COLLECTFILE: Create a gff file corresponding to the proteins file
+    ch_proteins_gff             = ch_final_gff
+                                | map { meta, gff ->
+                                    def gff_lines = gff.readLines()
+                                        .collect { line ->
+                                            if ( line.startsWith('#') ) { return line }
+
+                                            def cols    = line.split('\t')
+                                            def feat    = cols[2]
+                                            def atts    = cols[8]
+                                            def matches = null
+
+                                            if ( feat in [ 'gene', 'mRNA', 'transcript' ] ) {
+                                                matches = atts =~ /ID=([^;]*)/
+                                            } else {
+                                                matches = atts =~ /Parent=([^;]*)/
+                                            }
+
+                                            def id      = matches[0][1]
+                                            def atts_r  = atts + ";Name=${id}"
+
+                                            return ( cols[0..7] + [ atts_r ] ).join('\t')
+                                        }
+
+                                    [ "${meta.id}.pep.gff" ] + gff_lines.join('\n')
+                                }
+                                | collectFile(newLine: true)
+                                | map { file ->
+                                    [ [ id: file.baseName.replace('.pep', '') ], file ]
+                                }
+                                | view
 
     emit:
     final_gff                   = ch_final_gff          // [ meta, gff ]
+    final_proteins              = ch_final_proteins     // [ meta, fasta ]
+    proteins_gff                = ch_proteins_gff       // [ meta, gff ]
     versions                    = ch_versions           // [ versions.yml ]
 }
