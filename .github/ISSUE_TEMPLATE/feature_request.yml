@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an idea for the PlantandFoodResearch/genepal pipeline
+description: Suggest an idea for the plant-food-research-open/genepal pipeline
 labels: enhancement
 body:
   - type: textarea

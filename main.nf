@@ -1,13 +1,11 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    PlantandFoodResearch/genepal
+    plant-food-research-open/genepal
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/PlantandFoodResearch/genepal
+    Github : https://github.com/plant-food-research-open/genepal
 ----------------------------------------------------------------------------------------
 */
-
-nextflow.enable.dsl = 2
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -18,7 +16,6 @@ nextflow.enable.dsl = 2
 include { GENEPAL  } from './workflows/genepal'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_genepal_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_genepal_pipeline'
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOWS FOR PIPELINE
@@ -28,7 +25,7 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_gene
 //
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
-workflow PLANTANDFOODRESEARCH_GENEPAL {
+workflow PLANTFOODRESEARCHOPEN_GENEPAL {
 
     take:
     samplesheet // channel: samplesheet read in from --input
@@ -41,10 +38,8 @@ workflow PLANTANDFOODRESEARCH_GENEPAL {
     GENEPAL (
         samplesheet
     )
-
     emit:
     multiqc_report = GENEPAL.out.multiqc_report // channel: /path/to/multiqc_report.html
-
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -55,13 +50,11 @@ workflow PLANTANDFOODRESEARCH_GENEPAL {
 workflow {
 
     main:
-
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
     PIPELINE_INITIALISATION (
         params.version,
-        params.help,
         params.validate_params,
         params.monochrome_logs,
         args,
@@ -72,10 +65,9 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    PLANTANDFOODRESEARCH_GENEPAL (
+    PLANTFOODRESEARCHOPEN_GENEPAL (
         PIPELINE_INITIALISATION.out.samplesheet
     )
-
     //
     // SUBWORKFLOW: Run completion tasks
     //
@@ -86,7 +78,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        PLANTANDFOODRESEARCH_GENEPAL.out.multiqc_report
+        PLANTFOODRESEARCHOPEN_GENEPAL.out.multiqc_report
     )
 }
 

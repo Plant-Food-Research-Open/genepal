@@ -17,7 +17,7 @@
                         "size": "Large",
                         "weight": "Bolder",
                         "color": "<% if (success) { %>Good<% } else { %>Attention<%} %>",
-                        "text": "PlantandFoodResearch/genepal v${version} - ${runName}",
+                        "text": "plant-food-research-open/genepal v${version} - ${runName}",
                         "wrap": true
                     },
                     {

@@ -1,5 +1,8 @@
+bump_version: null
 lint:
   files_exist:
+    - conf/igenomes.config
+    - conf/igenomes_ignored.config
     - CODE_OF_CONDUCT.md
     - assets/nf-core-genepal_logo_light.png
     - docs/images/nf-core-genepal_logo_light.png
@@ -7,21 +10,29 @@ lint:
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
-    - conf/igenomes.config
   files_unchanged:
-    - CODE_OF_CONDUCT.md
-    - assets/nf-core-genepal_logo_light.png
-    - docs/images/nf-core-genepal_logo_light.png
-    - docs/images/nf-core-genepal_logo_dark.png
-    - .github/ISSUE_TEMPLATE/bug_report.yml
   multiqc_config:
     - report_comment
   nextflow_config:
     - manifest.name
     - manifest.homePage
-nf_core_version: 2.14.1
+    - validation.help.beforeText
+    - validation.help.afterText
+    - validation.summary.beforeText
+    - validation.summary.afterText
+nf_core_version: 3.0.2
+org_path: null
 repository_type: pipeline
 template:
-  prefix: PlantandFoodResearch
-  skip:
+  author: Usman Rashid, Jason Shiller
+  description: A Nextflow pipeline for single genome, multiple genomes and pan-genome
+    annotation.
+  force: true
+  is_nfcore: false
+  name: genepal
+  org: plant-food-research-open
+  outdir: .
+  skip_features:
     - igenomes
+  version: 1.0.0dev
+update: null
