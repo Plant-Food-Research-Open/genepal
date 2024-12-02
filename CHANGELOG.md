@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 1. Fixed an issue where TSEBRA failed because LIFTOFF mislabelled the phase of CDS features [#115](https://github.com/Plant-Food-Research-Open/genepal/issues/115)
+2. Switched branch name from `master` to `main` in the GHA CIs
 
 ### `Dependencies`
 
