@@ -5,18 +5,18 @@
                 "successful tasks": 0,
                 "versions": {
                     "Workflow": {
-                        "plant-food-research-open/genepal": "v0.5.0"
+                        "plant-food-research-open/genepal": "v0.5.1"
                     }
                 },
                 "stable paths": [
-
+                    
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-10-22T11:39:43.110621"
+        "timestamp": "2024-12-02T16:52:41.687179"
     }
 }

@@ -55,7 +55,7 @@
                         "tsebra": "1.1.2.5"
                     },
                     "Workflow": {
-                        "plant-food-research-open/genepal": "v0.5.0"
+                        "plant-food-research-open/genepal": "v0.5.1"
                     }
                 },
                 "stable paths": [
@@ -82,8 +82,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.1"
         },
-        "timestamp": "2024-11-19T11:35:02.477202"
+        "timestamp": "2024-12-02T16:52:30.400922"
     }
 }

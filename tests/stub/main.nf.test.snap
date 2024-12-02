@@ -2,7 +2,7 @@
     "full - stub": {
         "content": [
             {
-                "successful tasks": 154,
+                "successful tasks": 158,
                 "versions": {
                     "AGAT_CONVERTSPGFF2GTF": {
                         "agat": "v1.4.0"
@@ -79,6 +79,9 @@
                     "GT_GFF3": {
                         "genometools": "1.6.5"
                     },
+                    "GT_GFF3_AFTER_LIFTOFF": {
+                        "genometools": "1.6.5"
+                    },
                     "GUNZIP": {
                         "gunzip": 1.1
                     },
@@ -143,7 +146,7 @@
                         "tsebra": "1.1.2.5"
                     },
                     "Workflow": {
-                        "plant-food-research-open/genepal": "v0.5.0"
+                        "plant-food-research-open/genepal": "v0.5.1"
                     }
                 },
                 "stable paths": [
@@ -191,6 +194,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-21T12:34:14.056074"
+        "timestamp": "2024-12-02T17:01:15.438026"
     }
 }
