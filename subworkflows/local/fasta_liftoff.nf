@@ -6,6 +6,7 @@ include { AGAT_SPMERGEANNOTATIONS as MERGE_LIFTOFF_ANNOTATIONS  } from '../../mo
 include { AGAT_SPFLAGSHORTINTRONS                               } from '../../modules/gallvp/agat/spflagshortintrons/main'
 include { AGAT_SPFILTERFEATUREFROMKILLLIST                      } from '../../modules/nf-core/agat/spfilterfeaturefromkilllist/main'
 include { GFFREAD as GFFREAD_AFTER_LIFTOFF                      } from '../../modules/nf-core/gffread/main'
+include { GT_GFF3 as GT_GFF3_AFTER_LIFTOFF                      } from '../../modules/nf-core/gt/gff3/main'
 include { GFF_TSEBRA_SPFILTERFEATUREFROMKILLLIST                } from '../../subworkflows/local/gff_tsebra_spfilterfeaturefromkilllist'
 
 workflow FASTA_LIFTOFF {
@@ -120,8 +121,8 @@ workflow FASTA_LIFTOFF {
     ch_versions                     = ch_versions.mix(AGAT_SPFLAGSHORTINTRONS.out.versions.first())
 
     // COLLECTFILE: Kill list for valid_ORF=False transcripts
-    // tRNA, rRNA
-    // gene with any intron marked as 'pseudo=' by AGAT/SPFLAGSHORTINTRONS
+    // tRNA, rRNA, gene with any intron marked as
+    // 'pseudo=' by AGAT/SPFLAGSHORTINTRONS
     ch_kill_list                    = ch_flagged_gff
                                     | map { meta, gff ->
 
@@ -171,8 +172,15 @@ workflow FASTA_LIFTOFF {
     // MODULE: GFFREAD as GFFREAD_AFTER_LIFTOFF
     GFFREAD_AFTER_LIFTOFF ( ch_liftoff_purged_gff, [] )
 
-    ch_attr_trimmed_gff             = GFFREAD_AFTER_LIFTOFF.out.gffread_gff
     ch_versions                     = ch_versions.mix(GFFREAD_AFTER_LIFTOFF.out.versions.first())
+
+    // MODULE: GT_GFF3 as GT_GFF3_AFTER_LIFTOFF
+    // To fix the phase mislabelled by LIFTOFF
+    // https://github.com/Plant-Food-Research-Open/genepal/issues/115
+    GT_GFF3_AFTER_LIFTOFF ( GFFREAD_AFTER_LIFTOFF.out.gffread_gff )
+
+    ch_attr_trimmed_gff             = GT_GFF3_AFTER_LIFTOFF.out.gt_gff3
+    ch_versions                     = ch_versions.mix(GT_GFF3_AFTER_LIFTOFF.out.versions.first())
 
     // SUBWORKFLOW: GFF_TSEBRA_SPFILTERFEATUREFROMKILLLIST
     GFF_TSEBRA_SPFILTERFEATUREFROMKILLLIST(
