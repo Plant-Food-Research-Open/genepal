@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 1. Added cDNA and CDS outputs to <OUTPUT_DIR>/annotations/<SAMPLE> directory [#118](https://github.com/Plant-Food-Research-Open/genepal/issues/118)
 2. Added parameter `add_attrs_to_proteins_cds_fastas`
+3. Added parameter `filter_genes_by_aa_length` with default set to `24` which allows removal of genes with ORFs shorter than 24 [#125](https://github.com/Plant-Food-Research-Open/genepal/issues/125)
 
 ### `Fixed`
 

@@ -39,6 +39,7 @@
   - Optionally, allow or remove iso-forms
   - Remove BRAKER models from Liftoff loci
   - Merge Liftoff and BRAKER models
+  - Optionally, remove models with ORFs shorter than `N` amino acids
   - Optionally, remove models without any EggNOG-mapper hits
 - [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper): Add functional annotation to gff
 - [GenomeTools](https://github.com/genometools/genometools): GFF format validation

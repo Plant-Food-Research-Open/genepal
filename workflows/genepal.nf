@@ -178,7 +178,8 @@ workflow GENEPAL {
     // SUBWORKFLOW: GFF_MERGE_CLEANUP
     GFF_MERGE_CLEANUP(
         ch_braker_purged_gff,
-        ch_liftoff_gff3
+        ch_liftoff_gff3,
+        params.filter_genes_by_aa_length
     )
 
     ch_merged_gff               = GFF_MERGE_CLEANUP.out.gff

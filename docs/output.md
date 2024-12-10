@@ -169,8 +169,8 @@ If more than one genome is included in the pipeline, [ORTHOFINDER](https://githu
   - `Y/`
     - `Y.gt.gff3`: Final annotation file for genome `Y` which contains gene models and their functional annotations
     - `Y.pep.fasta`: Protein sequences for the gene models
-    - 'Y.cdna.fasta': cDNA sequences for the gene models
-    - 'Y.cds.fasta': Coding sequences for the gene models
+    - `Y.cdna.fasta`: cDNA sequences for the gene models
+    - `Y.cds.fasta`: Coding sequences for the gene models
 
 </details>
 

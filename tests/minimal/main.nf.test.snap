@@ -2,7 +2,7 @@
     "profile - test": {
         "content": [
             {
-                "successful tasks": 20,
+                "successful tasks": 21,
                 "versions": {
                     "AGAT_CONVERTSPGFF2GTF": {
                         "agat": "v1.4.0"
@@ -15,6 +15,9 @@
                     },
                     "AGAT_SPEXTRACTSEQUENCES": {
                         "agat": "v1.4.0"
+                    },
+                    "AGAT_SPFILTERBYORFSIZE": {
+                        "agat": "v1.4.1"
                     },
                     "BRAKER3": {
                         "braker3": "3.0.8",
@@ -92,8 +95,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.04.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-12-05T07:51:43.818374"
+        "timestamp": "2024-12-11T06:36:01.956188"
     }
 }

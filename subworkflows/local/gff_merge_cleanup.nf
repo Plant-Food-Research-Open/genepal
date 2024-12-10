@@ -1,18 +1,20 @@
 include { AGAT_SPMERGEANNOTATIONS               } from '../../modules/nf-core/agat/spmergeannotations/main'
 include { GT_GFF3                               } from '../../modules/nf-core/gt/gff3/main'
+include { AGAT_SPFILTERBYORFSIZE                } from '../../modules/gallvp/agat/spfilterbyorfsize/main'
 include { AGAT_CONVERTSPGXF2GXF                 } from '../../modules/nf-core/agat/convertspgxf2gxf/main'
 
 workflow GFF_MERGE_CLEANUP {
     take:
     ch_braker_gff               // Channel: [ meta, gff ]
     ch_liftoff_gff              // Channel: [ meta, gff ]
+    val_filter_by_aa_length     // val(null|Integer)
 
     main:
     ch_versions                 = Channel.empty()
 
     ch_gff_branch               = ch_braker_gff
                                 | join(ch_liftoff_gff, remainder:true)
-                                | branch { meta, braker_gff, liftoff_gff ->
+                                | branch { _meta, braker_gff, liftoff_gff ->
                                     both        : (     braker_gff      &&      liftoff_gff )
                                     braker_only : (     braker_gff      && ( !  liftoff_gff ) )
                                     liftoff_only: ( ( ! braker_gff )    &&      liftoff_gff )
@@ -25,12 +27,25 @@ workflow GFF_MERGE_CLEANUP {
     )
 
     ch_merged_gff               = AGAT_SPMERGEANNOTATIONS.out.gff
-                                | mix ( ch_gff_branch.liftoff_only.map { meta, braker_gff, liftoff_gff -> [ meta, liftoff_gff ] } )
-                                | mix ( ch_gff_branch.braker_only.map { meta, braker_gff, liftoff_gff -> [ meta, braker_gff ] } )
+                                | mix ( ch_gff_branch.liftoff_only.map { meta, _braker_gff, liftoff_gff -> [ meta, liftoff_gff ] } )
+                                | mix ( ch_gff_branch.braker_only.map { meta, braker_gff, _liftoff_gff -> [ meta, braker_gff ] } )
     ch_versions                 = ch_versions.mix(AGAT_SPMERGEANNOTATIONS.out.versions.first())
 
+    // MODULE: AGAT_SPFILTERBYORFSIZE
+    ch_filter_input             = ch_merged_gff
+                                | branch {
+                                    filter: val_filter_by_aa_length != null
+                                    pass: val_filter_by_aa_length == null
+                                }
+
+    AGAT_SPFILTERBYORFSIZE ( ch_filter_input.filter, [] )
+
+    ch_filtered_gff             = AGAT_SPFILTERBYORFSIZE.out.passed_gff
+                                | mix ( ch_filter_input.pass )
+    ch_versions                 = ch_versions.mix(AGAT_SPFILTERBYORFSIZE.out.versions.first())
+
     // MODULE: GT_GFF3
-    GT_GFF3 ( ch_merged_gff )
+    GT_GFF3 ( ch_filtered_gff )
 
     ch_gt_gff                   = GT_GFF3.out.gt_gff3
     ch_versions                 = ch_versions.mix(GT_GFF3.out.versions.first())

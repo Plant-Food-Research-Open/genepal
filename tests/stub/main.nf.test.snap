@@ -2,7 +2,7 @@
     "full - stub": {
         "content": [
             {
-                "successful tasks": 162,
+                "successful tasks": 166,
                 "versions": {
                     "AGAT_CONVERTSPGFF2GTF": {
                         "agat": "v1.4.0"
@@ -15,6 +15,9 @@
                     },
                     "AGAT_SPEXTRACTSEQUENCES": {
                         "agat": "v1.4.0"
+                    },
+                    "AGAT_SPFILTERBYORFSIZE": {
+                        "agat": "v1.4.1"
                     },
                     "AGAT_SPFILTERFEATUREFROMKILLLIST": {
                         "agat": "v1.4.0"
@@ -203,8 +206,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.04.2"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-12-05T07:56:38.915238"
+        "timestamp": "2024-12-10T21:52:10.308719"
     }
 }
