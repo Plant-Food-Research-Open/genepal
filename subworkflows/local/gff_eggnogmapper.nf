@@ -16,8 +16,8 @@ workflow GFF_EGGNOGMAPPER {
                                 | join(ch_fasta)
 
     GFF2FASTA_FOR_EGGNOGMAPPER(
-        ch_gffread_inputs.map { meta, gff, fasta -> [ meta, gff ] },
-        ch_gffread_inputs.map { meta, gff, fasta -> fasta }
+        ch_gffread_inputs.map { meta, gff, _fasta -> [ meta, gff ] },
+        ch_gffread_inputs.map { _meta, _gff, fasta -> fasta }
     )
 
     ch_gffread_fasta            = GFF2FASTA_FOR_EGGNOGMAPPER.out.gffread_fasta
@@ -30,9 +30,9 @@ workflow GFF_EGGNOGMAPPER {
                                 | combine(Channel.fromPath(db_folder))
 
     EGGNOGMAPPER(
-        ch_eggnogmapper_inputs.map { meta, fasta, db -> [ meta, fasta ] },
+        ch_eggnogmapper_inputs.map { meta, fasta, _db -> [ meta, fasta ] },
         [],
-        ch_eggnogmapper_inputs.map { meta, fasta, db -> db },
+        ch_eggnogmapper_inputs.map { _meta, _fasta, db -> db },
         [ [], [] ]
     )
 

@@ -190,22 +190,43 @@ cat("<br>")
 
 
 ```{r pheatmap, eval=(exists("n0_df") && !is.null(n0_df$heatmap)), results='hide', fig.align='center', fig.cap="Heatmap showing number of proteins present in each orthocluster (clusters where all individuals have 1 copy are excluded). Columns = Orthologue cluster, Row = Individual", fig.width=7, fig.height=7, dpi=150, warning=FALSE}
-pheatmap(n0_df$heatmap,
+
+# Max 65536 allowed
+# https://github.com/Plant-Food-Research-Open/genepal/issues/124
+
+n_cols <- ncol(n0_df$heatmap)
+max_cols_allowed <- min(n_cols, 5000)
+
+# Approach 1: Random selection of columns
+# selected_cols <- sample(n_cols, max_cols_allowed)
+
+# Approach 2: First N largest clusters
+selected_cols <- order(colSums(n0_df$heatmap), decreasing = TRUE)[seq(1, max_cols_allowed)]
+
+prefix_text <- ""
+
+if ( n_cols != max_cols_allowed ) {
+  prefix_text <- paste0("Top ", max_cols_allowed, " ")
+}
+
+pheatmap(n0_df$heatmap[, selected_cols],
   show_colnames = FALSE,
-  main = "Orthologue clusters containing accessory proteins",
+  main = paste0(prefix_text, "Orthologue clusters"),
   legend = TRUE,
   legend_labels = TRUE,
   border_color = "white"
 )
 
-pheatmap(n0_df$heatmap,
+pheatmap(n0_df$heatmap[, selected_cols],
   filename = file.path(outputs_folder, "pangene.matrix.heatmap.pdf"),
   show_colnames = FALSE,
-  main = "Orthologue clusters containing accessory proteins",
+  main = paste0(prefix_text, "Orthologue clusters"),
   legend = TRUE,
   legend_labels = TRUE,
   border_color = "white"
 )
+
+write.csv(x = transform_hogs(n0o), file = file.path(outputs_folder, "pangenome.matrix.csv"), row.names = FALSE)
 ```
 
 

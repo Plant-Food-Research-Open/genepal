@@ -11,7 +11,7 @@ include { PREPROCESS_RNASEQ                     } from '../subworkflows/local/pr
 include { ALIGN_RNASEQ                          } from '../subworkflows/local/align_rnaseq'
 include { PREPARE_EXT_PROTS                     } from '../subworkflows/local/prepare_ext_prots'
 include { FASTA_BRAKER3                         } from '../subworkflows/local/fasta_braker3'
-include { FASTA_LIFTOFF                         } from '../subworkflows/local/fasta_liftoff'
+include { FASTA_LIFTOFF                         } from '../subworkflows/local/fasta_liftoff/main'
 include { PURGE_BRAKER_MODELS                   } from '../subworkflows/local/purge_braker_models'
 include { GFF_MERGE_CLEANUP                     } from '../subworkflows/local/gff_merge_cleanup'
 include { GFF_EGGNOGMAPPER                      } from '../subworkflows/local/gff_eggnogmapper'
@@ -178,7 +178,8 @@ workflow GENEPAL {
     // SUBWORKFLOW: GFF_MERGE_CLEANUP
     GFF_MERGE_CLEANUP(
         ch_braker_purged_gff,
-        ch_liftoff_gff3
+        ch_liftoff_gff3,
+        params.filter_genes_by_aa_length
     )
 
     ch_merged_gff               = GFF_MERGE_CLEANUP.out.gff

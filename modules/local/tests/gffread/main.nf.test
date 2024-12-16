@@ -1,0 +1,38 @@
+nextflow_process {
+
+    name "Test Process GFFREAD"
+    script "../../../nf-core/gffread/main.nf"
+    config "./nextflow.config"
+    process "GFFREAD"
+
+    tag "gffread"
+    tag "modules_nfcore"
+    tag "modules"
+
+    test("filter by length") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file("$baseDir" + '/modules/local/tests/gffread/testdata/t.gff', checkIfExists: true)
+                ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert file(process.out.gffread_gff[0][1]).text.contains('gene19851') },
+                { assert file(process.out.gffread_gff[0][1]).text.contains('gene19851.t1') },
+                { assert ! file(process.out.gffread_gff[0][1]).text.contains('gene19851.t2') } // This is the only transcript which is being knocked out
+            )
+        }
+
+    }
+
+}

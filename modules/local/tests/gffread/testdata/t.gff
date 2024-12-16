@@ -1,0 +1,47 @@
+##gff-version 3
+###
+chr23	AUGUSTUS	gene	16515075	16516672	.	-	.	ID=gene19849;description=Protein%20of%20unknown%20function%20%28DUF1635%29
+chr23	AUGUSTUS	mRNA	16515075	16516597	1	-	.	ID=gene19849.t1;Parent=gene19849;description=Protein%20of%20unknown%20function%20%28DUF1635%29
+chr23	AUGUSTUS	exon	16515075	16515794	.	-	.	ID=gene19849.t1.exon1;Parent=gene19849.t1
+chr23	AUGUSTUS	CDS	16515075	16515794	1	-	0	ID=gene19849.t1.cds1;Parent=gene19849.t1
+chr23	AUGUSTUS	exon	16516562	16516597	.	-	.	ID=gene19849.t1.exon2;Parent=gene19849.t1
+chr23	AUGUSTUS	CDS	16516562	16516597	1	-	0	ID=gene19849.t1.cds2;Parent=gene19849.t1
+chr23	gmst	mRNA	16515075	16516672	.	-	.	ID=gene19849.t2;Parent=gene19849;description=Protein%20of%20unknown%20function%20%28DUF1635%29
+chr23	gmst	exon	16515075	16515794	50.2	-	0	ID=gene19849.t2.exon1;Parent=gene19849.t2
+chr23	gmst	CDS	16515075	16515794	50.2	-	0	ID=gene19849.t2.cds1;Parent=gene19849.t2
+chr23	gmst	exon	16516562	16516672	50.2	-	0	ID=gene19849.t2.exon2;Parent=gene19849.t2
+chr23	gmst	CDS	16516562	16516672	50.2	-	0	ID=gene19849.t2.cds2;Parent=gene19849.t2
+###
+chr23	gmst	gene	16530414	16531453	.	-	.	ID=gene19850;description=Myb-like%20DNA-binding%20domain
+chr23	gmst	mRNA	16530414	16531453	.	-	.	ID=gene19850.t1;Parent=gene19850;description=Myb-like%20DNA-binding%20domain
+chr23	gmst	exon	16530414	16531041	42.7	-	1	ID=gene19850.t1.exon1;Parent=gene19850.t1
+chr23	gmst	CDS	16530414	16531041	42.7	-	1	ID=gene19850.t1.cds1;Parent=gene19850.t1
+chr23	gmst	exon	16531197	16531453	42.7	-	0	ID=gene19850.t1.exon2;Parent=gene19850.t1
+chr23	gmst	CDS	16531197	16531453	42.7	-	0	ID=gene19850.t1.cds2;Parent=gene19850.t1
+###
+chr23	AUGUSTUS	gene	16530414	16531542	.	-	.	ID=gene19851;description=Differing%20isoform%20descriptions
+chr23	AUGUSTUS	mRNA	16530414	16531542	1	-	.	ID=gene19851.t1;Parent=gene19851;description=Myb-like%20DNA-binding%20domain
+chr23	AUGUSTUS	exon	16530414	16530721	.	-	.	ID=gene19851.t1.exon1;Parent=gene19851.t1
+chr23	AUGUSTUS	CDS	16530414	16530721	1	-	2	ID=gene19851.t1.cds1;Parent=gene19851.t1
+chr23	AUGUSTUS	exon	16530824	16531041	.	-	.	ID=gene19851.t1.exon2;Parent=gene19851.t1
+chr23	AUGUSTUS	CDS	16530824	16531041	1	-	1	ID=gene19851.t1.cds2;Parent=gene19851.t1
+chr23	AUGUSTUS	exon	16531197	16531326	.	-	.	ID=gene19851.t1.exon3;Parent=gene19851.t1
+chr23	AUGUSTUS	CDS	16531197	16531326	1	-	2	ID=gene19851.t1.cds3;Parent=gene19851.t1
+chr23	AUGUSTUS	exon	16531428	16531542	.	-	.	ID=gene19851.t1.exon4;Parent=gene19851.t1
+chr23	AUGUSTUS	CDS	16531428	16531542	1	-	0	ID=gene19851.t1.cds4;Parent=gene19851.t1
+chr23	GeneMark.hmm3	mRNA	16531514	16531542	.	-	.	ID=gene19851.t2;Parent=gene19851;description=Hypothetical%20protein%20%7C%20no%20eggnog%20hit
+chr23	GeneMark.hmm3	exon	16531514	16531542	.	-	0	ID=gene19851.t2.exon1;Parent=gene19851.t2
+chr23	GeneMark.hmm3	CDS	16531514	16531542	.	-	0	ID=gene19851.t2.cds1;Parent=gene19851.t2
+###
+chr23	AUGUSTUS	gene	16539401	16545431	.	+	.	ID=gene19852;description=nuclease%20HARBI1
+chr23	AUGUSTUS	mRNA	16539401	16545431	1	+	.	ID=gene19852.t1;Parent=gene19852;description=nuclease%20HARBI1
+chr23	AUGUSTUS	exon	16539401	16539509	.	+	.	ID=gene19852.t1.exon1;Parent=gene19852.t1
+chr23	AUGUSTUS	CDS	16539401	16539509	1	+	0	ID=gene19852.t1.cds1;Parent=gene19852.t1
+chr23	AUGUSTUS	exon	16544386	16545431	.	+	.	ID=gene19852.t1.exon2;Parent=gene19852.t1
+chr23	AUGUSTUS	CDS	16544386	16545431	1	+	2	ID=gene19852.t1.cds2;Parent=gene19852.t1
+###
+chr23	AUGUSTUS	gene	16556338	16556796	.	+	.	ID=gene19853;description=Zinc%20finger%20protein
+chr23	AUGUSTUS	mRNA	16556338	16556796	1	+	.	ID=gene19853.t1;Parent=gene19853;description=Zinc%20finger%20protein
+chr23	AUGUSTUS	exon	16556338	16556796	.	+	.	ID=gene19853.t1.exon1;Parent=gene19853.t1
+chr23	AUGUSTUS	CDS	16556338	16556796	1	+	0	ID=gene19853.t1.cds1;Parent=gene19853.t1
+###

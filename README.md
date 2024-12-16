@@ -35,14 +35,16 @@
   - Merge multi-reference liftoffs
   - Remove liftoff transcripts marked by _valid_ORF=False_
   - Remove liftoff genes with any intron shorter than 10 bp
-  - Remove rRNA and tRNA from liftoff
+  - Remove rRNA, tRNA and other non-protein coding models from liftoff
   - Optionally, allow or remove iso-forms
   - Remove BRAKER models from Liftoff loci
   - Merge Liftoff and BRAKER models
   - Optionally, remove models without any EggNOG-mapper hits
 - [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper): Add functional annotation to gff
 - [GenomeTools](https://github.com/genometools/genometools): GFF format validation
-- [GffRead](https://github.com/gpertea/gffread): Extraction of protein sequences
+- [GffRead](https://github.com/gpertea/gffread)
+  - Extraction of protein sequences
+  - Optionally, remove models with ORFs shorter than `N` amino acids
 - [OrthoFinder](https://github.com/davidemms/OrthoFinder): Perform phylogenetic orthology inference across genomes
 - [GffCompare](https://github.com/gpertea/gffcompare): Compare and benchmark against an existing annotation
 - [BUSCO](https://gitlab.com/ezlab/busco): Completeness statistics for genome and annotation through proteins
@@ -97,7 +99,7 @@ sbatch ./pfr_genepal
 
 plant-food-research-open/genepal workflows were originally scripted by Jason Shiller ([@jasonshiller](https://github.com/jasonshiller)). Usman Rashid ([@gallvp](https://github.com/gallvp)) wrote the Nextflow pipeline.
 
-We thank the following people for their extensive assistance in the development of this pipeline:
+We thank the following people for extensive assistance in the development of the pipeline,
 
 - Cecilia Deng [@CeciliaDeng](https://github.com/CeciliaDeng)
 - Charles David [@charlesdavid](https://github.com/charlesdavid)
@@ -106,6 +108,10 @@ We thank the following people for their extensive assistance in the development 
 - Ross Crowhurst [@rosscrowhurst](https://github.com/rosscrowhurst)
 - Susan Thomson [@cflsjt](https://github.com/cflsjt)
 - Ting-Hsuan Chen [@ting-hsuan-chen](https://github.com/ting-hsuan-chen)
+
+and for contributions to the codebase,
+
+- Liam Le Lievre [@liamlelievre](https://github.com/liamlelievre)
 
 The pipeline uses nf-core modules contributed by following authors:
 
@@ -139,6 +145,7 @@ The pipeline uses nf-core modules contributed by following authors:
 <a href="https://github.com/charles-plessy"><img src="https://github.com/charles-plessy.png" width="50" height="50"></a>
 <a href="https://github.com/bunop"><img src="https://github.com/bunop.png" width="50" height="50"></a>
 <a href="https://github.com/abhi18av"><img src="https://github.com/abhi18av.png" width="50" height="50"></a>
+<a href="https://github.com/liamlelievre"><img src="https://github.com/liamlelievre.png" width="50" height="50"></a>
 
 ## Contributions and Support
 

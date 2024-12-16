@@ -2,7 +2,7 @@
     "full - stub": {
         "content": [
             {
-                "successful tasks": 154,
+                "successful tasks": 126,
                 "versions": {
                     "AGAT_CONVERTSPGFF2GTF": {
                         "agat": "v1.4.0"
@@ -14,15 +14,6 @@
                         "agat": "v1.4.0"
                     },
                     "AGAT_SPEXTRACTSEQUENCES": {
-                        "agat": "v1.4.0"
-                    },
-                    "AGAT_SPFILTERFEATUREFROMKILLLIST": {
-                        "agat": "v1.4.0"
-                    },
-                    "AGAT_SPFLAGSHORTINTRONS": {
-                        "agat": "v1.4.1"
-                    },
-                    "AGAT_SPMERGEANNOTATIONS": {
                         "agat": "v1.4.0"
                     },
                     "BENCHMARK": {
@@ -46,14 +37,17 @@
                     "CAT_PROTEIN_FASTAS": {
                         "pigz": "2.3.4"
                     },
-                    "COMPARE_BRAKER_TO_LIFTOFF": {
-                        "gffcompare": "0.12.6"
-                    },
                     "CUSTOM_SRATOOLSNCBISETTINGS": {
                         "sratools": "3.0.8"
                     },
                     "EGGNOGMAPPER": {
                         "eggnog-mapper": "2.1.12"
+                    },
+                    "EXTRACT_CDNA": {
+                        "gffread": "0.12.7"
+                    },
+                    "EXTRACT_CDS": {
+                        "gffread": "0.12.7"
                     },
                     "EXTRACT_PROTEINS": {
                         "gffread": "0.12.7"
@@ -64,13 +58,13 @@
                     "FASTP": {
                         "fastp": "0.23.4"
                     },
+                    "FILTER_BY_ORF_SIZE": {
+                        "gffread": "0.12.7"
+                    },
                     "FINAL_GFF_CHECK": {
                         "genometools": "1.6.5"
                     },
                     "GFF2FASTA_FOR_EGGNOGMAPPER": {
-                        "gffread": "0.12.7"
-                    },
-                    "GFFREAD_AFTER_LIFTOFF": {
                         "gffread": "0.12.7"
                     },
                     "GFFREAD_BEFORE_LIFTOFF": {
@@ -96,9 +90,6 @@
                     },
                     "LIFTOFF": {
                         "liftoff": "v1.6.3"
-                    },
-                    "MERGE_LIFTOFF_ANNOTATIONS": {
-                        "agat": "v1.4.0"
                     },
                     "ORTHOFINDER": {
                         "orthofinder": "2.5.5"
@@ -143,25 +134,33 @@
                         "tsebra": "1.1.2.5"
                     },
                     "Workflow": {
-                        "plant-food-research-open/genepal": "v0.5.0"
+                        "plant-food-research-open/genepal": "v0.6.0"
                     }
                 },
                 "stable paths": [
+                    "donghong.cdna.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "donghong.cds.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "donghong.emapper.annotations:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "donghong.emapper.hits:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "donghong.emapper.seed_orthologs:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "donghong.gt.gff3:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "donghong.pep.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "red5_v2p1.cdna.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "red5_v2p1.cds.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red5_v2p1.emapper.annotations:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red5_v2p1.emapper.hits:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red5_v2p1.emapper.seed_orthologs:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red5_v2p1.gt.gff3:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red5_v2p1.pep.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "red5_v3.cdna.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "red5_v3.cds.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red5_v3.emapper.annotations:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red5_v3.emapper.hits:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red5_v3.emapper.seed_orthologs:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red5_v3.gt.gff3:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red5_v3.pep.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "red7_v5.cdna.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "red7_v5.cds.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red7_v5.emapper.annotations:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red7_v5.emapper.hits:md5,d41d8cd98f00b204e9800998ecf8427e",
                     "red7_v5.emapper.seed_orthologs:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -188,9 +187,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
+            "nf-test": "0.9.2",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-21T12:34:14.056074"
+        "timestamp": "2024-12-16T13:24:49.69503"
     }
 }

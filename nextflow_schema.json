@@ -272,6 +272,13 @@
                     "type": "boolean",
                     "description": "Purge transcripts which do not have a hit against eggnog",
                     "fa_icon": "fas fa-question-circle"
+                },
+                "filter_genes_by_aa_length": {
+                    "type": "integer",
+                    "default": 24,
+                    "fa_icon": "fas fa-hashtag",
+                    "description": "Filter genes with open reading frames shorter than the specified number of amino acids excluding the stop codon. If set to `null`, this filter step is skipped.",
+                    "minimum": 3
                 }
             }
         },
@@ -287,10 +294,10 @@
                     "description": "Save BRAKER files",
                     "fa_icon": "fas fa-question-circle"
                 },
-                "add_attrs_to_proteins_fasta": {
+                "add_attrs_to_proteins_cds_fastas": {
                     "type": "boolean",
-                    "fa_icon": "fas fa-question-circle",
-                    "description": "Add gff attributes to proteins fasta"
+                    "description": "Add gff attributes to proteins/cDNA/CDS fasta",
+                    "fa_icon": "fas fa-question-circle"
                 }
             }
         },

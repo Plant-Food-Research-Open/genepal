@@ -38,6 +38,8 @@ nextflow_pipeline {
                 ['**']
             )
 
+            def summary_stats = (Map) new groovy.json.JsonSlurper().parseText(file("$outputDir/genepal_data/summary_stats.json").text)
+
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -46,6 +48,7 @@ nextflow_pipeline {
                         'versions': removeNextflowVersion("$outputDir/pipeline_info/genepal_software_mqc_versions.yml"),
                         'stable paths': stable_path,
                         'stable names': getRelativePath(stable_name, outputDir),
+                        'summary_stats': summary_stats
                     ]
                 ).match() }
             )
