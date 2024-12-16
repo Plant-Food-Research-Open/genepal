@@ -73,6 +73,16 @@ Each row represents an input genome and the fields are:
 - `fasta:` fasta file for the genome
 - `is_masked`: yes or no to denote whether the fasta file is already masked or not
 
+#### `--min_contig_length`
+- **Description**: Minimum length (in base pairs) of contigs to include in the analysis.
+- **Default**: 5000
+- **Example**:
+    ```bash
+    nextflow run main.nf --min_contig_length 10000
+    ```
+    This will exclude all contigs shorter than 10,000 bp from the analysis.
+
+
 At minimum, a file with proteins as evidence is also required. Now, you can run the pipeline using:
 
 ```bash
