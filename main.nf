@@ -23,18 +23,22 @@ include { PIPELINE_COMPLETION       } from './subworkflows/local/utils_nfcore_ge
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+// Include the seqkit module
+include { SEQKIT } from './modules/nf-core/seqkit'
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    PROCESS: Filter Genome Assembly by Minimum Contig Length
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
 process SEQKIT_GET_LENGTH {
-    tag "${meta.id}"
-    label 'process_medium'
-    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'https://depot.galaxyproject.org/singularity/seqkit:2.4.0--h9ee0642_0'
-        : 'quay.io/biocontainers/seqkit:2.4.0--h9ee0642_0'}"
 
     input:
-    tuple val(meta), path(genome_fasta)
+    path input_file
 
     output:
-    tuple val(meta), path("filtered_${meta.id}.fasta"), path("${meta.id}_contig_list.txt"), emit: filtered_fasta
+    path 'filtered_output_file.txt'
 
     script:
     """
