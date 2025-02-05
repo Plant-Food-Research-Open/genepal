@@ -291,6 +291,14 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-question-circle",
                     "description": "Add gff attributes to proteins fasta"
+                },
+                "Seqkit_min_contig_threshold":
+                {
+                    "name": "min_contig_length",
+                    "type": "integer",
+                    "description": "Minimum length of contigs.",
+                    "required": true,
+                    "minimum": 5000
                 }
             }
         },
