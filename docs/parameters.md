@@ -69,10 +69,11 @@ A Nextflow pipeline for consensus, phased and pan-genome annotation.
 
 ## Annotation output options
 
-| Parameter                          | Description                                   | Type      | Default | Required | Hidden |
-| ---------------------------------- | --------------------------------------------- | --------- | ------- | -------- | ------ |
-| `braker_save_outputs`              | Save BRAKER files                             | `boolean` |         |          |        |
-| `add_attrs_to_proteins_cds_fastas` | Add gff attributes to proteins/cDNA/CDS fasta | `boolean` |         |          |        |
+| Parameter                             | Description                                                        | Type      | Default | Required | Hidden |
+| ------------------------------------- | ------------------------------------------------------------------ | --------- | ------- | -------- | ------ |
+| `braker_save_outputs`                 | Save BRAKER files                                                  | `boolean` |         |          |        |
+| `add_attrs_to_proteins_cds_fastas`    | Add gff attributes to proteins/cDNA/CDS fasta                      | `boolean` |         |          |        |
+| `append_genome_prefix_to_feature_ids` | Add genome prefix to all the features in the final Gff/Fasta files | `boolean` |         |          |        |
 
 ## Evaluation options
 

@@ -298,6 +298,11 @@
                     "type": "boolean",
                     "description": "Add gff attributes to proteins/cDNA/CDS fasta",
                     "fa_icon": "fas fa-question-circle"
+                },
+                "append_genome_prefix_to_feature_ids": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-question-circle",
+                    "description": "Add genome prefix to all the features in the final Gff/Fasta files"
                 }
             }
         },
