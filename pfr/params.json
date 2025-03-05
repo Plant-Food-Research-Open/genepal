@@ -35,6 +35,7 @@
     "filter_genes_by_aa_length": 24,
     "braker_save_outputs": false,
     "add_attrs_to_proteins_cds_fastas": false,
+    "append_genome_prefix_to_feature_ids": true,
     "busco_skip": false,
     "busco_lineage_datasets": "embryophyta_odb10"
 }

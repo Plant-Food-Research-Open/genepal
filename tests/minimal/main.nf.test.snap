@@ -64,15 +64,15 @@
                         "tsebra": "1.1.2.5"
                     },
                     "Workflow": {
-                        "plant-food-research-open/genepal": "v0.6.0"
+                        "plant-food-research-open/genepal": "v0.6.1dev"
                     }
                 },
                 "stable paths": [
-                    "a_thaliana.cdna.fasta:md5,12b9bef973e488640aec8c04ba3882fe",
-                    "a_thaliana.cds.fasta:md5,b81060419355a590560f92aec8536281",
-                    "a_thaliana.gt.gff3:md5,528459cf9596523bf66de99d24c37e20",
-                    "a_thaliana.pep.fasta:md5,4994c0393ca0245a1c57966d846d101e",
-                    "a_thaliana.gff3:md5,30adac1b21d7aaed6ca7fb71ab33f32d",
+                    "a_thaliana.cdna.fasta:md5,f44a6acdc245b85a935ef9ed3fc62967",
+                    "a_thaliana.cds.fasta:md5,4fd5a251a3912b452844e1f7332f514d",
+                    "a_thaliana.gt.gff3:md5,2ce78be84046266da89a2b8256b1ac3c",
+                    "a_thaliana.pep.fasta:md5,38ae660abc78eb57d467bb48b5170f19",
+                    "a_thaliana.gff3:md5,a95b8141ed7d90935a7d6c0a389fb53f",
                     "summary_stats.json:md5,007ba5cf2b7a2fd395a27d9458ca2d2e"
                 ],
                 "stable names": [
@@ -108,8 +108,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.04.4"
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-12-12T09:36:52.952048"
+        "timestamp": "2025-03-05T14:07:05.189463"
     }
 }

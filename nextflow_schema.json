@@ -302,7 +302,8 @@
                 "append_genome_prefix_to_feature_ids": {
                     "type": "boolean",
                     "fa_icon": "fas fa-question-circle",
-                    "description": "Add genome prefix to all the features in the final Gff/Fasta files"
+                    "description": "Add genome prefix to all the features in the final Gff/Fasta files",
+                    "default": true
                 }
             }
         },
