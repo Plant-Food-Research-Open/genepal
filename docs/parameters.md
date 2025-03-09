@@ -59,20 +59,22 @@ A Nextflow pipeline for consensus, phased and pan-genome annotation.
 
 ## Post-annotation filtering options
 
-| Parameter                     | Description                                                                                                                                                     | Type      | Default | Required | Hidden |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------- | -------- | ------ |
-| `allow_isoforms`              | Allow multiple isoforms for gene models                                                                                                                         | `boolean` | True    |          |        |
-| `enforce_full_intron_support` | Require every model to have external evidence for all its introns                                                                                               | `boolean` | True    |          |        |
-| `filter_liftoff_by_hints`     | Use BRAKER hints to filter Liftoff models                                                                                                                       | `boolean` | True    |          |        |
-| `eggnogmapper_purge_nohits`   | Purge transcripts which do not have a hit against eggnog                                                                                                        | `boolean` |         |          |        |
-| `filter_genes_by_aa_length`   | Filter genes with open reading frames shorter than the specified number of amino acids excluding the stop codon. If set to `null`, this filter step is skipped. | `integer` | 24      |          |        |
+| Parameter                     | Description                                                                                                                                            | Type      | Default | Required | Hidden |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- | ------- | -------- | ------ |
+| `allow_isoforms`              | Allow multiple isoforms for gene models                                                                                                                | `boolean` | True    |          |        |
+| `enforce_full_intron_support` | Require every model to have external evidence for all its introns                                                                                      | `boolean` | True    |          |        |
+| `filter_liftoff_by_hints`     | Use BRAKER hints to filter Liftoff models                                                                                                              | `boolean` | True    |          |        |
+| `eggnogmapper_purge_nohits`   | Purge transcripts which do not have a hit against eggnog                                                                                               | `boolean` |         |          |        |
+| `filter_genes_by_aa_length`   | Filter genes with open reading frames shorter than the specified number of amino acids excluding the stop codon. If set to `null`, this filter step is |
+| skipped.                      | `integer`                                                                                                                                              | 24        |         |          |
 
 ## Annotation output options
 
-| Parameter                          | Description                                   | Type      | Default | Required | Hidden |
-| ---------------------------------- | --------------------------------------------- | --------- | ------- | -------- | ------ |
-| `braker_save_outputs`              | Save BRAKER files                             | `boolean` |         |          |        |
-| `add_attrs_to_proteins_cds_fastas` | Add gff attributes to proteins/cDNA/CDS fasta | `boolean` |         |          |        |
+| Parameter                             | Description                                                        | Type      | Default | Required | Hidden |
+| ------------------------------------- | ------------------------------------------------------------------ | --------- | ------- | -------- | ------ |
+| `braker_save_outputs`                 | Save BRAKER files                                                  | `boolean` |         |          |        |
+| `add_attrs_to_proteins_cds_fastas`    | Add gff attributes to proteins/cDNA/CDS fasta                      | `boolean` |         |          |        |
+| `append_genome_prefix_to_feature_ids` | Add genome prefix to all the features in the final Gff/Fasta files | `boolean` | True    |          |        |
 
 ## Evaluation options
 
