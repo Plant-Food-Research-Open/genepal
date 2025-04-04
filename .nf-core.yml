@@ -17,8 +17,7 @@ lint:
     - docs/README.md
   multiqc_config:
     - report_comment
-nf_core_version: 3.0.2
-org_path: null
+nf_core_version: 3.2.0
 repository_type: pipeline
 template:
   author: Usman Rashid, Jason Shiller
@@ -31,4 +30,3 @@ template:
   skip_features:
     - igenomes
   version: 0.6.1dev
-update: null

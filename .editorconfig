@@ -62,3 +62,6 @@ indent_size = unset
 # ignore bin/genepal_report
 [bin/genepal_report*]
 indent_size = unset
+# ignore ro-crate metadata files
+[**/ro-crate-metadata.json]
+insert_final_newline = unset
