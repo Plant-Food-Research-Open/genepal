@@ -2,7 +2,11 @@ bump_version: null
 lint:
   actions_ci: false
   included_configs: false
-  nextflow_config: false
+  nextflow_config:
+    - manifest.name
+    - manifest.homePage
+    - config_defaults:
+        - params.ribo_database_manifest
   files_exist:
     - CODE_OF_CONDUCT.md
     - .github/ISSUE_TEMPLATE/config.yml
