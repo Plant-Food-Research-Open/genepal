@@ -1,0 +1,31 @@
+##gff-version 3
+###
+chr12	AGAT	gene	23494755	23496995	.	+	.	ID=P005ME_h2_v2.g14880;description=Hypothetical%20protein%20%7C%20no%20eggnog%20hit
+chr12	Liftoff	mRNA	23494755	23496995	.	+	.	ID=P005ME_h2_v2.g14880.t1;Parent=P005ME_h2_v2.g14880;liftoffID=RUSV2a.013971.1.HCt5360.7594;description=Hypothetical%20protein%20%7C%20no%20eggnog%20hit
+chr12	Liftoff	exon	23494755	23495522	.	+	.	ID=P005ME_h2_v2.g14880.t1.exon1;Parent=P005ME_h2_v2.g14880.t1
+chr12	Liftoff	CDS	23494852	23494872	.	+	0	ID=P005ME_h2_v2.g14880.t1.cds1;Parent=P005ME_h2_v2.g14880.t1
+chr12	Liftoff	exon	23495991	23496507	.	+	.	ID=P005ME_h2_v2.g14880.t1.exon2;Parent=P005ME_h2_v2.g14880.t1
+chr12	Liftoff	exon	23496639	23496995	.	+	.	ID=P005ME_h2_v2.g14880.t1.exon3;Parent=P005ME_h2_v2.g14880.t1
+###
+chr16	AGAT	gene	13773098	13775804	.	-	.	ID=P005ME_h2_v2.g19822;description=Hypothetical%20protein%20%7C%20no%20eggnog%20hit
+chr16	Liftoff	mRNA	13773098	13775804	.	-	.	ID=P005ME_h2_v2.g19822.t1;Parent=P005ME_h2_v2.g19822;liftoffID=RUSV2a.018489.1.HCt1015606.1017946;description=Hypothetical%20protein%20%7C%20no%20eggnog%20hit
+chr16	Liftoff	exon	13773098	13774178	.	-	.	ID=P005ME_h2_v2.g19822.t1.exon1;Parent=P005ME_h2_v2.g19822.t1
+chr16	Liftoff	CDS	13773750	13773797	.	-	0	ID=P005ME_h2_v2.g19822.t1.cds1;Parent=P005ME_h2_v2.g19822.t1
+chr16	Liftoff	exon	13775755	13775804	.	-	.	ID=P005ME_h2_v2.g19822.t1.exon2;Parent=P005ME_h2_v2.g19822.t1
+###
+chr7	AGAT	gene	21456599	21459752	.	+	.	ID=P005ME_h2_v2.g8694;description=Hypothetical%20protein%20%7C%20no%20eggnog%20hit
+chr7	Liftoff	mRNA	21456599	21459752	.	+	.	ID=P005ME_h2_v2.g8694.t1;Parent=P005ME_h2_v2.g8694;liftoffID=RUSV2a.050666.1.HCt1358553.1361384;description=Hypothetical%20protein%20%7C%20no%20eggnog%20hit
+chr7	Liftoff	exon	21456599	21456737	.	+	.	ID=P005ME_h2_v2.g8694.t1.exon1;Parent=P005ME_h2_v2.g8694.t1
+chr7	Liftoff	CDS	21456735	21456737	.	+	0	ID=P005ME_h2_v2.g8694.t1.cds1;Parent=P005ME_h2_v2.g8694.t1
+chr7	Liftoff	CDS	21457169	21457180	.	+	0	ID=P005ME_h2_v2.g8694.t1.cds2;Parent=P005ME_h2_v2.g8694.t1
+chr7	Liftoff	exon	21457169	21457531	.	+	.	ID=P005ME_h2_v2.g8694.t1.exon2;Parent=P005ME_h2_v2.g8694.t1
+chr7	Liftoff	exon	21458661	21459752	.	+	.	ID=P005ME_h2_v2.g8694.t1.exon3;Parent=P005ME_h2_v2.g8694.t1
+###
+chr1	AUGUSTUS	gene	311200	312602	.	+	.	ID=P005ME_h2_v2.g24;description=Protodermal%20factor
+chr1	AUGUSTUS	mRNA	311200	312602	1	+	.	ID=P005ME_h2_v2.g24.t1;Parent=P005ME_h2_v2.g24;description=Protodermal%20factor
+chr1	AUGUSTUS	exon	311200	311359	.	+	.	ID=P005ME_h2_v2.g24.t1.exon1;Parent=P005ME_h2_v2.g24.t1
+chr1	AUGUSTUS	CDS	311200	311359	.	+	0	ID=P005ME_h2_v2.g24.t1.cds1;Parent=P005ME_h2_v2.g24.t1
+chr1	AUGUSTUS	exon	311682	312015	.	+	.	ID=P005ME_h2_v2.g24.t1.exon2;Parent=P005ME_h2_v2.g24.t1
+chr1	AUGUSTUS	CDS	311682	312015	.	+	2	ID=P005ME_h2_v2.g24.t1.cds2;Parent=P005ME_h2_v2.g24.t1
+chr1	AUGUSTUS	exon	312272	312602	.	+	.	ID=P005ME_h2_v2.g24.t1.exon3;Parent=P005ME_h2_v2.g24.t1
+chr1	AUGUSTUS	CDS	312272	312602	.	+	1	ID=P005ME_h2_v2.g24.t1.cds3;Parent=P005ME_h2_v2.g24.t1
