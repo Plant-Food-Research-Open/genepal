@@ -1,0 +1,22 @@
+Changes in component 'nf-core/agat/spfilterbyorfsize'
+'modules/nf-core/agat/spfilterbyorfsize/environment.yml' is unchanged
+'modules/nf-core/agat/spfilterbyorfsize/meta.yml' is unchanged
+Changes in 'agat/spfilterbyorfsize/main.nf':
+--- modules/nf-core/agat/spfilterbyorfsize/main.nf
++++ modules/nf-core/agat/spfilterbyorfsize/main.nf
+@@ -2,10 +2,7 @@
+     tag "$meta.id"
+     label 'process_single'
+ 
+-    conda "${moduleDir}/environment.yml"
+-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'https://depot.galaxyproject.org/singularity/agat:1.4.2--pl5321hdfd78af_0':
+-        'biocontainers/agat:1.4.2--pl5321hdfd78af_0' }"
++    container 'docker.io/gallvp/agat:1baa1d0'
+ 
+     input:
+     tuple val(meta), path(gxf)
+
+'modules/nf-core/agat/spfilterbyorfsize/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/agat/spfilterbyorfsize/tests/main.nf.test' is unchanged
+************************************************************
