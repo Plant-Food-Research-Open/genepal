@@ -59,7 +59,7 @@
                         "fastp": "0.23.4"
                     },
                     "FILTER_BY_ORF_SIZE": {
-                        "gffread": "0.12.7"
+                        "agat": "v1.4.3"
                     },
                     "FINAL_GFF_CHECK": {
                         "genometools": "1.6.5"
@@ -190,6 +190,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-03-05T14:53:07.564693"
+        "timestamp": "2025-04-08T10:14:06.518835"
     }
 }

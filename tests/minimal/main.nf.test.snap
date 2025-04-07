@@ -38,7 +38,7 @@
                         "py_fasta_validator": 0.6
                     },
                     "FILTER_BY_ORF_SIZE": {
-                        "gffread": "0.12.7"
+                        "agat": "v1.4.3"
                     },
                     "FINAL_GFF_CHECK": {
                         "genometools": "1.6.5"
@@ -70,9 +70,9 @@
                 "stable paths": [
                     "a_thaliana.cdna.fasta:md5,f44a6acdc245b85a935ef9ed3fc62967",
                     "a_thaliana.cds.fasta:md5,4fd5a251a3912b452844e1f7332f514d",
-                    "a_thaliana.gt.gff3:md5,2ce78be84046266da89a2b8256b1ac3c",
+                    "a_thaliana.gt.gff3:md5,00b2ee481731e9ada62575ebe5eff1e4",
                     "a_thaliana.pep.fasta:md5,38ae660abc78eb57d467bb48b5170f19",
-                    "a_thaliana.gff3:md5,a95b8141ed7d90935a7d6c0a389fb53f",
+                    "a_thaliana.gff3:md5,bc520744a70fd9bf1b4bd4271bc83fc4",
                     "summary_stats.json:md5,007ba5cf2b7a2fd395a27d9458ca2d2e"
                 ],
                 "stable names": [
@@ -108,8 +108,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "24.10.5"
         },
-        "timestamp": "2025-03-05T14:07:05.189463"
+        "timestamp": "2025-04-08T09:54:41.452661"
     }
 }
