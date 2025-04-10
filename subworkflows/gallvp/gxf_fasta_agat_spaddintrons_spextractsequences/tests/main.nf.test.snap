@@ -19,8 +19,8 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,1befbe41bc7abbf49767b8dc68877bc7",
-                    "versions.yml:md5,65042e008b2466984150cb219a05291c"
+                    "versions.yml:md5,3cf7738c06a6fadd889090c97da9c1db",
+                    "versions.yml:md5,69031d50a2a4198def1595b5e303ff98"
                 ],
                 "marked_gff3": [
                     [
@@ -39,16 +39,16 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,1befbe41bc7abbf49767b8dc68877bc7",
-                    "versions.yml:md5,65042e008b2466984150cb219a05291c"
+                    "versions.yml:md5,3cf7738c06a6fadd889090c97da9c1db",
+                    "versions.yml:md5,69031d50a2a4198def1595b5e303ff98"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-06-24T16:20:01.32929"
+        "timestamp": "2024-11-10T10:07:58.599389"
     },
     "actinidia_chinensis - fasta - gff3 - stub": {
         "content": [
@@ -70,8 +70,8 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,1befbe41bc7abbf49767b8dc68877bc7",
-                    "versions.yml:md5,65042e008b2466984150cb219a05291c"
+                    "versions.yml:md5,3cf7738c06a6fadd889090c97da9c1db",
+                    "versions.yml:md5,69031d50a2a4198def1595b5e303ff98"
                 ],
                 "marked_gff3": [
                     [
@@ -90,15 +90,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,1befbe41bc7abbf49767b8dc68877bc7",
-                    "versions.yml:md5,65042e008b2466984150cb219a05291c"
+                    "versions.yml:md5,3cf7738c06a6fadd889090c97da9c1db",
+                    "versions.yml:md5,69031d50a2a4198def1595b5e303ff98"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-06-24T16:22:01.840388"
+        "timestamp": "2024-11-10T10:08:07.6839"
     }
 }
