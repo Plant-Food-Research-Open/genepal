@@ -1,0 +1,70 @@
+nextflow_process {
+
+    name "Test Process AGAT_SPFILTERBYORFSIZE"
+    script "../../../../nf-core/agat/spfilterbyorfsize/main.nf"
+    process "AGAT_SPFILTERBYORFSIZE"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "agat"
+    tag "agat/spfilterbyorfsize"
+
+    test("Knockout one transcript") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file("$baseDir" + '/modules/local/tests/gffread/testdata/t.gff', checkIfExists: true)
+                ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+            with (file(process.out.passed_gff[0][1]).text) {
+                assert contains('gene19851')
+                assert contains('gene19851.t1')
+
+                // This is the only transcript which should be knocked out
+                assert ! contains('gene19851.t2')
+            }
+        }
+
+    }
+
+    test("Knockout long transcript with short CDS") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file("$baseDir" + '/modules/local/tests/gffread/testdata/t2.gff', checkIfExists: true)
+                ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+            with (file(process.out.passed_gff[0][1]).text) {
+                assert contains('P005ME_h2_v2.g24')
+
+                // The following transcripts should be knocked out because AGAT considers the CDS length
+                // as opposed to the length of the transcript
+                assert ! contains('P005ME_h2_v2.g14880')
+                assert ! contains('P005ME_h2_v2.g19822')
+                assert ! contains('P005ME_h2_v2.g8694')
+            }
+        }
+
+    }
+
+}

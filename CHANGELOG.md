@@ -3,12 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.6.1dev - [04-April-2025]
+## v0.6.1dev - [07-April-2025]
 
 ### 'Added'
 
 1. Added parameter `append_genome_prefix_to_feature_ids` which allows the user to add genome prefixes defined in the assemblysheet to the final Gff/Fasta files [#135](https://github.com/Plant-Food-Research-Open/genepal/issues/135)
 2. Updated nf-core template to 3.2.0
+
+### `Fixed`
+
+1. Fixed an issue where `filter_genes_by_aa_length` was not correctly applied when the CDS was shorter than the transcript by replacing `GFFREAD` with `AGAT_SPFILTERBYORFSIZE` [#139](https://github.com/Plant-Food-Research-Open/genepal/issues/139)
 
 ### `Dependencies`
 
