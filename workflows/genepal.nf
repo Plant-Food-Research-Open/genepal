@@ -244,7 +244,8 @@ workflow GENEPAL {
         'genome',
         params.busco_lineage_datasets?.tokenize(' '),
         [], // val_busco_lineages_path
-        [] // val_busco_config
+        [], // val_busco_config
+        true
     )
 
     ch_busco_fasta_summary      = FASTA_GXF_BUSCO_PLOT.out.assembly_short_summaries_txt
