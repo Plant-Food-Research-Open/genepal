@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | --------- | ----------- | ----------- |
 | agat      | 1.4.0       | 1.4.2       |
 | braker3   | v3.0.7.5    | v3.0.7.6    |
+| busco     | 5.7.1       | 5.8.3       |
 | coreutils | 8.30        | 9.5         |
 | fastp     | 0.23.4      | 0.24.0      |
 | multiqc   | 1.25.1      | 1.28        |

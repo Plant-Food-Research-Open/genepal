@@ -1,0 +1,33 @@
+Changes in component 'nf-core/busco/generateplot'
+Changes in 'busco/generateplot/environment.yml':
+--- modules/nf-core/busco/generateplot/environment.yml
++++ modules/nf-core/busco/generateplot/environment.yml
+@@ -5,4 +5,5 @@
+   - bioconda
+ 
+ dependencies:
+-  - bioconda::busco=5.8.2
++  - bioconda::busco=5.8.3
++  - bioconda::sepp=4.5.5
+
+'modules/nf-core/busco/generateplot/meta.yml' is unchanged
+Changes in 'busco/generateplot/main.nf':
+--- modules/nf-core/busco/generateplot/main.nf
++++ modules/nf-core/busco/generateplot/main.nf
+@@ -2,9 +2,9 @@
+     label 'process_single'
+ 
+     conda "${moduleDir}/environment.yml"
+-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'https://depot.galaxyproject.org/singularity/busco:5.8.2--pyhdfd78af_0':
+-        'biocontainers/busco:5.8.2--pyhdfd78af_0' }"
++    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
++        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c6/c607f319867d96a38c8502f751458aa78bbd18fe4c7c4fa6b9d8350e6ba11ebe/data'
++        : 'community.wave.seqera.io/library/busco_sepp:f2dbc18a2f7a5b64'}"
+ 
+     input:
+     path short_summary_txt, stageAs: 'busco/*'
+
+'modules/nf-core/busco/generateplot/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/busco/generateplot/tests/main.nf.test' is unchanged
+************************************************************

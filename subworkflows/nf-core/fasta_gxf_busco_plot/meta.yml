@@ -45,6 +45,11 @@ input:
       description: |
         Path to BUSCO config. It is optional and can be set to `[]`
         Structure:val(busco_config)
+  - val_busco_cleanup:
+      type: boolean
+      description: |
+        Flag to indicate if intermediate BUSCO files should be removed
+        Structure:val(busco_cleanup)
 output:
   - assembly_batch_summary:
       type: file
@@ -64,6 +69,12 @@ output:
         Channel containing BUSCO short summaries corresponding to fasta files
         Structure: [ val(meta), json ]
       pattern: "*.json"
+  - assembly_full_table:
+      description: |
+        Channel containing complete results in a tabular format with scores and lengths of BUSCO matches,
+        and coordinates (for genome mode) or gene/protein IDs (for transcriptome or protein modes)
+        Structure: [ val(meta), tsv ]
+      pattern: "*.tsv"
   - assembly_plot_summary_txt:
       type: file
       description: |
@@ -94,6 +105,12 @@ output:
         Channel containing BUSCO short summaries corresponding to annotation files
         Structure: [ val(meta), json ]
       pattern: "*.json"
+  - annotation_full_table:
+      description: |
+        Channel containing complete results in a tabular format with scores and lengths of BUSCO matches,
+        protein IDs in protein mode
+        Structure: [ val(meta), tsv ]
+      pattern: "*.tsv"
   - annotation_plot_summary_txt:
       type: file
       description: |
@@ -116,3 +133,4 @@ authors:
   - "@GallVp"
 maintainers:
   - "@GallVp"
+  - "@FernandoDuarteF"

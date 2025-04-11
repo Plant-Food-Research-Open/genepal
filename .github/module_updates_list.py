@@ -86,4 +86,6 @@ print("|------|-------------|-------------|")
 for tool, version in versions.items():
     if version["old"] == version["new"]:
         continue
+    if version["old"] is None or version["new"] is None:
+        continue
     print(f"| {tool} | {version["old"]} | {version["new"]} |")

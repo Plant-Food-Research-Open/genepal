@@ -1,8 +1,8 @@
-include { BUSCO_BUSCO as BUSCO_ASSEMBLY         } from '../../../modules/gallvp/busco/busco/main'
-include { BUSCO_GENERATEPLOT as PLOT_ASSEMBLY   } from '../../../modules/gallvp/busco/generateplot/main'
-include { GFFREAD as EXTRACT_PROTEINS           } from '../../../modules/gallvp/gffread/main'
-include { BUSCO_BUSCO as BUSCO_ANNOTATION       } from '../../../modules/gallvp/busco/busco/main'
-include { BUSCO_GENERATEPLOT as PLOT_ANNOTATION } from '../../../modules/gallvp/busco/generateplot/main'
+include { BUSCO_BUSCO as BUSCO_ASSEMBLY         } from '../../../modules/nf-core/busco/busco/main'
+include { BUSCO_GENERATEPLOT as PLOT_ASSEMBLY   } from '../../../modules/nf-core/busco/generateplot/main'
+include { GFFREAD as EXTRACT_PROTEINS           } from '../../../modules/nf-core/gffread/main'
+include { BUSCO_BUSCO as BUSCO_ANNOTATION       } from '../../../modules/nf-core/busco/busco/main'
+include { BUSCO_GENERATEPLOT as PLOT_ANNOTATION } from '../../../modules/nf-core/busco/generateplot/main'
 
 workflow FASTA_GXF_BUSCO_PLOT {
 
@@ -10,7 +10,7 @@ workflow FASTA_GXF_BUSCO_PLOT {
     ch_fasta                                    // channel: [ val(meta), fasta ]
     ch_gxf                                      // channel: [ val(meta2), gxf ]; gxf ~ gff | gff3 | gtf
                                                 //
-                                                // Meta and meta2 should have same id
+                                                // meta and meta2 should have same id
 
     val_mode                                    // val(mode); BUSCO mode to apply to ch_fasta
                                                 // - genome, for genome assemblies (DNA)
@@ -23,15 +23,17 @@ workflow FASTA_GXF_BUSCO_PLOT {
     val_lineages                                // [ val(lineage) ]
     val_busco_lineages_path                     // val(path); Optional; Set to [] if not needed
     val_busco_config                            // val(path); Optional; Set to [] if not needed
+    val_busco_cleanup                           // val(boolean); Set to true to remove BUSCO intermediate files
 
     main:
     ch_versions                                 = Channel.empty()
     ch_db_path                                  = val_busco_lineages_path
                                                 ? Channel.of(file(val_busco_lineages_path, checkIfExists: true))
-                                                : Channel.of(null)
+                                                : Channel.of( [ [] ] )
     ch_config_path                              = val_busco_config
                                                 ? Channel.of(file(val_busco_config, checkIfExists: true))
-                                                : Channel.of(null)
+                                                : Channel.of( [ [] ] )
+    ch_busco_cleanup                            = Channel.of([val_busco_cleanup])
 
     // MODULE: BUSCO_BUSCO as BUSCO_ASSEMBLY
     ch_busco_assembly_inputs                    = ch_fasta
@@ -53,18 +55,23 @@ workflow FASTA_GXF_BUSCO_PLOT {
                                                 | combine(
                                                     ch_config_path
                                                 )
+                                                | combine(
+                                                    ch_busco_cleanup
+                                                )
 
     BUSCO_ASSEMBLY(
-        ch_busco_assembly_inputs.map { meta, fasta, mode, lineage, db, config -> [ meta, fasta ] },
-        ch_busco_assembly_inputs.map { meta, fasta, mode, lineage, db, config -> mode },
-        ch_busco_assembly_inputs.map { meta, fasta, mode, lineage, db, config -> lineage },
-        ch_busco_assembly_inputs.map { meta, fasta, mode, lineage, db, config -> db ?: [] },
-        ch_busco_assembly_inputs.map { meta, fasta, mode, lineage, db, config -> config ?: [] }
+        ch_busco_assembly_inputs.map { meta,  fasta,  _mode, _lineage, _db, _config, _cleanup -> [ meta, fasta ] },
+        ch_busco_assembly_inputs.map { _meta, _fasta, mode,  _lineage, _db, _config, _cleanup -> mode },
+        ch_busco_assembly_inputs.map { _meta, _fasta, _mode, lineage,  _db, _config, _cleanup -> lineage },
+        ch_busco_assembly_inputs.map { _meta, _fasta, _mode, _lineage, db,  _config, _cleanup -> db },
+        ch_busco_assembly_inputs.map { _meta, _fasta, _mode, _lineage, _db, config, _cleanup  -> config },
+        ch_busco_assembly_inputs.map { _meta, _fasta, _mode, _lineage, _db, _config, cleanup -> cleanup }
     )
 
     ch_assembly_batch_summary                   = BUSCO_ASSEMBLY.out.batch_summary
     ch_assembly_short_summaries_txt             = BUSCO_ASSEMBLY.out.short_summaries_txt
     ch_assembly_short_summaries_json            = BUSCO_ASSEMBLY.out.short_summaries_json
+    ch_assembly_full_table                      = BUSCO_ASSEMBLY.out.full_table
     ch_versions                                 = ch_versions.mix(BUSCO_ASSEMBLY.out.versions.first())
 
     // MODULE: BUSCO_GENERATEPLOT as PLOT_ASSEMBLY
@@ -84,7 +91,7 @@ workflow FASTA_GXF_BUSCO_PLOT {
     ch_versions                                 = ch_versions.mix(PLOT_ASSEMBLY.out.versions)
 
     // MODULE: GFFREAD as EXTRACT_PROTEINS
-    ch_gffread_inputs                           = ! ( val_mode == 'geno' || val_mode == 'genome' )
+    ch_gffread_inputs                           = val_mode !in [ 'geno', 'genome' ]
                                                 ? Channel.empty()
                                                 : ch_fasta
                                                 | map { meta, fasta -> [ meta.id, meta, fasta ] }
@@ -93,10 +100,10 @@ workflow FASTA_GXF_BUSCO_PLOT {
                                                     // Join with matching annotation
                                                     // to allow one annotations per fasta
                                                 )
-                                                | map { id, meta, fasta, gxf -> [ meta, gxf, fasta ] }
+                                                | map { _id, meta, fasta, gxf -> [ meta, gxf, fasta ] }
     EXTRACT_PROTEINS(
-        ch_gffread_inputs.map { meta, gxf, fasta -> [ meta, gxf ] },
-        ch_gffread_inputs.map { meta, gxf, fasta -> fasta }
+        ch_gffread_inputs.map { meta,  gxf,  _fasta -> [ meta, gxf ] },
+        ch_gffread_inputs.map { _meta, _gxf, fasta  -> fasta }
     )
 
     ch_proteins                                 = EXTRACT_PROTEINS.out.gffread_fasta
@@ -122,18 +129,23 @@ workflow FASTA_GXF_BUSCO_PLOT {
                                                 | combine(
                                                     ch_config_path
                                                 )
+                                                | combine(
+                                                    ch_busco_cleanup
+                                                )
 
     BUSCO_ANNOTATION(
-        ch_busco_annotation_inputs.map { meta, fasta, mode, lineage, db, config -> [ meta, fasta ] },
-        ch_busco_annotation_inputs.map { meta, fasta, mode, lineage, db, config -> mode },
-        ch_busco_annotation_inputs.map { meta, fasta, mode, lineage, db, config -> lineage },
-        ch_busco_annotation_inputs.map { meta, fasta, mode, lineage, db, config -> db ?: [] },
-        ch_busco_annotation_inputs.map { meta, fasta, mode, lineage, db, config -> config ?: [] }
+        ch_busco_annotation_inputs.map { meta,  fasta,  _mode, _lineage, _db, _config, _cleanup -> [ meta, fasta ] },
+        ch_busco_annotation_inputs.map { _meta, _fasta, mode,  _lineage, _db, _config, _cleanup -> mode },
+        ch_busco_annotation_inputs.map { _meta, _fasta, _mode, lineage,  _db, _config, _cleanup -> lineage },
+        ch_busco_annotation_inputs.map { _meta, _fasta, _mode, _lineage, db,  _config, _cleanup -> db },
+        ch_busco_annotation_inputs.map { _meta, _fasta, _mode, _lineage, _db, config, _cleanup  -> config },
+        ch_busco_annotation_inputs.map { _meta, _fasta, _mode, _lineage, _db, _config, cleanup -> cleanup }
     )
 
     ch_annotation_batch_summary                 = BUSCO_ANNOTATION.out.batch_summary
     ch_annotation_short_summaries_txt           = BUSCO_ANNOTATION.out.short_summaries_txt
     ch_annotation_short_summaries_json          = BUSCO_ANNOTATION.out.short_summaries_json
+    ch_annotation_full_table                    = BUSCO_ANNOTATION.out.full_table
     ch_versions                                 = ch_versions.mix(BUSCO_ANNOTATION.out.versions.first())
 
     // MODULE: BUSCO_GENERATEPLOT as PLOT_ANNOTATION
@@ -157,11 +169,13 @@ workflow FASTA_GXF_BUSCO_PLOT {
     assembly_batch_summary                      = ch_assembly_batch_summary             // channel: [ meta3, txt ]; meta3 ~ meta + [ val(mode), val(lineage) ]
     assembly_short_summaries_txt                = ch_assembly_short_summaries_txt       // channel: [ meta3, txt ]
     assembly_short_summaries_json               = ch_assembly_short_summaries_json      // channel: [ meta3, json ]
+    assembly_full_table                         = ch_assembly_full_table                // channel: [ meta3, tsv ]
     assembly_plot_summary_txt                   = ch_assembly_plot_summary              // channel: [ text ]
     assembly_png                                = ch_assembly_png                       // channel: [ png ]
     annotation_batch_summary                    = ch_annotation_batch_summary           // channel: [ meta3, txt ]
     annotation_short_summaries_txt              = ch_annotation_short_summaries_txt     // channel: [ meta3, txt ]
     annotation_short_summaries_json             = ch_annotation_short_summaries_json    // channel: [ meta3, json ]
+    annotation_full_table                       = ch_annotation_full_table              // channel: [ meta3, tsv ]
     annotation_plot_summary_txt                 = ch_annotation_plot_summary            // channel: [ txt ]
     annotation_png                              = ch_annotation_png                     // channel: [ png ]
     versions                                    = ch_versions                           // channel: [ versions.yml ]
