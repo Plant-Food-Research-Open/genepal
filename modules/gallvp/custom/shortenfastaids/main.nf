@@ -23,7 +23,7 @@ process CUSTOM_SHORTENFASTAIDS {
     template 'shorten_fasta_ids.py'
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     echo \\
         'IDs have acceptable length and character. No change required.' \\

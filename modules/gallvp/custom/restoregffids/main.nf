@@ -23,7 +23,7 @@ process CUSTOM_RESTOREGFFIDS {
     template 'restore_gff_ids.py'
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch "${prefix}.restored.ids.gff3"
 

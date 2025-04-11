@@ -5,16 +5,16 @@
                 "successful tasks": 21,
                 "versions": {
                     "AGAT_CONVERTSPGFF2GTF": {
-                        "agat": "v1.4.0"
+                        "agat": "v1.4.1"
                     },
                     "AGAT_CONVERTSPGXF2GXF": {
-                        "agat": "v1.4.0"
+                        "agat": "v1.4.1"
                     },
                     "AGAT_SPADDINTRONS": {
-                        "agat": "v1.4.0"
+                        "agat": "v1.4.1"
                     },
                     "AGAT_SPEXTRACTSEQUENCES": {
-                        "agat": "v1.4.0"
+                        "agat": "v1.4.1"
                     },
                     "BRAKER3": {
                         "braker3": "3.0.8",
@@ -53,11 +53,11 @@
                         "pigz": "2.3.4"
                     },
                     "SEQKIT_RMDUP": {
-                        "seqkit": "v2.8.0"
+                        "seqkit": "v2.9.0"
                     },
                     "STAR_GENOMEGENERATE": {
-                        "star": "2.7.10a",
-                        "samtools": 1.18,
+                        "star": "2.7.11b",
+                        "samtools": 1.21,
                         "gawk": "5.1.0"
                     },
                     "TSEBRA": {
@@ -110,6 +110,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.5"
         },
-        "timestamp": "2025-04-08T09:54:41.452661"
+        "timestamp": "2025-04-11T12:26:06.229329"
     }
 }

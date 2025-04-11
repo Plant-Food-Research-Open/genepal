@@ -3,9 +3,9 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v0.6.1dev - [07-April-2025]
+## v0.6.1dev - [11-April-2025]
 
-### 'Added'
+### `Added`
 
 1. Added parameter `append_genome_prefix_to_feature_ids` which allows the user to add genome prefixes defined in the assemblysheet to the final Gff/Fasta files [#135](https://github.com/Plant-Food-Research-Open/genepal/issues/135)
 2. Updated nf-core template to 3.2.0
@@ -18,6 +18,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 1. Nextflow!>=24.04.2
 2. nf-schema@2.3.0
+
+### `Tool Updates`
+
+| Tool      | Old Version | New Version |
+| --------- | ----------- | ----------- |
+| agat      | 1.4.0       | 1.4.2       |
+| braker3   | v3.0.7.5    | v3.0.7.6    |
+| busco     | 5.7.1       | 5.8.3       |
+| coreutils | 8.30        | 9.5         |
+| fastp     | 0.23.4      | 0.24.0      |
+| multiqc   | 1.25.1      | 1.28        |
+| seqkit    | 2.8.1       | 2.9.0       |
+| htslib    | 1.18        | 1.21        |
+| samtools  | 1.18        | 1.21        |
+| star      | 2.7.10a     | 2.7.11b     |
 
 ## v0.6.0 - [20-Dec-2024]
 
