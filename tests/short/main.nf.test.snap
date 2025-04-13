@@ -5,11 +5,11 @@
                 "successful tasks": 0,
                 "versions": {
                     "Workflow": {
-                        "plant-food-research-open/genepal": "v0.6.1dev"
+                        "plant-food-research-open/genepal": "v0.7.0"
                     }
                 },
                 "stable paths": [
-                    
+
                 ]
             }
         ],

@@ -117,6 +117,7 @@ The pipeline uses nf-core modules contributed by following authors:
 <a href="https://github.com/gallvp"><img src="https://github.com/gallvp.png" width="50" height="50"></a>
 <a href="https://github.com/drpatelh"><img src="https://github.com/drpatelh.png" width="50" height="50"></a>
 <a href="https://github.com/jfy133"><img src="https://github.com/jfy133.png" width="50" height="50"></a>
+<a href="https://github.com/midnighter"><img src="https://github.com/midnighter.png" width="50" height="50"></a>
 <a href="https://github.com/joseespinosa"><img src="https://github.com/joseespinosa.png" width="50" height="50"></a>
 <a href="https://github.com/kevinmenden"><img src="https://github.com/kevinmenden.png" width="50" height="50"></a>
 <a href="https://github.com/toniher"><img src="https://github.com/toniher.png" width="50" height="50"></a>
@@ -124,7 +125,6 @@ The pipeline uses nf-core modules contributed by following authors:
 <a href="https://github.com/grst"><img src="https://github.com/grst.png" width="50" height="50"></a>
 <a href="https://github.com/friederikehanssen"><img src="https://github.com/friederikehanssen.png" width="50" height="50"></a>
 <a href="https://github.com/erikrikarddaniel"><img src="https://github.com/erikrikarddaniel.png" width="50" height="50"></a>
-<a href="https://github.com/edmundmiller"><img src="https://github.com/edmundmiller.png" width="50" height="50"></a>
 <a href="https://github.com/adamrtalbot"><img src="https://github.com/adamrtalbot.png" width="50" height="50"></a>
 <a href="https://github.com/vagkaratzas"><img src="https://github.com/vagkaratzas.png" width="50" height="50"></a>
 <a href="https://github.com/kherronism"><img src="https://github.com/kherronism.png" width="50" height="50"></a>
@@ -141,10 +141,11 @@ The pipeline uses nf-core modules contributed by following authors:
 <a href="https://github.com/jemten"><img src="https://github.com/jemten.png" width="50" height="50"></a>
 <a href="https://github.com/felixkrueger"><img src="https://github.com/felixkrueger.png" width="50" height="50"></a>
 <a href="https://github.com/ewels"><img src="https://github.com/ewels.png" width="50" height="50"></a>
+<a href="https://github.com/edmundmiller"><img src="https://github.com/edmundmiller.png" width="50" height="50"></a>
 <a href="https://github.com/charles-plessy"><img src="https://github.com/charles-plessy.png" width="50" height="50"></a>
 <a href="https://github.com/bunop"><img src="https://github.com/bunop.png" width="50" height="50"></a>
 <a href="https://github.com/abhi18av"><img src="https://github.com/abhi18av.png" width="50" height="50"></a>
-<a href="https://github.com/liamlelievre"><img src="https://github.com/liamlelievre.png" width="50" height="50"></a>
+<a href="https://github.com/fernandoduartef"><img src="https://github.com/fernandoduartef.png" width="50" height="50"></a>
 
 ## Contributions and Support
 

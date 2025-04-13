@@ -1,7 +1,6 @@
 bump_version: null
 lint:
   actions_ci: false
-  included_configs: false
   nextflow_config:
     - manifest.name
     - manifest.homePage
@@ -33,4 +32,4 @@ template:
   outdir: .
   skip_features:
     - igenomes
-  version: 0.6.1dev
+  version: 0.7.0
