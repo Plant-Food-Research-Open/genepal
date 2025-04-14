@@ -11,7 +11,7 @@ report_section_order:
   "plant-food-research-open-genepal-summary":
     order: -1002
 
-export_plots: true
+export_plots: false
 disable_version_detection: true
 
 module_order:
@@ -19,23 +19,30 @@ module_order:
       name: "FastQC (raw)"
       path_filters_exclude:
         - "*_trim*"
+      anchor: "fastqc_raw"
   - fastp:
+      anchor: "fastp"
   - fastqc:
       name: "FastQC (trim)"
       path_filters:
         - "*_trim*"
+      anchor: "fastqc_trim"
   - star:
+      anchor: "star"
   - busco:
       name: "BUSCO"
       info: "Genome completeness statistics"
       path_filters_exclude:
         - "*.proteins.txt"
+      anchor: "busco_genome"
   - busco:
       name: "BUSCO Annotation"
       info: "Annotation completeness statistics"
       path_filters:
         - "*.proteins.txt"
+      anchor: "busco_annotation"
   - gffcompare:
+      anchor: "gffcompare"
 
 extra_fn_clean_exts:
   - ".proteins"
