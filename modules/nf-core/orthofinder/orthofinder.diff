@@ -1,4 +1,4 @@
-Changes in module 'nf-core/orthofinder'
+Changes in component 'nf-core/orthofinder'
 'modules/nf-core/orthofinder/environment.yml' is unchanged
 'modules/nf-core/orthofinder/meta.yml' is unchanged
 Changes in 'orthofinder/main.nf':
@@ -114,6 +114,5 @@ Changes in 'orthofinder/tests/main.nf.test.snap':
      "sarscov2 - candidatus_portiera_aleyrodidarum - proteome - resume": {
          "content": [
 
-'modules/nf-core/orthofinder/tests/tags.yml' is unchanged
 'modules/nf-core/orthofinder/tests/main.nf.test' is unchanged
 ************************************************************

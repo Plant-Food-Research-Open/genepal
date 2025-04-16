@@ -1,8 +1,13 @@
 bump_version: null
 lint:
   actions_ci: false
+  multiqc_config: false
   included_configs: false
-  nextflow_config: false
+  nextflow_config:
+    - manifest.name
+    - manifest.homePage
+    - config_defaults:
+        - params.ribo_database_manifest
   files_exist:
     - CODE_OF_CONDUCT.md
     - .github/ISSUE_TEMPLATE/config.yml
@@ -15,10 +20,7 @@ lint:
     - .github/workflows/branch.yml
     - .github/workflows/linting.yml
     - docs/README.md
-  multiqc_config:
-    - report_comment
-nf_core_version: 3.0.2
-org_path: null
+nf_core_version: 3.2.0
 repository_type: pipeline
 template:
   author: Usman Rashid, Jason Shiller
@@ -30,5 +32,4 @@ template:
   outdir: .
   skip_features:
     - igenomes
-  version: 0.6.0
-update: null
+  version: 0.7.0

@@ -69,10 +69,11 @@ A Nextflow pipeline for consensus, phased and pan-genome annotation.
 
 ## Annotation output options
 
-| Parameter                          | Description                                   | Type      | Default | Required | Hidden |
-| ---------------------------------- | --------------------------------------------- | --------- | ------- | -------- | ------ |
-| `braker_save_outputs`              | Save BRAKER files                             | `boolean` |         |          |        |
-| `add_attrs_to_proteins_cds_fastas` | Add gff attributes to proteins/cDNA/CDS fasta | `boolean` |         |          |        |
+| Parameter                             | Description                                                        | Type      | Default | Required | Hidden |
+| ------------------------------------- | ------------------------------------------------------------------ | --------- | ------- | -------- | ------ |
+| `braker_save_outputs`                 | Save BRAKER files                                                  | `boolean` |         |          |        |
+| `add_attrs_to_proteins_cds_fastas`    | Add gff attributes to proteins/cDNA/CDS fasta                      | `boolean` |         |          |        |
+| `append_genome_prefix_to_feature_ids` | Add genome prefix to all the features in the final Gff/Fasta files | `boolean` | True    |          |        |
 
 ## Evaluation options
 
@@ -91,17 +92,22 @@ Parameters used to describe centralised config profiles. These should not be edi
 | `custom_config_base`         | Base directory for Institutional configs. | `string` | https://raw.githubusercontent.com/nf-core/configs/master |          | True   |
 | `config_profile_name`        | Institutional config name.                | `string` |                                                          |          | True   |
 | `config_profile_description` | Institutional config description.         | `string` |                                                          |          | True   |
+| `config_profile_contact`     | Institutional config contact information. | `string` |                                                          |          | True   |
+| `config_profile_url`         | Institutional config URL link.            | `string` |                                                          |          | True   |
 
 ## Generic options
 
 Less common options for the pipeline, typically set in a config file.
 
-| Parameter                | Description                                                       | Type      | Default | Required | Hidden |
-| ------------------------ | ----------------------------------------------------------------- | --------- | ------- | -------- | ------ |
-| `version`                | Display version and exit.                                         | `boolean` |         |          | True   |
-| `publish_dir_mode`       | Method used to save pipeline results to output directory.         | `string`  | copy    |          | True   |
-| `email_on_fail`          | Email address for completion summary, only when pipeline fails.   | `string`  |         |          | True   |
-| `plaintext_email`        | Send plain-text email instead of HTML.                            | `boolean` |         |          | True   |
-| `max_multiqc_email_size` | File size limit when attaching MultiQC reports to summary emails. | `string`  | 25.MB   |          | True   |
-| `monochrome_logs`        | Do not use coloured log outputs.                                  | `boolean` |         |          | True   |
-| `hook_url`               | Incoming hook URL for messaging service                           | `string`  |         |          | True   |
+| Parameter                      | Description                                                                                                                                                                            | Type      | Default                                                  | Required | Hidden |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | -------------------------------------------------------- | -------- | ------ |
+| `version`                      | Display version and exit.                                                                                                                                                              | `boolean` |                                                          |          | True   |
+| `publish_dir_mode`             | Method used to save pipeline results to output directory.                                                                                                                              | `string`  | copy                                                     |          | True   |
+| `email_on_fail`                | Email address for completion summary, only when pipeline fails.                                                                                                                        | `string`  |                                                          |          | True   |
+| `plaintext_email`              | Send plain-text email instead of HTML.                                                                                                                                                 | `boolean` |                                                          |          | True   |
+| `max_multiqc_email_size`       | File size limit when attaching MultiQC reports to summary emails.                                                                                                                      | `string`  | 25.MB                                                    |          | True   |
+| `monochrome_logs`              | Do not use coloured log outputs.                                                                                                                                                       | `boolean` |                                                          |          | True   |
+| `hook_url`                     | Incoming hook URL for messaging service <details><summary>Help</summary><small>Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.</small></details> | `string`  |                                                          |          | True   |
+| `validate_params`              | Boolean whether to validate parameters against the schema at runtime                                                                                                                   | `boolean` | True                                                     |          | True   |
+| `pipelines_testdata_base_path` | Base URL or local path to location of pipeline test dataset files                                                                                                                      | `string`  | https://raw.githubusercontent.com/nf-core/test-datasets/ |          | True   |
+| `trace_report_suffix`          | Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.                                                                            | `string`  |                                                          |          | True   |

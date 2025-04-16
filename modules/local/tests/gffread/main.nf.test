@@ -35,4 +35,33 @@ nextflow_process {
 
     }
 
+    test("filter by length -- case II") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file("$baseDir" + '/modules/local/tests/gffread/testdata/t2.gff', checkIfExists: true)
+                ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+            with (file(process.out.gffread_gff[0][1]).text) {
+                assert contains('P005ME_h2_v2.g24')
+
+                // The following should have been excluded if CDS length was considered by gffread
+                assert contains('P005ME_h2_v2.g14880')
+                assert contains('P005ME_h2_v2.g19822')
+                assert contains('P005ME_h2_v2.g8694')
+            }
+        }
+
+    }
+
 }

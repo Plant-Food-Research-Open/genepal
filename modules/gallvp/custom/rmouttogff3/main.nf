@@ -22,7 +22,7 @@ process CUSTOM_RMOUTTOGFF3 {
     template 'rmouttogff3.pl'
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.gff3
 

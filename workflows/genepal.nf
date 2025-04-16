@@ -18,7 +18,7 @@ include { GFF_EGGNOGMAPPER                      } from '../subworkflows/local/gf
 include { PURGE_NOHIT_MODELS                    } from '../subworkflows/local/purge_nohit_models'
 include { GFF_STORE                             } from '../subworkflows/local/gff_store'
 include { FASTA_ORTHOFINDER                     } from '../subworkflows/local/fasta_orthofinder'
-include { FASTA_GXF_BUSCO_PLOT                  } from '../subworkflows/gallvp/fasta_gxf_busco_plot/main'
+include { FASTA_GXF_BUSCO_PLOT                  } from '../subworkflows/nf-core/fasta_gxf_busco_plot/main'
 
 include { GXF_FASTA_AGAT_SPADDINTRONS_SPEXTRACTSEQUENCES                            } from '../subworkflows/gallvp/gxf_fasta_agat_spaddintrons_spextractsequences/main'
 include { FASTQ_DOWNLOAD_PREFETCH_FASTERQDUMP_SRATOOLS as DOWNLOAD_RNASEQ_FROM_SRA  } from '../subworkflows/nf-core/fastq_download_prefetch_fasterqdump_sratools/main'
@@ -179,7 +179,8 @@ workflow GENEPAL {
     GFF_MERGE_CLEANUP(
         ch_braker_purged_gff,
         ch_liftoff_gff3,
-        params.filter_genes_by_aa_length
+        params.filter_genes_by_aa_length,
+        params.append_genome_prefix_to_feature_ids
     )
 
     ch_merged_gff               = GFF_MERGE_CLEANUP.out.gff
@@ -243,7 +244,8 @@ workflow GENEPAL {
         'genome',
         params.busco_lineage_datasets?.tokenize(' '),
         [], // val_busco_lineages_path
-        [] // val_busco_config
+        [], // val_busco_config
+        true
     )
 
     ch_busco_fasta_summary      = FASTA_GXF_BUSCO_PLOT.out.assembly_short_summaries_txt
@@ -362,6 +364,7 @@ workflow GENEPAL {
     emit:
     multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
+
 }
 
 /*
