@@ -129,7 +129,8 @@
                     "busco/busco": {
                         "branch": "master",
                         "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["fasta_gxf_busco_plot"]
+                        "installed_by": ["fasta_gxf_busco_plot"],
+                        "patch": "modules/nf-core/busco/busco/busco-busco.diff"
                     },
                     "busco/generateplot": {
                         "branch": "master",
