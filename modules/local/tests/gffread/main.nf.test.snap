@@ -1,4 +1,49 @@
 {
+    "Exclude models with in-frame stop codons": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gff3:md5,27b4dbccace0637328733bcad6349bb8"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                ],
+                "gffread_fasta": [
+                    
+                ],
+                "gffread_gff": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gff3:md5,27b4dbccace0637328733bcad6349bb8"
+                    ]
+                ],
+                "gtf": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,05f671c6c6e530acedad0af0a5948dbd"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.6"
+        },
+        "timestamp": "2025-05-02T15:29:04.830714"
+    },
     "filter by length -- case II": {
         "content": [
             {

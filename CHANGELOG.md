@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.7.1 - [02-May-2025]
+
+### `Fixed`
+
+1. Gene models from BRAKER with invalid ORF(s) are now removed [#151](https://github.com/Plant-Food-Research-Open/genepal/issues/151)
+2. Demoted nf-schema to 2.2.0 to avoid errors with latest Nextflow versions
+
+### `Dependencies`
+
+1. Nextflow!>=24.04.2
+2. nf-schema@2.2.0
+
 ## v0.7.0 - [16-April-2025]
 
 ### `Added`

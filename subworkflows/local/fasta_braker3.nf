@@ -1,6 +1,7 @@
 include { BRAKER3                               } from '../../modules/gallvp/braker3'
 include { FILE_GUNZIP as BRAKER_GFF3_GUNZIP     } from '../../subworkflows/local/file_gunzip'
 include { FILE_GUNZIP as BRAKER_HINTS_GUNZIP    } from '../../subworkflows/local/file_gunzip'
+include { GFFREAD as FILTER_INVALID_ORFS        } from '../../modules/nf-core/gffread'
 
 workflow FASTA_BRAKER3 {
     take:
@@ -58,8 +59,25 @@ workflow FASTA_BRAKER3 {
     ch_braker_hints             = BRAKER_HINTS_GUNZIP.out.gunzip
     ch_versions                 = ch_versions.mix(BRAKER_HINTS_GUNZIP.out.versions)
 
+
+    // MODULE: GFFREAD as FILTER_INVALID_ORFS
+    ch_filter_inputs            = ch_braker_gff3
+                                | join(ch_masked_target_assembly)
+                                | multiMap { meta, gff3, fasta ->
+                                    gff:   [ meta, gff3 ]
+                                    fasta: fasta
+                                }
+
+    FILTER_INVALID_ORFS (
+        ch_filter_inputs.gff,
+        ch_filter_inputs.fasta
+    )
+
+    ch_filtered_gff3            = FILTER_INVALID_ORFS.out.gffread_gff
+    ch_versions                 = ch_versions.mix(FILTER_INVALID_ORFS.out.versions)
+
     emit:
-    braker_gff3                 = ch_braker_gff3        // [ meta, gff3 ]
+    braker_gff3                 = ch_filtered_gff3      // [ meta, gff3 ]
     braker_hints                = ch_braker_hints       // [ meta, hints.gff ]
     versions                    = ch_versions           // [ versions.yml ]
 }
