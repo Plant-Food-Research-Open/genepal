@@ -5,8 +5,8 @@ include { GFFREAD as FILTER_INVALID_ORFS        } from '../../modules/nf-core/gf
 
 workflow FASTA_BRAKER3 {
     take:
-    ch_masked_target_assembly   // channel: [ meta, fasta ]; meta ~ [ id: traget_assembly ]
-    ch_braker_ex_asm_str        // channel: val(assembly_x,assembly_y)
+    ch_valid_target_assembly    // channel: [ meta, fasta ]; meta ~ [ id: target_assembly ]; All input assemblies
+    ch_masked_target_assembly   // channel: [ meta, fasta ]; Assemblies that don't have BRAKER annotations in the input sheet
     ch_rnaseq_bam               // channel: [ meta, bam ]
     ch_ext_prots_fasta          // channel: [ meta2, fasta ]; meta2 ~ [ id: ext_protein_seqs ]
     ch_braker_annotation        // channel: [ meta, gff3, hints.gff ]
@@ -16,11 +16,6 @@ workflow FASTA_BRAKER3 {
 
 
     ch_braker_inputs            = ch_masked_target_assembly
-                                | combine( ch_braker_ex_asm_str )
-                                | filter { meta, fasta, ex_str -> !( ex_str.split(",").contains( meta.id ) ) }
-                                | map { meta, fasta, ex_str ->
-                                    [ meta, fasta ]
-                                }
                                 | join(ch_rnaseq_bam, remainder: true)
                                 | combine(
                                     ch_ext_prots_fasta.map { meta, fasta -> fasta }.ifEmpty(null)
@@ -62,7 +57,7 @@ workflow FASTA_BRAKER3 {
 
     // MODULE: GFFREAD as FILTER_INVALID_ORFS
     ch_filter_inputs            = ch_braker_gff3
-                                | join(ch_masked_target_assembly)
+                                | join(ch_valid_target_assembly)
                                 | multiMap { meta, gff3, fasta ->
                                     gff:   [ meta, gff3 ]
                                     fasta: fasta

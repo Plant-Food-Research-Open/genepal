@@ -43,7 +43,6 @@ workflow GENEPAL {
 
     take:
     ch_target_assembly
-    ch_tar_assm_str
     ch_is_masked
     ch_te_library
     ch_braker_annotation
@@ -93,7 +92,6 @@ workflow GENEPAL {
     // SUBWORKFLOW: PREPROCESS_RNASEQ
     PREPROCESS_RNASEQ(
         ch_rna_all_fq,
-        ch_tar_assm_str,
         ch_braker_ex_asm_str,
         params.fastqc_skip,
         params.fastp_skip,
@@ -138,8 +136,8 @@ workflow GENEPAL {
 
     // SUBWORKFLOW: FASTA_BRAKER3
     FASTA_BRAKER3(
+        ch_valid_target_assembly,
         ch_masked_target_assembly,
-        ch_braker_ex_asm_str,
         ch_rnaseq_bam,
         ch_ext_prots_fasta,
         ch_braker_annotation

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 1. Gene models from BRAKER with invalid ORF(s) are now removed [#151](https://github.com/Plant-Food-Research-Open/genepal/issues/151)
 2. Demoted nf-schema to 2.2.0 to avoid errors with latest Nextflow versions
+3. Fixed a nextflow syntax issue in `conf/modules.config`
 
 ### `Dependencies`
 
