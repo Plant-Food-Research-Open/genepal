@@ -43,7 +43,7 @@
   - Optionally, remove models with ORFs shorter than `N` amino acids
 - [EggNOG-mapper](https://github.com/eggnogdb/eggnog-mapper): Add functional annotation to gff
 - [GenomeTools](https://github.com/genometools/genometools): GFF format validation
-- [GffRead](https://github.com/gpertea/gffread): Extraction of protein sequences
+- [GffRead](https://github.com/gpertea/gffread): Extraction of protein sequences and filtering of BRAKER models with invalid ORF(s)
 - [OrthoFinder](https://github.com/davidemms/OrthoFinder): Perform phylogenetic orthology inference across genomes
 - [GffCompare](https://github.com/gpertea/gffcompare): Compare and benchmark against an existing annotation
 - [BUSCO](https://gitlab.com/ezlab/busco): Completeness statistics for genome and annotation through proteins

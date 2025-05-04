@@ -297,7 +297,6 @@ workflow PIPELINE_INITIALISATION {
 
     emit:
     target_assembly             = ch_target_assembly
-    tar_assm_str                = ch_tar_assm_str
     is_masked                   = ch_is_masked
     te_library                  = ch_te_library
     braker_annotation           = ch_braker_annotation
