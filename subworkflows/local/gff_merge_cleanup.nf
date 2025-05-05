@@ -1,4 +1,4 @@
-include { AGAT_SPMERGEANNOTATIONS                       } from '../../modules/nf-core/agat/spmergeannotations/main'
+include { AGAT_SPCOMPLEMENTANNOTATIONS                  } from '../../modules/gallvp/agat/spcomplementannotations/main'
 include { GT_GFF3                                       } from '../../modules/nf-core/gt/gff3/main'
 include { AGAT_SPFILTERBYORFSIZE as FILTER_BY_ORF_SIZE  } from '../../modules/nf-core/agat/spfilterbyorfsize/main'
 include { AGAT_CONVERTSPGXF2GXF                         } from '../../modules/nf-core/agat/convertspgxf2gxf/main'
@@ -21,16 +21,17 @@ workflow GFF_MERGE_CLEANUP {
                                     liftoff_only: ( ( ! braker_gff )    &&      liftoff_gff )
                                 }
 
-    // MODULE: AGAT_SPMERGEANNOTATIONS
-    AGAT_SPMERGEANNOTATIONS(
-        ch_gff_branch.both.map { meta, bg, lg -> [ meta, [ bg, lg ] ] },
+    // MODULE: AGAT_SPCOMPLEMENTANNOTATIONS
+    AGAT_SPCOMPLEMENTANNOTATIONS(
+        ch_gff_branch.both.map { meta, _bg, lg -> [ meta, lg ] },
+        ch_gff_branch.both.map { meta, bg, _lg -> [ meta, bg ] },
         []
     )
 
-    ch_merged_gff               = AGAT_SPMERGEANNOTATIONS.out.gff
+    ch_merged_gff               = AGAT_SPCOMPLEMENTANNOTATIONS.out.gff
                                 | mix ( ch_gff_branch.liftoff_only.map { meta, _braker_gff, liftoff_gff -> [ meta, liftoff_gff ] } )
                                 | mix ( ch_gff_branch.braker_only.map { meta, braker_gff, _liftoff_gff -> [ meta, braker_gff ] } )
-    ch_versions                 = ch_versions.mix(AGAT_SPMERGEANNOTATIONS.out.versions.first())
+    ch_versions                 = ch_versions.mix(AGAT_SPCOMPLEMENTANNOTATIONS.out.versions.first())
 
     // MODULE: AGAT_SPFILTERBYORFSIZE as FILTER_BY_ORF_SIZE
     ch_filter_input             = ch_merged_gff
