@@ -10,6 +10,11 @@
                         "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
                         "installed_by": ["gxf_fasta_agat_spaddintrons_spextractsequences"]
                     },
+                    "agat/spcomplementannotations": {
+                        "branch": "main",
+                        "git_sha": "2a31a82b4d860637f21254471a2abb842410881c",
+                        "installed_by": ["modules"]
+                    },
                     "agat/spextractsequences": {
                         "branch": "main",
                         "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
