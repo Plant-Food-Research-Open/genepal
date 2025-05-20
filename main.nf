@@ -16,6 +16,7 @@
 include { GENEPAL                   } from './workflows/genepal'
 include { PIPELINE_INITIALISATION   } from './subworkflows/local/utils_nfcore_genepal_pipeline'
 include { PIPELINE_COMPLETION       } from './subworkflows/local/utils_nfcore_genepal_pipeline'
+include { SEQKIT } from './modules/nf-core/seqkit'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.7.1 - [20-May-2024]
+
+### `Added`
+
+1. Added contig length filtering feature using seqkit
+2. Added min_contig_length parameter with validation
+3. Added seqkit-based contig filtering process
+
 ## v0.7.0 - [16-April-2025]
 
 ### `Added`
