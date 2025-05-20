@@ -14,6 +14,7 @@ A Nextflow pipeline for consensus, phased and pan-genome annotation.
 | `protein_evidence` | Protein evidence provided as a fasta file or multiple fasta files listed in a plain txt file | `string` |  | True |  |
 | `eggnogmapper_db_dir` | Eggnogmapper database directory | `string` |  |  |  |
 | `eggnogmapper_tax_scope` | Eggnogmapper taxonomy scopre. Eukaryota: 2759, Viridiplantae: 33090, Archaea: 2157, Bacteria: 2, root: 1 | `integer` | 1 |  |  |
+| `min_contig_length` | Minimum length for contigs to be included in annotation | `integer` | 5000 |  |  |
 | `rna_evidence` | FASTQ/BAM samples listed in a CSV sheet | `string` |  |  |  |
 | `liftoff_annotations` | Reference annotations listed in a CSV sheet | `string` |  |  |  |
 | `orthofinder_annotations` | Additional annotations for orthology listed in a CSV sheet | `string` |  |  |  |

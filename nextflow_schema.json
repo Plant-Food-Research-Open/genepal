@@ -41,6 +41,13 @@
                     "default": 1,
                     "fa_icon": "fas fa-hashtag"
                 },
+                "min_contig_length": {
+                    "type": "integer",
+                    "description": "Minimum length for contigs to be included in annotation",
+                    "minimum": 0,
+                    "default": 5000,
+                    "fa_icon": "fas fa-ruler"
+                },
                 "rna_evidence": {
                     "type": "string",
                     "format": "file-path",
