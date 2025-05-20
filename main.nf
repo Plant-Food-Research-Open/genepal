@@ -19,6 +19,39 @@ include { PIPELINE_COMPLETION       } from './subworkflows/local/utils_nfcore_ge
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    PROCESS: Filter Genome Assembly by Minimum Contig Length
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+// Include the seqkit module
+include { SEQKIT } from './modules/nf-core/seqkit'
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    PROCESS: Filter Genome Assembly by Minimum Contig Length
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+process SEQKIT_GET_LENGTH {
+
+    input:
+    path input_file
+
+    output:
+    path 'filtered_output_file.txt'
+
+    script:
+    """
+    # Filter contigs based on length and output filtered FASTA
+    seqkit seq --min-len ${params.min_contig_length} ${genome_fasta} > filtered_${meta.id}.fasta
+
+    # Generate a list of filtered contigs
+    seqkit fx2tab --length --name filtered_${meta.id}.fasta | awk '{print \$1}' > ${meta.id}_contig_list.txt
+    """
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOWS FOR PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
@@ -48,10 +81,15 @@ workflow PLANTFOODRESEARCHOPEN_GENEPAL {
 
     main:
     //
-    // WORKFLOW: Run pipeline
+    // Filter genome assembly by minimum contig length
+    //
+    SEQKIT_GET_LENGTH(ch_target_assembly)
+
+    //
+    // Run GENEPAL main workflow using filtered FASTA
     //
     GENEPAL(
-        ch_target_assembly,
+        SEQKIT_GET_LENGTH.out.filtered_fasta.map { meta, fasta, contig_list -> [ meta, fasta ] }, // Filtered genome FASTA
         ch_tar_assm_str,
         ch_is_masked,
         ch_te_library,
@@ -68,9 +106,11 @@ workflow PLANTFOODRESEARCHOPEN_GENEPAL {
         ch_tsebra_config,
         ch_orthofinder_pep
     )
+
     emit:
     multiqc_report = GENEPAL.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -81,9 +121,9 @@ workflow {
 
     main:
     //
-    // SUBWORKFLOW: Run initialisation tasks
+    // SUBWORKFLOW: Run initialization tasks
     //
-    PIPELINE_INITIALISATION (
+    PIPELINE_INITIALISATION(
         params.version,
         params.monochrome_logs,
         args,
@@ -95,10 +135,15 @@ workflow {
     )
 
     //
-    // WORKFLOW: Run main workflow
+    // Filter genome assembly by minimum contig length
+    //
+    SEQKIT_GET_LENGTH(PIPELINE_INITIALISATION.out.target_assembly)
+
+    //
+    // Run main workflow using filtered FASTA
     //
     PLANTFOODRESEARCHOPEN_GENEPAL(
-        PIPELINE_INITIALISATION.out.target_assembly,
+        SEQKIT_GET_LENGTH.out.filtered_fasta,
         PIPELINE_INITIALISATION.out.tar_assm_str,
         PIPELINE_INITIALISATION.out.is_masked,
         PIPELINE_INITIALISATION.out.te_library,
@@ -115,10 +160,11 @@ workflow {
         PIPELINE_INITIALISATION.out.tsebra_config,
         PIPELINE_INITIALISATION.out.orthofinder_pep
     )
+
     //
     // SUBWORKFLOW: Run completion tasks
     //
-    PIPELINE_COMPLETION (
+    PIPELINE_COMPLETION(
         params.email,
         params.email_on_fail,
         params.plaintext_email,
