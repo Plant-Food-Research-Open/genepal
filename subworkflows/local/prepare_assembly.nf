@@ -1,5 +1,6 @@
 include { GUNZIP as GUNZIP_TARGET_ASSEMBLY      } from '../../modules/nf-core/gunzip'
 include { GUNZIP as GUNZIP_TE_LIBRARY           } from '../../modules/nf-core/gunzip'
+include { SEQKIT as SEQKIT_FILTER               } from '../../modules/nf-core/seqkit/main.nf'
 include { SEQKIT_RMDUP                          } from '../../modules/nf-core/seqkit/rmdup/main.nf'
 include { FASTAVALIDATOR                        } from '../../modules/nf-core/fastavalidator'
 include { REPEATMODELER_BUILDDATABASE           } from '../../modules/nf-core/repeatmodeler/builddatabase'
@@ -37,8 +38,13 @@ workflow PREPARE_ASSEMBLY {
                                 )
     ch_versions                 = ch_versions.mix(GUNZIP_TARGET_ASSEMBLY.out.versions.first())
 
+    // MODULE: SEQKIT_FILTER
+    SEQKIT_FILTER ( ch_gunzip_assembly, params.min_contig_length )
+
+    ch_filtered_assembly = SEQKIT_FILTER.out.fastx
+
     // MODULE: SEQKIT_RMDUP
-    SEQKIT_RMDUP ( ch_gunzip_assembly )
+    SEQKIT_RMDUP ( ch_filtered_assembly )
 
     ch_nondup_fw_assembly       = SEQKIT_RMDUP.out.log
                                 | join(SEQKIT_RMDUP.out.fastx)
