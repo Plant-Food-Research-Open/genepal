@@ -41,6 +41,13 @@
                     "default": 1,
                     "fa_icon": "fas fa-hashtag"
                 },
+                "min_contig_length": {
+                    "type": "integer",
+                    "description": "Minimum length for contigs to be included in annotation",
+                    "minimum": 0,
+                    "default": 5000,
+                    "fa_icon": "fas fa-ruler"
+                },
                 "rna_evidence": {
                     "type": "string",
                     "format": "file-path",
@@ -302,8 +309,20 @@
                 "append_genome_prefix_to_feature_ids": {
                     "type": "boolean",
                     "fa_icon": "fas fa-question-circle",
+<<<<<<< HEAD
                     "description": "Add genome prefix to all the features in the final Gff/Fasta files",
                     "default": true
+=======
+                    "description": "Add gff attributes to proteins fasta"
+                },
+                "Seqkit_min_contig_threshold":
+                {
+                    "name": "min_contig_length",
+                    "type": "integer",
+                    "description": "Minimum length of contigs.",
+                    "required": true,
+                    "minimum": 5000
+>>>>>>> feature/seqkit-filtering
                 }
             }
         },

@@ -72,6 +72,8 @@ Each row represents an input genome and the fields are:
 - `fasta:` fasta file for the genome
 - `is_masked`: yes or no to denote whether the fasta file is already masked or not
 
+
+
 At minimum, a file with proteins as evidence is also required. Now, you can run the pipeline using:
 
 ```bash
