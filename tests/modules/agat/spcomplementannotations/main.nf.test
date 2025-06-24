@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process AGAT_SPCOMPLEMENTANNOTATIONS"
-    script "../../../../gallvp/agat/spcomplementannotations/main.nf"
+    script "../../../../modules/gallvp/agat/spcomplementannotations/main.nf"
     process "AGAT_SPCOMPLEMENTANNOTATIONS"
 
     tag "modules"
@@ -20,13 +20,13 @@ nextflow_process {
                 input[0] = [
                     [id: 'test'],
                     [
-                        file("$baseDir" + '/modules/local/tests/agat/spmergeannotations/testdata/file1.gff', checkIfExists: true), // 10 genes
+                        file("$baseDir" + '/tests/modules/agat/spmergeannotations/testdata/file1.gff', checkIfExists: true), // 10 genes
                     ]
                 ]
                 input[1] = [
                     [],
                     [
-                        file("$baseDir" + '/modules/local/tests/agat/spmergeannotations/testdata/file2.gff', checkIfExists: true) // 5 genes
+                        file("$baseDir" + '/tests/modules/agat/spmergeannotations/testdata/file2.gff', checkIfExists: true) // 5 genes
                     ]
                 ]
                 input[2] = []

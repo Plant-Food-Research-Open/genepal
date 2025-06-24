@@ -570,4 +570,3 @@ def methodsDescriptionText(mqc_methods_yaml, versions_yml) {
 
     return description_html.toString()
 }
-

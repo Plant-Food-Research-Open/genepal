@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process GFFREAD"
-    script "../../../nf-core/gffread/main.nf"
+    script "../../../modules/nf-core/gffread/main.nf"
     config "./nextflow.config"
     process "GFFREAD"
 
@@ -19,7 +19,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [id: 'test'],
-                    file("$baseDir" + '/modules/local/tests/gffread/testdata/t.gff', checkIfExists: true)
+                    file("$baseDir" + '/tests/modules/gffread/testdata/t.gff', checkIfExists: true)
                 ]
                 input[1] = []
                 """
@@ -48,7 +48,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [id: 'test'],
-                    file("$baseDir" + '/modules/local/tests/gffread/testdata/t2.gff', checkIfExists: true)
+                    file("$baseDir" + '/tests/modules/gffread/testdata/t2.gff', checkIfExists: true)
                 ]
                 input[1] = []
                 """
@@ -74,12 +74,12 @@ nextflow_process {
 
         setup {
             run("GUNZIP") {
-                script "../../../nf-core/gunzip/main.nf"
+                script "../../../modules/nf-core/gunzip/main.nf"
                 process {
                     """
                     input[0] = [
                         [id: 'test'],
-                        file("$baseDir" + '/modules/local/tests/gffread/testdata/inframe.stop.fa.gz', checkIfExists: true)
+                        file("$baseDir" + '/tests/modules/gffread/testdata/inframe.stop.fa.gz', checkIfExists: true)
                     ]
                     """
                 }
@@ -94,7 +94,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [id: 'test'],
-                    file("$baseDir" + '/modules/local/tests/gffread/testdata/inframe.stop.gff', checkIfExists: true)
+                    file("$baseDir" + '/tests/modules/gffread/testdata/inframe.stop.gff', checkIfExists: true)
                 ]
                 input[1] = GUNZIP.out.gunzip.map { meta, fa -> fa }
                 """

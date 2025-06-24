@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## v1.0.0dev - [24-Jun-2025]
 
+### `Added`
+
+1. Updated the nf-core template to `3.3.1`
+
 ### `Dependencies`
 
 1. Nextflow!>=24.04.2
