@@ -137,7 +137,7 @@
                         "tsebra": "1.1.2.5"
                     },
                     "Workflow": {
-                        "plant-food-research-open/genepal": "v0.7.2"
+                        "plant-food-research-open/genepal": "v1.0.0dev"
                     }
                 },
                 "stable paths": [
