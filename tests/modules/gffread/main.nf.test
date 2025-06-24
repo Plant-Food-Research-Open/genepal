@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process GFFREAD"
-    script "../../../nf-core/gffread/main.nf"
+    script "../../../modules/nf-core/gffread/main.nf"
     config "./nextflow.config"
     process "GFFREAD"
 
@@ -74,7 +74,7 @@ nextflow_process {
 
         setup {
             run("GUNZIP") {
-                script "../../../nf-core/gunzip/main.nf"
+                script "../../../modules/nf-core/gunzip/main.nf"
                 process {
                     """
                     input[0] = [

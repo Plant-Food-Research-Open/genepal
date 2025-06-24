@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process AGAT_SPFILTERBYORFSIZE"
-    script "../../../../nf-core/agat/spfilterbyorfsize/main.nf"
+    script "../../../../modules/nf-core/agat/spfilterbyorfsize/main.nf"
     process "AGAT_SPFILTERBYORFSIZE"
 
     tag "modules"

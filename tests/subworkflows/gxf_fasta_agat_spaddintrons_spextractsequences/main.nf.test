@@ -1,7 +1,7 @@
 nextflow_workflow {
 
     name "Test Subworkflow GXF_FASTA_AGAT_SPADDINTRONS_SPEXTRACTSEQUENCES"
-    script "../../../gallvp/gxf_fasta_agat_spaddintrons_spextractsequences/main.nf"
+    script "../../../subworkflows/gallvp/gxf_fasta_agat_spaddintrons_spextractsequences/main.nf"
     workflow "GXF_FASTA_AGAT_SPADDINTRONS_SPEXTRACTSEQUENCES"
     config './nextflow.config'
 

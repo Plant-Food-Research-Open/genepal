@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process AGAT_SPCOMPLEMENTANNOTATIONS"
-    script "../../../../gallvp/agat/spcomplementannotations/main.nf"
+    script "../../../../modules/gallvp/agat/spcomplementannotations/main.nf"
     process "AGAT_SPCOMPLEMENTANNOTATIONS"
 
     tag "modules"
