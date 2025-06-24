@@ -25,4 +25,3 @@ Chr01	Liftoff	gene	89011	89469	.	+	0	ID=gene5
 Chr01	Liftoff	transcript	89011	89469	.	+	0	ID=transcript5;Parent=gene5;liftoffID=RED5V2.040264.1.1.HCt89052.89510
 Chr01	Liftoff	exon	89011	89469	.	+	0	ID=exon7;Parent=transcript5
 Chr01	Liftoff	CDS	89011	89469	.	+	0	ID=cds7;Parent=transcript5
-

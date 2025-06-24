@@ -19,11 +19,11 @@ nextflow_workflow {
                 """
                 input[0] = Channel.of ( [
                     [ id:'test' ],
-                    file("$baseDir" + '/subworkflows/local/tests/gxf_fasta_agat_spaddintrons_spextractsequences/testdata/scaffold_4.gff', checkIfExists: true)
+                    file("$baseDir" + '/tests/subworkflows/gxf_fasta_agat_spaddintrons_spextractsequences/testdata/scaffold_4.gff', checkIfExists: true)
                 ] )
                 input[1] = Channel.of ( [
                     [ id:'test' ],
-                    file("$baseDir" + '/subworkflows/local/tests/gxf_fasta_agat_spaddintrons_spextractsequences/testdata/scaffold_4.fasta', checkIfExists: true)
+                    file("$baseDir" + '/tests/subworkflows/gxf_fasta_agat_spaddintrons_spextractsequences/testdata/scaffold_4.fasta', checkIfExists: true)
                 ] )
                 """
             }

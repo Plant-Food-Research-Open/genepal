@@ -16,7 +16,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [id: 'test'],
-                    file("$baseDir" + '/modules/local/tests/gffread/testdata/t.gff', checkIfExists: true)
+                    file("$baseDir" + '/tests/modules/gffread/testdata/t.gff', checkIfExists: true)
                 ]
                 input[1] = []
                 """
@@ -44,7 +44,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [id: 'test'],
-                    file("$baseDir" + '/modules/local/tests/gffread/testdata/t2.gff', checkIfExists: true)
+                    file("$baseDir" + '/tests/modules/gffread/testdata/t2.gff', checkIfExists: true)
                 ]
                 input[1] = []
                 """

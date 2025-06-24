@@ -14,7 +14,9 @@ repos:
           (?x)^(
               .*ro-crate-metadata.json$|
               modules/nf-core/.*|
+              modules/gallvp/.*|
               subworkflows/nf-core/.*|
+              subworkflows/gallvp/.*|
               .*\.snap$
           )$
       - id: end-of-file-fixer
@@ -22,7 +24,9 @@ repos:
           (?x)^(
               .*ro-crate-metadata.json$|
               modules/nf-core/.*|
+              modules/gallvp/.*|
               subworkflows/nf-core/.*|
+              subworkflows/gallvp/.*|
               .*\.snap$
           )$
   - repo: local
