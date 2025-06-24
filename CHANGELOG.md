@@ -3,6 +3,37 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0dev - [24-Jun-2025]
+
+### `Dependencies`
+
+1. Nextflow!>=24.04.2
+2. nf-schema@2.2.0
+
+## v0.7.2 - [06-May-2025]
+
+### `Fixed`
+
+1. Now using `agat_sp_complement_annotations.pl` to merge Liftoff and BRAKER models to avoid creation of iso-forms due to overlap of separate genes [#153](https://github.com/Plant-Food-Research-Open/genepal/issues/153)
+
+### `Dependencies`
+
+1. Nextflow!>=24.04.2
+2. nf-schema@2.2.0
+
+## v0.7.1 - [02-May-2025]
+
+### `Fixed`
+
+1. Gene models from BRAKER with invalid ORF(s) are now removed [#151](https://github.com/Plant-Food-Research-Open/genepal/issues/151)
+2. Demoted nf-schema to 2.2.0 to avoid errors with latest Nextflow versions
+3. Fixed a nextflow syntax issue in `conf/modules.config`
+
+### `Dependencies`
+
+1. Nextflow!>=24.04.2
+2. nf-schema@2.2.0
+
 ## v0.7.0 - [16-April-2025]
 
 ### `Added`

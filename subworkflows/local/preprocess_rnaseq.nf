@@ -6,8 +6,7 @@ include { FASTQ_FASTQC_UMITOOLS_FASTP   } from '../../subworkflows/nf-core/fastq
 workflow PREPROCESS_RNASEQ {
     take:
     ch_reads                        // channel: [ [ id, single_end, target_assemblies ], [ [ fq ] ] ]
-    permissible_assemblies          // val: assembly_a,assembly_b
-    exclude_assemblies              // channel: val(assembly_x,assembly_y)
+    exclude_assemblies              // channel: val(assembly_x,assembly_y); To exclude samples for which all assemblies have BRAKER annotations in the input sheet
     fastqc_skip                     // val: true|false
     fastp_skip                      // val: true|false
     save_trimmed                    // val: true|false

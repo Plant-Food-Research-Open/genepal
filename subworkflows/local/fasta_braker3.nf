@@ -1,11 +1,12 @@
 include { BRAKER3                               } from '../../modules/gallvp/braker3'
 include { FILE_GUNZIP as BRAKER_GFF3_GUNZIP     } from '../../subworkflows/local/file_gunzip'
 include { FILE_GUNZIP as BRAKER_HINTS_GUNZIP    } from '../../subworkflows/local/file_gunzip'
+include { GFFREAD as FILTER_INVALID_ORFS        } from '../../modules/nf-core/gffread'
 
 workflow FASTA_BRAKER3 {
     take:
-    ch_masked_target_assembly   // channel: [ meta, fasta ]; meta ~ [ id: traget_assembly ]
-    ch_braker_ex_asm_str        // channel: val(assembly_x,assembly_y)
+    ch_valid_target_assembly    // channel: [ meta, fasta ]; meta ~ [ id: target_assembly ]; All input assemblies
+    ch_masked_target_assembly   // channel: [ meta, fasta ]; Assemblies that don't have BRAKER annotations in the input sheet
     ch_rnaseq_bam               // channel: [ meta, bam ]
     ch_ext_prots_fasta          // channel: [ meta2, fasta ]; meta2 ~ [ id: ext_protein_seqs ]
     ch_braker_annotation        // channel: [ meta, gff3, hints.gff ]
@@ -15,11 +16,6 @@ workflow FASTA_BRAKER3 {
 
 
     ch_braker_inputs            = ch_masked_target_assembly
-                                | combine( ch_braker_ex_asm_str )
-                                | filter { meta, fasta, ex_str -> !( ex_str.split(",").contains( meta.id ) ) }
-                                | map { meta, fasta, ex_str ->
-                                    [ meta, fasta ]
-                                }
                                 | join(ch_rnaseq_bam, remainder: true)
                                 | combine(
                                     ch_ext_prots_fasta.map { meta, fasta -> fasta }.ifEmpty(null)
@@ -58,8 +54,25 @@ workflow FASTA_BRAKER3 {
     ch_braker_hints             = BRAKER_HINTS_GUNZIP.out.gunzip
     ch_versions                 = ch_versions.mix(BRAKER_HINTS_GUNZIP.out.versions)
 
+
+    // MODULE: GFFREAD as FILTER_INVALID_ORFS
+    ch_filter_inputs            = ch_braker_gff3
+                                | join(ch_valid_target_assembly)
+                                | multiMap { meta, gff3, fasta ->
+                                    gff:   [ meta, gff3 ]
+                                    fasta: fasta
+                                }
+
+    FILTER_INVALID_ORFS (
+        ch_filter_inputs.gff,
+        ch_filter_inputs.fasta
+    )
+
+    ch_filtered_gff3            = FILTER_INVALID_ORFS.out.gffread_gff
+    ch_versions                 = ch_versions.mix(FILTER_INVALID_ORFS.out.versions)
+
     emit:
-    braker_gff3                 = ch_braker_gff3        // [ meta, gff3 ]
+    braker_gff3                 = ch_filtered_gff3      // [ meta, gff3 ]
     braker_hints                = ch_braker_hints       // [ meta, hints.gff ]
     versions                    = ch_versions           // [ versions.yml ]
 }

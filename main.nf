@@ -30,7 +30,6 @@ workflow PLANTFOODRESEARCHOPEN_GENEPAL {
 
     take:
     ch_target_assembly
-    ch_tar_assm_str
     ch_is_masked
     ch_te_library
     ch_braker_annotation
@@ -52,7 +51,6 @@ workflow PLANTFOODRESEARCHOPEN_GENEPAL {
     //
     GENEPAL(
         ch_target_assembly,
-        ch_tar_assm_str,
         ch_is_masked,
         ch_te_library,
         ch_braker_annotation,
@@ -99,7 +97,6 @@ workflow {
     //
     PLANTFOODRESEARCHOPEN_GENEPAL(
         PIPELINE_INITIALISATION.out.target_assembly,
-        PIPELINE_INITIALISATION.out.tar_assm_str,
         PIPELINE_INITIALISATION.out.is_masked,
         PIPELINE_INITIALISATION.out.te_library,
         PIPELINE_INITIALISATION.out.braker_annotation,
