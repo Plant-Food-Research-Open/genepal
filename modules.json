@@ -286,7 +286,7 @@
                 "nf-core": {
                     "fasta_gxf_busco_plot": {
                         "branch": "master",
-                        "git_sha": "ebfffb751c6c73b7a16afe7a1a35eb103f6a4563",
+                        "git_sha": "de5b67889ef5f53d6996fb4dac300ed399a51212",
                         "installed_by": ["subworkflows"],
                         "patch": "subworkflows/nf-core/fasta_gxf_busco_plot/fasta_gxf_busco_plot.diff"
                     },
