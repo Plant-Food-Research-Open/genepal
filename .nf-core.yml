@@ -5,6 +5,7 @@ lint:
     - assets/nf-core-genepal_logo_light.png
     - docs/images/nf-core-genepal_logo_light.png
     - docs/images/nf-core-genepal_logo_dark.png
+    - tests/default.nf.test
   files_unchanged:
     - .gitignore
     - LICENSE
@@ -18,7 +19,10 @@ lint:
     - manifest.homePage
     - config_defaults:
         - params.ribo_database_manifest
-nf_core_version: 3.3.1
+  nf_test_content:
+    - tests/default.nf.test
+    - tests/nextflow.config
+nf_core_version: 3.4.0
 repository_type: pipeline
 template:
   author: Usman Rashid, Jason Shiller
