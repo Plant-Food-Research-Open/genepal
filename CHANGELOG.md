@@ -3,16 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.0dev - [24-Jun-2025]
+## v1.0.0dev - [16-Oct-2025]
 
 ### `Added`
 
-1. Updated the nf-core template to `3.3.1`
+1. Updated the nf-core template to `3.4.0`
 
 ### `Dependencies`
 
-1. Nextflow!>=24.04.2
-2. nf-schema@2.2.0
+1. Nextflow!>=25.04.0
+2. nf-schema@2.5.1
 
 ## v0.7.2 - [06-May-2025]
 

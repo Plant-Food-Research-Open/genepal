@@ -90,6 +90,9 @@ workflow {
         params.rna_evidence,
         params.liftoff_annotations,
         params.orthofinder_annotations
+        params.help,
+        params.help_full,
+        params.show_hidden
     )
 
     //
