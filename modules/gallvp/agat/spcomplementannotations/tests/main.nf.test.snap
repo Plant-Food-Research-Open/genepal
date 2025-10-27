@@ -2,7 +2,7 @@
     "candidatus_portiera_aleyrodidarum - Gffs": {
         "content": [
             [
-                "versions.yml:md5,3b461a98eb18641f842397b7c626f59c"
+                "versions.yml:md5,cb53265f543102e814d555c8c382cdfe"
             ],
             [
                 "##gff-version 3",
@@ -11,10 +11,10 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-05-06T10:38:15.349104"
+        "timestamp": "2025-10-20T08:46:41.19846"
     },
     "candidatus_portiera_aleyrodidarum - Gffs - stub": {
         "content": [
@@ -29,7 +29,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,3b461a98eb18641f842397b7c626f59c"
+                    "versions.yml:md5,cb53265f543102e814d555c8c382cdfe"
                 ],
                 "gff": [
                     [
@@ -41,14 +41,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,3b461a98eb18641f842397b7c626f59c"
+                    "versions.yml:md5,cb53265f543102e814d555c8c382cdfe"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-05-06T10:13:11.651559"
+        "timestamp": "2025-10-20T08:46:46.937116"
     }
 }

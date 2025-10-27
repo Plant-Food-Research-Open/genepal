@@ -19,7 +19,7 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,a3d1e735adde2ea534a2ca079be3c543"
+                    "versions.yml:md5,2e38ac0abb6444b112afc6a583fa1178"
                 ],
                 "failed_gff": [
                     [
@@ -38,15 +38,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,a3d1e735adde2ea534a2ca079be3c543"
+                    "versions.yml:md5,2e38ac0abb6444b112afc6a583fa1178"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-04-07T11:01:04.86992"
+        "timestamp": "2025-10-28T09:58:07.562174"
     },
     "Knockout one transcript": {
         "content": [
@@ -68,7 +68,7 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,a3d1e735adde2ea534a2ca079be3c543"
+                    "versions.yml:md5,2e38ac0abb6444b112afc6a583fa1178"
                 ],
                 "failed_gff": [
                     [
@@ -87,14 +87,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,a3d1e735adde2ea534a2ca079be3c543"
+                    "versions.yml:md5,2e38ac0abb6444b112afc6a583fa1178"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-04-07T11:01:00.710911"
+        "timestamp": "2025-10-28T09:58:00.554653"
     }
 }

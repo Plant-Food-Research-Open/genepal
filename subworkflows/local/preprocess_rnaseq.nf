@@ -58,13 +58,12 @@ workflow PREPROCESS_RNASEQ {
     def umi_discard_read            = false
 
     FASTQ_FASTQC_UMITOOLS_FASTP (
-        ch_cat_fastq,
+        ch_cat_fastq.map { meta, fastq -> [ meta, fastq, [] ] },
         fastqc_skip,
         with_umi,
         skip_umi_extract,
         umi_discard_read,
         fastp_skip,
-        [],
         save_trimmed,
         save_trimmed,
         min_trimmed_reads

@@ -2,7 +2,10 @@ process BRAKER3 {
     tag "${meta.id}"
     label 'process_high'
 
-    container "docker.io/teambraker/braker3:v3.0.7.6"
+    // Re. Conda from the BRAKER team:
+    // Warning: installing GeneMark-ETP for BRAKER in conda environments has lead to multiple problems reported by users (Issues!).
+    // We can not offer support for conda installations. Please use the singularity image instead.
+    container "docker.io/teambraker/braker3:v3.0.7.5"
 
     input:
     tuple val(meta), path(fasta)

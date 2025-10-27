@@ -25,21 +25,25 @@ input:
         type: file
         description: RepeatMasker out file
         pattern: "*.out"
+        ontologies: []
 output:
-  - gff3:
-      - meta:
-        type: map
-        description: |
-          Groovy Map containing sample information
-          e.g. `[ id:'sample1' ]`
+  gff3:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1' ]`
       - "*.gff3":
-        type: file
-        description: GFF3 formatted output
-  - versions:
-      - versions.yml:
           type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          description: GFF3 formatted output
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@GallVp"
 maintainers:
