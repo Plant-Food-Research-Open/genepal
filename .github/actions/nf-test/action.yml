@@ -84,11 +84,11 @@ runs:
       if: steps.disk-cleanup-check.outputs.cleanup == 'YES'
       uses: jlumbroso/free-disk-space@v1.3.1
       with:
-        tool-cache: true
+        tool-cache: false
         android: true
         dotnet: false
         haskell: false
-        large-packages: false
+        large-packages: true
         docker-images: false
         swap-storage: false
 
