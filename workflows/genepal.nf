@@ -61,8 +61,8 @@ workflow GENEPAL {
 
     main:
     // Channels
-    ch_versions                 = Channel.empty()
-    ch_multiqc_files            = Channel.empty()
+    ch_versions                 = channel.empty()
+    ch_multiqc_files            = channel.empty()
 
     // SUBWORKFLOW: PREPARE_ASSEMBLY
     PREPARE_ASSEMBLY(
@@ -229,11 +229,11 @@ workflow GENEPAL {
 
     // SUBWORKFLOW: FASTA_GXF_BUSCO_PLOT
     ch_busco_fasta              = params.busco_skip
-                                ? Channel.empty()
+                                ? channel.empty()
                                 : ch_valid_target_assembly
 
     ch_busco_gff                = params.busco_skip
-                                ? Channel.empty()
+                                ? channel.empty()
                                 : ch_final_gff
 
     FASTA_GXF_BUSCO_PLOT(
@@ -289,9 +289,9 @@ workflow GENEPAL {
                                 | join ( ch_benchmark_gunzip_gff )
 
     BENCHMARK (
-        ch_benchmark_inputs.map { meta, gff, fasta, ref_gff -> [ meta, gff ] },
-        ch_benchmark_inputs.map { meta, gff, fasta, ref_gff -> [ meta, fasta, [] ] },
-        ch_benchmark_inputs.map { meta, gff, fasta, ref_gff -> [ meta, ref_gff ] }
+        ch_benchmark_inputs.map { meta, gff, _fasta, _ref_gff -> [ meta, gff ] },
+        ch_benchmark_inputs.map { meta, _gff, fasta, _ref_gff -> [ meta, fasta, [] ] },
+        ch_benchmark_inputs.map { meta, _gff, _fasta, ref_gff -> [ meta, ref_gff ] }
     )
 
     ch_benchmark_stats          = BENCHMARK.out.stats
@@ -313,9 +313,9 @@ workflow GENEPAL {
                                 )
 
     // MODULE: MultiQC
-    ch_multiqc_config           = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+    ch_multiqc_config           = channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
 
-    ch_workflow_summary         = Channel.value( paramsSummaryMultiqc ( paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json") ) )
+    ch_workflow_summary         = channel.value( paramsSummaryMultiqc ( paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json") ) )
                                 | collectFile(name: 'workflow_summary_mqc.yaml')
 
     ch_methods_description      = ch_versions_yml
@@ -324,14 +324,14 @@ workflow GENEPAL {
                                 }
                                 | collectFile(name: 'methods_description_mqc.yaml', sort: true)
 
-    ch_multiqc_extra_files      = Channel.empty()
+    ch_multiqc_extra_files      = channel.empty()
                                 | mix(ch_workflow_summary)
                                 | mix(ch_versions_yml)
                                 | mix(ch_methods_description)
 
     MULTIQC (
         ch_multiqc_files
-        | map { meta, file -> file }
+        | map { _meta, file -> file }
         | mix(ch_multiqc_extra_files)
         | collect,
         ch_multiqc_config.toList(),
@@ -350,13 +350,13 @@ workflow GENEPAL {
 
 
     GENEPALREPORT (
-        ch_saved_marked_gff3        .map { meta, file -> file   }   .collect()              ,
-        ch_orthofinder_statistics   .map { meta, dir -> dir     }   .collect()  .ifEmpty([]),
-        ch_orthofinder_hogs         .map { meta, dir -> dir     }   .collect()  .ifEmpty([]),
-        ch_busco_fasta_summary      .map { meta, file -> file   }   .collect()  .ifEmpty([]),
-        ch_busco_gff_summary        .map { meta, file -> file   }   .collect()  .ifEmpty([]),
-        ch_benchmark_stats          .map { meta, file -> file   }   .collect()  .ifEmpty([]),
-        ch_pipeline_info                                            .collect()
+        ch_saved_marked_gff3        .map { _meta, file -> file   }      .collect()              ,
+        ch_orthofinder_statistics   .map { _meta, dir -> dir     }      .collect()  .ifEmpty([]),
+        ch_orthofinder_hogs         .map { _meta, dir -> dir     }      .collect()  .ifEmpty([]),
+        ch_busco_fasta_summary      .map { _meta, file -> file   }      .collect()  .ifEmpty([]),
+        ch_busco_gff_summary        .map { _meta, file -> file   }      .collect()  .ifEmpty([]),
+        ch_benchmark_stats          .map { _meta, file -> file   }      .collect()  .ifEmpty([]),
+        ch_pipeline_info                                                .collect()
     )
 
     emit:

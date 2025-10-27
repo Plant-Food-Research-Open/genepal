@@ -3,16 +3,33 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.0dev - [16-Oct-2025]
+## v1.0.0dev - [28-Oct-2025]
 
 ### `Added`
 
 1. Updated the nf-core template to `3.4.0`
+2. Update modules and sub-workflows from nf-core/modules and GallVp/nxf-components
 
 ### `Dependencies`
 
 1. Nextflow!>=25.04.0
 2. nf-schema@2.5.1
+
+### `Tool Updates`
+
+| Tool                 | Old Version | New Version |
+| -------------------- | ----------- | ----------- |
+| agat                 | 1.4.2       | 1.5.1       |
+| ltr_harvest_parallel | 1.1         | 1.2         |
+| braker3              | v3.0.7.6    | v3.0.7.5    |
+| busco                | 5.8.3       | 6.0.0       |
+| diamond              | 2.1.8       | 2.1.12      |
+| fastp                | 0.24.0      | 1.0.1       |
+| multiqc              | 1.28        | 1.32        |
+| htslib               | 1.21        | 1.22.1      |
+| samtools             | 1.21        | 1.22.1      |
+| sortmerna            | 4.3.6       | 4.3.7       |
+| umi_tools            | 1.1.5       | 1.1.6       |
 
 ## v0.7.2 - [06-May-2025]
 
