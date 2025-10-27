@@ -83,6 +83,14 @@ runs:
     - name: Disk space cleanup
       if: steps.disk-cleanup-check.outputs.cleanup == 'YES'
       uses: jlumbroso/free-disk-space@v1.3.1
+      with:
+        tool-cache: false
+        android: true
+        dotnet: false
+        haskell: false
+        large-packages: false
+        docker-images: false
+        swap-storage: false
 
       # TODO Skip failing conda tests and document their failures
       # https://github.com/nf-core/modules/issues/7017

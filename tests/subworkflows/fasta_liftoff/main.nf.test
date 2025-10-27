@@ -1,7 +1,7 @@
 nextflow_workflow {
 
     name "Test Subworkflow FASTA_LIFTOFF"
-    script "../main.nf"
+    script "../../../subworkflows/local/fasta_liftoff/main.nf"
     workflow "FASTA_LIFTOFF"
     config './nextflow.config'
 
@@ -20,7 +20,7 @@ nextflow_workflow {
 
     setup {
         run('GUNZIP', alias: 'GUNZIP_GENOME_FASTA') {
-            script "../../../../modules/nf-core/gunzip"
+            script "../../../modules/nf-core/gunzip"
 
             process {
                 """
@@ -33,7 +33,7 @@ nextflow_workflow {
         }
 
         run('GUNZIP', alias: 'GUNZIP_BRAKER_HINTS') {
-            script "../../../../modules/nf-core/gunzip"
+            script "../../../modules/nf-core/gunzip"
 
             process {
                 """
@@ -56,11 +56,11 @@ nextflow_workflow {
 
                 input[1]    = Channel.of([
                     [ id:'ref' ],
-                    file ( "${baseDir}/subworkflows/local/fasta_liftoff/tests/testdata/GCF_019202715.1.fna.gz", checkIfExists: true )
+                    file ( "${baseDir}/tests/subworkflows/fasta_liftoff/testdata/GCF_019202715.1.fna.gz", checkIfExists: true )
                 ])
                 input[2]    = Channel.of([
                     [ id:'ref' ],
-                    file ( "${baseDir}/subworkflows/local/fasta_liftoff/tests/testdata/GCF_019202715.1.gff.gz", checkIfExists: true )
+                    file ( "${baseDir}/tests/subworkflows/fasta_liftoff/testdata/GCF_019202715.1.gff.gz", checkIfExists: true )
                 ])
 
                 input[3]    = true // val_filter_liftoff_by_hints
