@@ -20,7 +20,7 @@ workflow FASTA_LIFTOFF {
 
 
     main:
-    ch_versions                     = Channel.empty()
+    ch_versions                     = channel.empty()
 
     // MODULE: GUNZIP as GUNZIP_FASTA
     ch_xref_fasta_branch            = xref_fasta
@@ -140,7 +140,7 @@ workflow FASTA_LIFTOFF {
 
     // collectFile: Kill list for valid_ORF=False transcripts
     // tRNA, rRNA, gene with any intron marked as
-    // 'pseudo=' by AGAT/SPFLAGSHORTINTRONS
+    // 'short_intron=' by AGAT/SPFLAGSHORTINTRONS
     ch_kill_list                    = ch_flagged_gff
                                     | map { meta, gff ->
 
@@ -160,11 +160,11 @@ workflow FASTA_LIFTOFF {
 
                                                 def attrs = cols[8]
 
-                                                // Add [ 'gene', 'transcript', 'mRNA' ] with 'valid_ORF=False' or 'pseudo=' attributes to kill list
-                                                ( attrs.contains('valid_ORF=False') || attrs.contains('pseudo=') )
+                                                // Add [ 'gene', 'transcript', 'mRNA' ] with 'valid_ORF=False' or 'short_intron=' attributes to kill list
+                                                ( attrs.contains('valid_ORF=False') || attrs.contains('short_intron=') )
                                             }
-                                            .collect {
-                                                def cols    = it.split('\t')
+                                            .collect { row ->
+                                                def cols    = row.split('\t')
                                                 def attrs   = cols[8]
 
                                                 def matches = attrs =~ /ID=([^;]*)/
@@ -201,7 +201,7 @@ workflow FASTA_LIFTOFF {
 
     // SUBWORKFLOW: GFF_TSEBRA_SPFILTERFEATUREFROMKILLLIST
     GFF_TSEBRA_SPFILTERFEATUREFROMKILLLIST(
-        val_filter_liftoff_by_hints ? ch_attr_trimmed_gff : Channel.empty(),
+        val_filter_liftoff_by_hints ? ch_attr_trimmed_gff : channel.empty(),
         braker_hints,
         tsebra_config,
         val_allow_isoforms,
