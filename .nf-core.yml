@@ -23,7 +23,7 @@ lint:
   nf_test_content:
     - tests/default.nf.test
     - tests/nextflow.config
-nf_core_version: 3.4.0
+nf_core_version: 3.4.1
 repository_type: pipeline
 template:
   author: Usman Rashid, Jason Shiller

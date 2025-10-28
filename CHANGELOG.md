@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-1. Updated the nf-core template to `3.4.0`
+1. Updated the nf-core template to `3.4.1`
 2. Update modules and sub-workflows from nf-core/modules and GallVp/nxf-components
 
 ### `Dependencies`
