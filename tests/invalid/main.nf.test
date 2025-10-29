@@ -3,7 +3,7 @@ nextflow_pipeline {
     name "Test for invalid assembly sequence IDs"
     script "main.nf"
 
-    test("invalid fasta IDs - error - terminate gracefully") {
+    test("protein fasta contains spaces - ignore gracefully - fail at invalid Fasta") {
 
         def assemblysheet_path = "$metaDir" + '/assemblysheet.csv'
         def assemblysheet_text = """\
@@ -11,14 +11,22 @@ nextflow_pipeline {
             invalid,$baseDir/tests/invalid/testdata/invalid.fasta.gz,no
             """.stripIndent()
 
+        def proteins_path = "$metaDir" + '/proteins.txt'
+        def proteins_text = """\
+
+            https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz
+
+            """.stripIndent()
+
         setup {
             (new File(assemblysheet_path)).text = assemblysheet_text
+            (new File(proteins_path)).text = proteins_text
         }
 
         when {
             params {
                 input               = assemblysheet_path
-                protein_evidence    = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz"
+                protein_evidence    = proteins_path
                 busco_skip          = true
                 outdir              = "$outputDir"
             }

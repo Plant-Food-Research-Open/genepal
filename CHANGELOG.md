@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.0dev - [29-Oct-2025]
+## v1.0.0dev - [30-Oct-2025]
 
 ### `Added`
 
@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 1. Fixed an issue where some genes with introns shorter than 10bp were not marked for exclusion correctly [#89](https://github.com/Plant-Food-Research-Open/genepal/issues/89)
 2. Fixed an issue where Fasta IDs such as `>lcl|Lmh1Chr1` caused the pipeline to fail due to IDs being changed by BRAKER3 [#161](https://github.com/Plant-Food-Research-Open/genepal/issues/161)
+3. Fixed an issue which caused a pipeline crash where there were empty lines in the protein evidence file [#166](https://github.com/Plant-Food-Research-Open/genepal/issues/166)
 
 ### `Dependencies`
 
