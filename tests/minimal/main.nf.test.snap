@@ -34,8 +34,8 @@
                     "EXTRACT_PROTEINS": {
                         "gffread": "0.12.7"
                     },
-                    "FASTAVALIDATOR": {
-                        "py_fasta_validator": 0.6
+                    "FALINT": {
+                        "fa-lint": "1.2.0"
                     },
                     "FILTER_BY_ORF_SIZE": {
                         "agat": "v1.5.1"

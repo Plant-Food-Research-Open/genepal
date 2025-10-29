@@ -1,0 +1,37 @@
+{
+    "invalid fasta IDs - error - terminate gracefully": {
+        "content": [
+            {
+                "successful tasks": 6,
+                "versions": {
+                    "CAT_PROTEIN_FASTAS": {
+                        "pigz": "2.3.4"
+                    },
+                    "FALINT": {
+                        "fa-lint": "1.2.0"
+                    },
+                    "GUNZIP": {
+                        "gunzip": 1.13
+                    },
+                    "GUNZIP_TARGET_ASSEMBLY": {
+                        "gunzip": 1.13
+                    },
+                    "SEQKIT_RMDUP": {
+                        "seqkit": "v2.9.0"
+                    },
+                    "Workflow": {
+                        "plant-food-research-open/genepal": "v1.0.0dev"
+                    }
+                },
+                "stable paths": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-29T16:53:20.433547"
+    }
+}

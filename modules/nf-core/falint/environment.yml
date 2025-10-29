@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::py_fasta_validator=0.6
+  - bioconda::fa-lint=1.2.0

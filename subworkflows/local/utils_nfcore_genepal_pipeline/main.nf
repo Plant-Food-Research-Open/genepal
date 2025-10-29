@@ -28,7 +28,7 @@ workflow PIPELINE_INITIALISATION {
 
     take:
     version                 // boolean: Display version and exit
-    monochrome_logs         // boolean: Do not use coloured log outputs
+    _monochrome_logs        // boolean: Do not use coloured log outputs
     nextflow_cli_args       //   array: List of positional nextflow CLI args
     outdir                  //  string: The output directory where the results will be saved
     input                   //  string: Path to input assemblysheet
@@ -78,7 +78,7 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create input channels
     //
-    ch_input                    = Channel.fromList (samplesheetToList(input, "assets/schema_input.json"))
+    ch_input                    = channel.fromList (samplesheetToList(input, "assets/schema_input.json"))
 
     ch_target_assembly          = ch_input
                                 | map { it ->
@@ -91,7 +91,7 @@ workflow PIPELINE_INITIALISATION {
                                         return [ [ id: tag ], fasta_file ]
                                     }
 
-                                    def is_zipped   = fasta.endsWith('.gz')
+                                    def is_zipped   = "$fasta".endsWith('.gz')
                                     def sz_thresh   = is_zipped ? 300_000 : 1_000_000
                                     def fasta_size  = fasta_file.size()
 
@@ -147,9 +147,9 @@ workflow PIPELINE_INITIALISATION {
                                 }
 
     ch_braker_ex_asm_str        = ch_braker_annotation
-                                | map { meta, braker_gff3, hints_gff -> meta.id }
+                                | map { meta, _braker_gff3, _hints_gff -> meta.id }
                                 | collect
-                                | map { it.join(",") }
+                                | map { it -> it.join(",") }
                                 | ifEmpty( "" )
 
     ch_benchmark_gff            = ch_input
@@ -166,8 +166,8 @@ workflow PIPELINE_INITIALISATION {
                                 }
 
     ch_rna_branch               = ! params.rna_evidence
-                                ? Channel.empty()
-                                : Channel.fromList (samplesheetToList(rna_evidence, "assets/schema_rna.json"))
+                                ? channel.empty()
+                                : channel.fromList (samplesheetToList(rna_evidence, "assets/schema_rna.json"))
                                 | map { meta, f1, f2 ->
                                     "$f1".find(/^SRR[0-9]*$/)
                                     ? [ meta + [ single_end: false ], [ f1, f2 ] ]
@@ -178,54 +178,54 @@ workflow PIPELINE_INITIALISATION {
                                 | map { meta, data ->
                                     [ meta + [ target_assemblies: meta.target_assemblies.split(';').sort() ], data ]
                                 }
-                                | branch { meta, data ->
+                                | branch { _meta, data ->
                                     sra: "${data.first()}".find(/^SRR[0-9]*$/)
                                     fq:  "${data.first()}".find(/^\S+\.(f(ast)?q\.gz)$/)
                                     bam: "${data.first()}".find(/^\S+\.bam$/)
                                 }
 
     ch_rna_sra                  = ! params.rna_evidence
-                                ? Channel.empty()
+                                ? channel.empty()
                                 : ch_rna_branch.sra
                                 | map { meta, sra -> [ meta.id, meta, sra ] }
                                 | groupTuple
                                 | combine(ch_tar_assm_str)
-                                | map { id, metas, sra, tar_assm_str ->
+                                | map { _id, metas, sra, tar_assm_str ->
                                     validateSRAMetadata(metas, sra, tar_assm_str)
                                 }
 
     ch_rna_fq                   = ! params.rna_evidence
-                                ? Channel.empty()
+                                ? channel.empty()
                                 : ch_rna_branch.fq
-                                | map { meta, files -> [ meta.id, meta, files.collect { file(it) } ] }
+                                | map { meta, files -> [ meta.id, meta, files.collect { it -> file(it) } ] }
                                 | groupTuple
                                 | combine(ch_tar_assm_str)
-                                | map { id, metas, files, tar_assm_str ->
+                                | map { _id, metas, files, tar_assm_str ->
                                     validateFastqMetadata(metas, files, tar_assm_str)
                                 }
 
     ch_rna_bam                  = ! params.rna_evidence
-                                ? Channel.empty()
+                                ? channel.empty()
                                 : ch_rna_branch.bam
-                                | map { meta, files -> [ meta.id, meta, files.collect { file(it) } ] }
+                                | map { meta, files -> [ meta.id, meta, files.collect { it -> file(it) } ] }
                                 | groupTuple
                                 | combine(ch_tar_assm_str)
-                                | flatMap { id, metas, files, tar_assm_str ->
+                                | flatMap { _id, metas, files, tar_assm_str ->
                                     validateBamMetadata(metas, files, tar_assm_str)
                                 }
 
     // Check if each sample for a given assembly has either bam or fastq files
     ch_rna_bam
-    | flatMap { meta, bams ->
-        meta.target_assemblies.collect { [ [ meta.id, it ], 'bam' ] }
+    | flatMap { meta, _bams ->
+        meta.target_assemblies.collect { it -> [ [ meta.id, it ], 'bam' ] }
     }
     | join(
         ch_rna_fq
-        | flatMap { meta, fqs ->
-            meta.target_assemblies.collect { [ [ meta.id, it ], 'fq' ] }
+        | flatMap { meta, _fqs ->
+            meta.target_assemblies.collect { it -> [ [ meta.id, it ], 'fq' ] }
         }
     )
-    | map { combination, bam, fq ->
+    | map { combination, _bam, _fq ->
         error "Sample ${combination[0]} for assembly ${combination[1]} can not have both fastq and bam files"
     }
 
@@ -239,15 +239,15 @@ workflow PIPELINE_INITIALISATION {
                                 : null
 
     ch_sortmerna_fastas         = ch_ribo_db
-                                ? Channel.from(ch_ribo_db ? ch_ribo_db.readLines() : null)
+                                ? channel.from(ch_ribo_db ? ch_ribo_db.readLines() : null)
                                 | map { row -> file(row, checkIfExists: true) }
                                 | collect
-                                : Channel.empty()
+                                : channel.empty()
 
     ch_ext_prot_fastas          = ( params.protein_evidence.endsWith('txt')
-                                    ? Channel.fromPath(params.protein_evidence)
+                                    ? channel.fromPath(params.protein_evidence)
                                     | splitText
-                                    : Channel.fromPath(params.protein_evidence)
+                                    : channel.fromPath(params.protein_evidence)
                                 )
                                 | map { file_path ->
 
@@ -260,8 +260,8 @@ workflow PIPELINE_INITIALISATION {
 
 
     ch_liftoff_mm               = ! params.liftoff_annotations
-                                ? Channel.empty()
-                                : Channel.fromList (samplesheetToList(liftoff_annotations, "assets/schema_liftoff.json"))
+                                ? channel.empty()
+                                : channel.fromList (samplesheetToList(liftoff_annotations, "assets/schema_liftoff.json"))
                                 | multiMap { fasta, gff ->
                                     def fastaFile = file(fasta, checkIfExists:true)
 
@@ -271,13 +271,13 @@ workflow PIPELINE_INITIALISATION {
 
     ch_liftoff_fasta            = params.liftoff_annotations
                                 ? ch_liftoff_mm.fasta
-                                : Channel.empty()
+                                : channel.empty()
 
     ch_liftoff_gff              = params.liftoff_annotations
                                 ? ch_liftoff_mm.gff
-                                : Channel.empty()
+                                : channel.empty()
 
-    ch_tsebra_config            = Channel.of ( file("${projectDir}/assets/tsebra-template.cfg", checkIfExists: true) )
+    ch_tsebra_config            = channel.of ( file("${projectDir}/assets/tsebra-template.cfg", checkIfExists: true) )
                                 | map { cfg ->
                                     def param_intron_support = params.enforce_full_intron_support ? '1.0' : '0.0'
 
@@ -301,8 +301,8 @@ workflow PIPELINE_INITIALISATION {
 
 
     ch_orthofinder_pep          = ! params.orthofinder_annotations
-                                ? Channel.empty()
-                                : Channel.fromList (samplesheetToList(orthofinder_annotations, "assets/schema_orthofinder.json"))
+                                ? channel.empty()
+                                : channel.fromList (samplesheetToList(orthofinder_annotations, "assets/schema_orthofinder.json"))
                                 | map { tag, fasta ->
                                     [ [ id: tag ], file(fasta, checkIfExists:true)  ]
                                 }
@@ -416,7 +416,7 @@ def validateSRAMetadata(metas, sra, permAssString) {
     }
 
     // Check if each listed assembly is permissible
-    if ( meta.target_assemblies.any { !permAssList.contains( it ) } ) {
+    if ( meta.target_assemblies.any { it -> !permAssList.contains( it ) } ) {
         error "Sample ${meta.id} targets ${meta.target_assemblies} which are not in $permAssList"
     }
 
@@ -428,7 +428,7 @@ def validateFastqMetadata(metas, fqs, permAssString) {
 
     // Check if each listed assembly is permissible
     metas.each { meta ->
-        if ( meta.target_assemblies.any { !permAssList.contains( it ) } ) {
+        if ( meta.target_assemblies.any { it -> !permAssList.contains( it ) } ) {
             error "Sample ${meta.id} targets ${meta.target_assemblies} which are not in $permAssList"
         }
     }
@@ -452,7 +452,7 @@ def validateBamMetadata(metas, bams, permAssString) {
 
     // Check if each listed assembly is permissible
     metas.each { meta ->
-        if ( meta.target_assemblies.any { !permAssList.contains( it ) } ) {
+        if ( meta.target_assemblies.any { it -> !permAssList.contains( it ) } ) {
             error "Sample ${meta.id} targets ${meta.target_assemblies} which are not in $permAssList"
         }
     }
@@ -470,7 +470,7 @@ def validateBamMetadata(metas, bams, permAssString) {
         }
     }
 
-    metas.every { it.target_assemblies == metas.first().target_assemblies }
+    metas.every { it -> it.target_assemblies == metas.first().target_assemblies }
     ? [ [ metas.first(), bams.flatten() ] ]
     : metas.withIndex().collect { meta, index -> [ meta, bams[index].flatten() ] }
 }
@@ -501,7 +501,7 @@ def toolCitationText(versions_yml) {
             ( ! v_text.contains('liftoff:') )       ? ''    : 'Liftoff (Shumate & Salzberg. 2021)',
             ( ! v_text.contains('orthofinder:') )   ? ''    : 'OrthoFinder (Emms & Kelly. 2019)',
             false                                   ? ''    : 'ProtHint (Brůna et al. 2020)',
-            false                                   ? ''    : 'py_fasta_validator (Edwards. 2019)',
+            false                                   ? ''    : 'fa-lint (Rashid. 2025)',
             ( ! v_text.contains('repeatmasker:') )  ? ''    : 'RepeatMasker (Smit & Hubley. 2023)',
             ( ! v_text.contains('repeatmodeler:') ) ? ''    : 'RepeatModeler (Hubley. 2023)',
             false                                   ? ''    : 'Samtools (Danecek et al. 2021)',
@@ -509,7 +509,7 @@ def toolCitationText(versions_yml) {
             ( ! v_text.contains('sortmerna:') )     ? ''    : 'SortMeRNA (Kopylova et al. 2012)',
             ( ! v_text.contains('star:') )          ? ''    : 'STAR (Dobin et al. 2013)',
             false                                   ? ''    : 'TSEBRA (Gabriel et al. 2021)',
-        ].findAll { it != '' }.join(', ').trim()
+        ].findAll { it -> it != '' }.join(', ').trim()
 
     return start_text + citation_text + end_text
 }
@@ -533,7 +533,7 @@ def toolBibliographyText(versions_yml) {
             ( ! v_text.contains('liftoff:') )       ? ''    : 'Shumate A, Salzberg SL. Liftoff: accurate mapping of gene annotations. Bioinformatics. 2021 Jul 19;37(12):1639-1643. doi: <a href="http://doi.org/10.1093/bioinformatics/btaa1016">10.1093/bioinformatics/btaa1016</a>. PMID: 33320174; PMCID: PMC8289374.',
             ( ! v_text.contains('orthofinder:') )   ? ''    : 'Emms, D.M., Kelly, S. OrthoFinder: phylogenetic orthology inference for comparative genomics. Genome Biol 20, 238 (2019). doi: <a href="https://doi.org/10.1186/s13059-019-1832-y">10.1186/s13059-019-1832-y</a>',
             false                                   ? ''    : 'Tomáš Brůna, Alexandre Lomsadze, Mark Borodovsky, GeneMark-EP+: eukaryotic gene prediction with self-training in the space of genes and proteins, NAR Genomics and Bioinformatics, Volume 2, Issue 2, June 2020, lqaa026, doi: <a href="https://doi.org/10.1093/nargab/lqaa026">10.1093/nargab/lqaa026</a>',
-            false                                   ? ''    : 'Edwards, R.A. 2019. fasta_validate: a fast and efficient fasta validator written in pure C. doi: <a href="https://doi.org/10.5281/zenodo.2532044">10.5281/zenodo.2532044</a>',
+            false                                   ? ''    : 'Rashid, 2025. fa-lint: A Fasta linter/validator. GitHub: <a href="https://github.com/GallVp/fa-lint">GallVp/fa-lint</a>',
             ( ! v_text.contains('repeatmasker:') )  ? ''    : 'Smit, A., & Hubley, R. (2023). RepeatMasker: a program that screens DNA sequences for interspersed repeats and low complexity DNA sequences. Repeatmasker.org. url: <a href="https://www.repeatmasker.org">https://www.repeatmasker.org</a>',
             ( ! v_text.contains('repeatmodeler:') ) ? ''    : 'Hubley, R. (2023). RepeatModeler: a de novo transposable element (TE) family identification and modeling package. Repeatmasker.org. url: <a href="https://www.repeatmasker.org">https://www.repeatmasker.org</a>',
             false                                   ? ''    : 'Danecek P, Bonfield JK, Liddle J, Marshall J, Ohan V, Pollard MO, Whitwham A, Keane T, McCarthy SA, Davies RM, Li H. 2021. Twelve years of SAMtools and BCFtools, GigaScience, Volume 10, Issue 2, February 2021, giab008, doi: <a href="https://doi.org/10.1093/gigascience/giab008">10.1093/gigascience/giab008</a>',
@@ -542,7 +542,7 @@ def toolBibliographyText(versions_yml) {
             ( ! v_text.contains('star:') )          ? ''    : 'Dobin A, Davis CA, Schlesinger F, Drenkow J, Zaleski C, Jha S, Batut P, Chaisson M, Gingeras TR. STAR: ultrafast universal RNA-seq aligner. Bioinformatics. 2013 Jan 1;29(1):15-21. doi: <a href="https://doi.org/10.1093/bioinformatics/bts635">10.1093/bioinformatics/bts635</a>. Epub 2012 Oct 25. PMID: 23104886; PMCID: PMC3530905.',
             false                                   ? ''    : 'Gabriel, L., Hoff, K.J., Brůna, T. et al. TSEBRA: transcript selector for BRAKER. BMC Bioinformatics 22, 566 (2021). doi: <a href="https://doi.org/10.1186/s12859-021-04482-0">10.1186/s12859-021-04482-0</a>',
             false                                   ? ''    : 'Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: <a href="https://doi.org/10.1093/bioinformatics/btw354">10.1093/bioinformatics/btw354</a>',
-        ].findAll { it != '' }.collect { it -> "<li>$it</li>" }.join('').trim()
+        ].findAll { it -> it != '' }.collect { it -> "<li>$it</li>" }.join('').trim()
 
     return reference_text
 }

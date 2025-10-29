@@ -1,11 +1,11 @@
-process FASTAVALIDATOR {
+process FALINT {
     tag "$meta.id"
-    label 'process_single'
+    label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/py_fasta_validator:0.6--py37h595c7a6_0':
-        'biocontainers/py_fasta_validator:0.6--py37h595c7a6_0' }"
+        'https://depot.galaxyproject.org/singularity/fa-lint:1.2.0--he881be0_0':
+        'biocontainers/fa-lint:1.2.0--he881be0_0' }"
 
     input:
     tuple val(meta), path(fasta)
@@ -20,43 +20,41 @@ process FASTAVALIDATOR {
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def args = task.ext.args ?: ''
     """
-    py_fasta_validator \\
-        -f $fasta \\
-        2> "${prefix}.error.log" \\
-        || echo "Errors from fasta_validate printed to ${prefix}.error.log"
+    fa-lint \\
+        -threads ${task.cpus} \\
+        $args \\
+        -fasta $fasta \\
+        > >(tee ${prefix}.success.log >&1) \\
+        2> >(tee ${prefix}.error.log >&2) \\
+        || echo "Errors from fa-lint printed to ${prefix}.error.log"
 
-    if [ \$(cat "${prefix}.error.log" | wc -l) -gt 0 ]; then
+    if [ \$(cat ${prefix}.error.log | wc -l) -gt 0 ]; then
         echo "Validation failed..."
 
-        cat \\
-            "${prefix}.error.log"
+        rm ${prefix}.success.log
     else
         echo "Validation successful..."
 
-        mv \\
-            "${prefix}.error.log" \\
-            fasta_validate.stderr
-
-        echo "Validation successful..." \\
-            > "${prefix}.success.log"
+        rm ${prefix}.error.log
     fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        py_fasta_validator: \$(py_fasta_validator -v | sed 's/.* version //')
+        fa-lint: \$(fa-lint -version)
     END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    echo "Validation successful..." \\
+    echo "Fasta is valid: $fasta" \\
         > "${prefix}.success.log"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        py_fasta_validator: \$(py_fasta_validator -v | sed 's/.* version //')
+        fa-lint: \$(fa-lint -version)
     END_VERSIONS
     """
 }
