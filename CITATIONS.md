@@ -70,9 +70,9 @@
 
   > Tomáš Brůna, Alexandre Lomsadze, Mark Borodovsky, GeneMark-EP+: eukaryotic gene prediction with self-training in the space of genes and proteins, NAR Genomics and Bioinformatics, Volume 2, Issue 2, June 2020, lqaa026, doi: <a href="https://doi.org/10.1093/nargab/lqaa026">10.1093/nargab/lqaa026</a>
 
-- py_fasta_validator, [MIT](https://github.com/linsalrob/py_fasta_validator/blob/master/LICENSE)
+- fa-lint, [MIT](https://github.com/GallVp/fa-lint/blob/master/LICENSE)
 
-  > Edwards, R.A. 2019. fasta_validate: a fast and efficient fasta validator written in pure C. doi: <a href="https://doi.org/10.5281/zenodo.2532044">10.5281/zenodo.2532044</a>
+  > <https://github.com/GallVp/fa-lint>
 
 - RepeatMasker, [Open Software License v. 2.1](https://github.com/rmhubley/RepeatMasker/blob/master/LICENSE)
 

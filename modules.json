@@ -108,8 +108,7 @@
                     "agat/spfilterbyorfsize": {
                         "branch": "master",
                         "git_sha": "55ed5f4aabcdcd7a4cc44e1700f956756c7e8532",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/agat/spfilterbyorfsize/agat-spfilterbyorfsize.diff"
+                        "installed_by": ["modules"]
                     },
                     "agat/spfilterfeaturefromkilllist": {
                         "branch": "master",
@@ -134,14 +133,12 @@
                     "busco/busco": {
                         "branch": "master",
                         "git_sha": "36c6c8445284e021d95ce30cdf743baef66b21aa",
-                        "installed_by": ["fasta_gxf_busco_plot"],
-                        "patch": "modules/nf-core/busco/busco/busco-busco.diff"
+                        "installed_by": ["fasta_gxf_busco_plot"]
                     },
                     "busco/generateplot": {
                         "branch": "master",
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
-                        "installed_by": ["fasta_gxf_busco_plot"],
-                        "patch": "modules/nf-core/busco/generateplot/busco-generateplot.diff"
+                        "installed_by": ["fasta_gxf_busco_plot"]
                     },
                     "cat/cat": {
                         "branch": "master",
@@ -161,18 +158,18 @@
                     "diamond/makedb": {
                         "branch": "master",
                         "git_sha": "c44e4bb090eb4c9136f6d3f786285e4a9000f38f",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/diamond/makedb/diamond-makedb.diff"
+                        "installed_by": ["modules"]
                     },
                     "eggnogmapper": {
                         "branch": "master",
                         "git_sha": "c44e4bb090eb4c9136f6d3f786285e4a9000f38f",
                         "installed_by": ["modules"]
                     },
-                    "fastavalidator": {
+                    "falint": {
                         "branch": "master",
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/falint/falint.diff"
                     },
                     "fastp": {
                         "branch": "master",

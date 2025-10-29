@@ -21,7 +21,7 @@
 
 <p align="center"><img src="docs/img/genepal.png"></p>
 
-- [fasta_validator](https://github.com/linsalrob/fasta_validator): Validate genome FASTA
+- [fa-lint](https://github.com/GallVp/fa-lint): Validate genome FASTA
 - [RepeatModeler](https://github.com/Dfam-consortium/RepeatModeler) or [EDTA](https://github.com/oushujun/EDTA): Create TE library
 - [RepeatMasker](https://github.com/rmhubley/RepeatMasker): Soft mask the genome fasta
 - [sra-tools](https://github.com/ncbi/sra-tools): RNASeq data download from SRA

@@ -1,0 +1,45 @@
+nextflow_pipeline {
+
+    name "Test for invalid assembly sequence IDs"
+    script "main.nf"
+
+    test("invalid fasta IDs - error - terminate gracefully") {
+
+        def assemblysheet_path = "$metaDir" + '/assemblysheet.csv'
+        def assemblysheet_text = """\
+            tag,fasta,is_masked
+            invalid,$baseDir/tests/invalid/testdata/invalid.fasta.gz,no
+            """.stripIndent()
+
+        setup {
+            (new File(assemblysheet_path)).text = assemblysheet_text
+        }
+
+        when {
+            params {
+                input               = assemblysheet_path
+                protein_evidence    = "https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/sarscov2/genome/proteome.fasta.gz"
+                busco_skip          = true
+                outdir              = "$outputDir"
+            }
+        }
+
+        then {
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.stdout.toString().contains("Invalid FASTA ID 'lcl|Lmh1Chr3' near line #6260: IDs must match [A-Za-z][A-Za-z0-9_]") },
+                { assert snapshot(
+                    [
+                        'successful tasks': workflow.trace.succeeded().size(),
+                        'versions': removeNextflowVersion("$outputDir/pipeline_info/genepal_software_mqc_versions.yml"),
+                        'stable paths': stable_path
+                    ]
+                ).match() }
+            )
+        }
+
+    }
+
+}

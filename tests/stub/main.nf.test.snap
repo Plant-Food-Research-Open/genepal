@@ -52,8 +52,8 @@
                     "EXTRACT_PROTEINS": {
                         "gffread": "0.12.7"
                     },
-                    "FASTAVALIDATOR": {
-                        "py_fasta_validator": 0.6
+                    "FALINT": {
+                        "fa-lint": "1.2.0"
                     },
                     "FASTP": {
                         "fastp": "1.0.1"
@@ -193,6 +193,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-28T10:40:53.30906"
+        "timestamp": "2025-10-29T11:04:58.78421"
     }
 }

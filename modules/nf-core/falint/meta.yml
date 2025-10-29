@@ -1,24 +1,19 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
-name: "fastavalidator"
-description: |
-  "Python C-extension for a simple validator for fasta files. The module emits the validated file or an
-  error log upon validation failure."
+name: "falint"
+description: A fasta linter/validator
 keywords:
   - fasta
   - validation
   - genome
 tools:
-  - fasta_validate:
-      description: |
-        "Python C-extension for a simple C code to validate a fasta file. It only checks a few things,
-        and by default only sets its response via the return code,
-        so you will need to check that!"
-      homepage: "https://github.com/linsalrob/py_fasta_validator"
-      documentation: "https://github.com/linsalrob/py_fasta_validator"
-      tool_dev_url: "https://github.com/linsalrob/py_fasta_validator"
-      doi: "10.5281/zenodo.5002710"
+  - "falint":
+      description: "A Fasta linter/validator"
+      homepage: "https://github.com/GallVp/fa-lint"
+      documentation: "https://github.com/GallVp/fa-lint"
+      tool_dev_url: "https://github.com/GallVp/fa-lint"
       licence: ["MIT"]
       identifier: ""
+
 input:
   - - meta:
         type: map

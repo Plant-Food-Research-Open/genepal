@@ -1,7 +1,7 @@
 include { GUNZIP as GUNZIP_TARGET_ASSEMBLY      } from '../../modules/nf-core/gunzip'
 include { GUNZIP as GUNZIP_TE_LIBRARY           } from '../../modules/nf-core/gunzip'
 include { SEQKIT_RMDUP                          } from '../../modules/nf-core/seqkit/rmdup/main.nf'
-include { FASTAVALIDATOR                        } from '../../modules/nf-core/fastavalidator'
+include { FALINT                                } from '../../modules/nf-core/falint'
 include { REPEATMODELER_BUILDDATABASE           } from '../../modules/nf-core/repeatmodeler/builddatabase'
 include { REPEATMODELER_REPEATMODELER           } from '../../modules/nf-core/repeatmodeler/repeatmodeler'
 include { REPEATMASKER_REPEATMASKER             } from '../../modules/gallvp/repeatmasker/repeatmasker'
@@ -20,11 +20,11 @@ workflow PREPARE_ASSEMBLY {
     ch_is_masked                // channel: [ meta, val(true|false) ]
 
     main:
-    ch_versions                 = Channel.empty()
+    ch_versions                 = channel.empty()
 
     // MODULE: GUNZIP_TARGET_ASSEMBLY
     target_assembly_branch      = target_assembly
-                                | branch { meta, file ->
+                                | branch { _meta, file ->
                                     gz: "$file".endsWith(".gz")
                                     rest: !"$file".endsWith(".gz")
                                 }
@@ -55,22 +55,22 @@ workflow PREPARE_ASSEMBLY {
 
     ch_versions                 = ch_versions.mix(SEQKIT_RMDUP.out.versions.first())
 
-    // MODULE: FASTAVALIDATOR
-    FASTAVALIDATOR ( ch_nondup_fw_assembly )
+    // MODULE: FALINT
+    FALINT ( ch_nondup_fw_assembly )
 
     ch_validated_assembly       = ch_nondup_fw_assembly
-                                | join(FASTAVALIDATOR.out.success_log)
-                                | map { meta, fasta, log -> [ meta, fasta ] }
-    ch_versions                 = ch_versions.mix(FASTAVALIDATOR.out.versions.first())
+                                | join(FALINT.out.success_log)
+                                | map { meta, fasta, _log -> [ meta, fasta ] }
+    ch_versions                 = ch_versions.mix(FALINT.out.versions.first())
 
-    FASTAVALIDATOR.out.error_log
-    | map { meta, log ->
-        log.warn "FASTAVALIDATOR failed for ${meta.id} with error: ${log}. ${meta.id} is excluded from further analysis."
+    FALINT.out.error_log
+    | map { meta, log_f ->
+        log.warn "FA-LINT failed for assembly '${meta.id}' with error,\n${log_f.readLines()}.\nAssembly '${meta.id}' is excluded from further analysis."
     }
 
     // MODULE: GUNZIP_TE_LIBRARY
     ch_te_library_branch        = te_library
-                                | branch { meta, file ->
+                                | branch { _meta, file ->
                                     gz: "$file".endsWith(".gz")
                                     rest: !"$file".endsWith(".gz")
                                 }
@@ -105,13 +105,13 @@ workflow PREPARE_ASSEMBLY {
                                 | join(
                                     ch_gunzip_te_library, remainder: true
                                 )
-                                | filter { meta, assembly, teLib ->
+                                | filter { _meta, assembly, teLib ->
                                     teLib == null && ( assembly != null )
                                 }
-                                | map { meta, assembly, teLib -> [ meta, assembly ] }
+                                | map { meta, assembly, _teLib -> [ meta, assembly ] }
 
     ch_edta_inputs              = repeat_annotator != 'edta'
-                                ? Channel.empty()
+                                ? channel.empty()
                                 : ch_annotator_inputs
 
     FASTA_EDTA_LAI(
@@ -124,7 +124,7 @@ workflow PREPARE_ASSEMBLY {
 
     // MODULE: REPEATMODELER_BUILDDATABASE
     ch_repeatmodeler_inputs     = repeat_annotator != 'repeatmodeler'
-                                ? Channel.empty()
+                                ? channel.empty()
                                 : ch_annotator_inputs
 
     REPEATMODELER_BUILDDATABASE ( ch_repeatmodeler_inputs )
@@ -145,8 +145,8 @@ workflow PREPARE_ASSEMBLY {
 
     // MODULE: REPEATMASKER_REPEATMASKER
     REPEATMASKER_REPEATMASKER(
-        ch_assembly_and_te_lib.map { meta, assembly, teLib -> [ meta, assembly ] },
-        ch_assembly_and_te_lib.map { meta, assembly, teLib -> teLib },
+        ch_assembly_and_te_lib.map { meta, assembly, _teLib -> [ meta, assembly ] },
+        ch_assembly_and_te_lib.map { _meta, _assembly, teLib -> teLib },
     )
 
     ch_masked_assembly          = ch_unmasked_masked_branch.masked
@@ -158,7 +158,7 @@ workflow PREPARE_ASSEMBLY {
     // MODULE: CUSTOM_RMOUTTOGFF3
     ch_RMOUTTOGFF3_input        = repeatmasker_save_outputs
                                 ? ch_repeatmasker_out
-                                : Channel.empty()
+                                : channel.empty()
     CUSTOM_RMOUTTOGFF3 ( ch_RMOUTTOGFF3_input )
 
     ch_versions                 = ch_versions.mix(CUSTOM_RMOUTTOGFF3.out.versions.first())
@@ -175,7 +175,7 @@ workflow PREPARE_ASSEMBLY {
 
     STAR_GENOMEGENERATE(
         ch_genomegenerate_inputs,
-        ch_genomegenerate_inputs.map { meta, fasta -> [ [], [] ] }
+        ch_genomegenerate_inputs.map { _meta, _fasta -> [ [], [] ] }
     )
 
     ch_assembly_index           = STAR_GENOMEGENERATE.out.index
