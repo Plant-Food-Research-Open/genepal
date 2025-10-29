@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 1. Updated the nf-core template to `3.4.1`
 2. Update modules and sub-workflows from nf-core/modules and GallVp/nxf-components
 
+### `Fixed`
+
+1. Fixed an issue where some genes with introns shorter than 10bp were not marked for exclusion correctly [#89](https://github.com/Plant-Food-Research-Open/genepal/issues/89)
+
 ### `Dependencies`
 
 1. Nextflow!>=25.04.0
