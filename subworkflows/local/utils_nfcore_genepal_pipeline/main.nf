@@ -249,6 +249,7 @@ workflow PIPELINE_INITIALISATION {
                                     | splitText
                                     : channel.fromPath(params.protein_evidence)
                                 )
+                                | filter { it -> "$it".strip() != '' }
                                 | map { file_path ->
 
                                     def file_handle = ( file_path instanceof String )

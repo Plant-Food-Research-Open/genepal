@@ -1,5 +1,5 @@
 {
-    "invalid fasta IDs - error - terminate gracefully": {
+    "protein fasta contains spaces - ignore gracefully - fail at invalid Fasta": {
         "content": [
             {
                 "successful tasks": 6,
@@ -32,6 +32,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-29T16:53:20.433547"
+        "timestamp": "2025-10-29T17:27:47.579396"
     }
 }
