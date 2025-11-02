@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 2. Fixed an issue where Fasta IDs such as `>lcl|Lmh1Chr1` caused the pipeline to fail due to IDs being changed by BRAKER3 [#161](https://github.com/Plant-Food-Research-Open/genepal/issues/161)
 3. Fixed an issue which caused a pipeline crash where there were empty lines in the protein evidence file [#166](https://github.com/Plant-Food-Research-Open/genepal/issues/166)
 4. Fixed an issue where the pipeline failed when liftoff Fasta and Gff had the same file name and the Gff extension was `gff3` [#160](https://github.com/Plant-Food-Research-Open/genepal/issues/160)
+5. Fixed an issue where STAR_ALIGN failed on large genomes in sorting the output BAM [#163](https://github.com/Plant-Food-Research-Open/genepal/issues/163)
 
 ### `Dependencies`
 
