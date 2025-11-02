@@ -148,7 +148,7 @@ workflow FASTA_GXF_BUSCO_PLOT {
                                                     config:     config
                                                     cleanup:    cleanup
                                                 }
-                                                
+
 
     BUSCO_ANNOTATION(
         ch_busco_annotation_inputs.fasta,

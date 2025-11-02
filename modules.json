@@ -167,9 +167,8 @@
                     },
                     "falint": {
                         "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/falint/falint.diff"
+                        "git_sha": "40d96d59355c30d2c48fb0b694946143c1bac24c",
+                        "installed_by": ["modules"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -283,9 +282,8 @@
                 "nf-core": {
                     "fasta_gxf_busco_plot": {
                         "branch": "master",
-                        "git_sha": "de5b67889ef5f53d6996fb4dac300ed399a51212",
-                        "installed_by": ["subworkflows"],
-                        "patch": "subworkflows/nf-core/fasta_gxf_busco_plot/fasta_gxf_busco_plot.diff"
+                        "git_sha": "488a9646d5a33692d348066846e3b1f9347c4128",
+                        "installed_by": ["subworkflows"]
                     },
                     "fastq_download_prefetch_fasterqdump_sratools": {
                         "branch": "master",
