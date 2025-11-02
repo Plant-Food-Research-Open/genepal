@@ -76,6 +76,8 @@ runs:
 
         if grep -q 'full - stub' nf-test.log; then
           echo "cleanup=YES" >> $GITHUB_OUTPUT
+        elif grep -q 'liftoff - dummy - same input output name - stub' nf-test.log; then
+          echo "cleanup=YES" >> $GITHUB_OUTPUT
         else
           echo "cleanup=NO" >> $GITHUB_OUTPUT
         fi
