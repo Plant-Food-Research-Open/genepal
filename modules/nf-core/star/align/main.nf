@@ -50,7 +50,7 @@ process STAR_ALIGN {
     attrRG          = args.contains("--outSAMattrRGline") ? "" : "--outSAMattrRGline 'ID:$prefix' $seq_center_arg 'SM:$prefix' $seq_platform_arg"
     def out_sam_type    = (args.contains('--outSAMtype')) ? '' : '--outSAMtype BAM Unsorted'
     mv_unsorted_bam = (args.contains('--outSAMtype BAM Unsorted SortedByCoordinate')) ? "mv ${prefix}.Aligned.out.bam ${prefix}.Aligned.unsort.out.bam" : ''
-    def memory_limit = args.contains('--limitBAMsortRAM') ? '' : "--limitBAMsortRAM ${ ( task.memory.toBytes() * 0.9 ).toInteger() }"
+    def memory_limit = args.contains('--limitBAMsortRAM') ? '' : "--limitBAMsortRAM ${ ( task.memory.bytes * 0.9 ).round() }"
     """
     STAR \\
         --genomeDir $index \\
@@ -84,7 +84,7 @@ process STAR_ALIGN {
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}"
-    def memory_limit = args.contains('--limitBAMsortRAM') ? '' : "--limitBAMsortRAM ${ ( task.memory.toBytes() * 0.9 ).toInteger() }"
+    def memory_limit = args.contains('--limitBAMsortRAM') ? '' : "--limitBAMsortRAM ${ ( task.memory.bytes * 0.9 ).round() }"
     """
     echo "limitBAMsortRAM: $memory_limit"
     echo "" | gzip > ${prefix}.unmapped_1.fastq.gz
