@@ -4,18 +4,19 @@ A Nextflow pipeline for consensus, phased and pan-genome annotation.
 
 ## Input/output options
 
-| Parameter                 | Description                                                                                              | Type      | Default | Required | Hidden |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- | --------- | ------- | -------- | ------ |
-| `input`                   | Target assemblies listed in a CSV sheet                                                                  | `string`  |         | True     |        |
-| `protein_evidence`        | Protein evidence provided as a fasta file or multiple fasta files listed in a plain txt file             | `string`  |         | True     |        |
-| `eggnogmapper_db_dir`     | Eggnogmapper database directory                                                                          | `string`  |         |          |        |
-| `eggnogmapper_tax_scope`  | Eggnogmapper taxonomy scopre. Eukaryota: 2759, Viridiplantae: 33090, Archaea: 2157, Bacteria: 2, root: 1 | `integer` | 1       |          |        |
-| `rna_evidence`            | FASTQ/BAM samples listed in a CSV sheet                                                                  | `string`  |         |          |        |
-| `liftoff_annotations`     | Reference annotations listed in a CSV sheet                                                              | `string`  |         |          |        |
-| `orthofinder_annotations` | Additional annotations for orthology listed in a CSV sheet                                               | `string`  |         |          |        |
-| `outdir`                  | The output directory where the results will be saved                                                     | `string`  |         | True     |        |
-| `email`                   | Email address for completion summary.                                                                    | `string`  |         |          | True   |
-| `tags`                    | One or more comma separated tags for nf-shard                                                            | `string`  |         |          |        |
+| Parameter                    | Description                                                                                              | Type      | Default | Required | Hidden |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------- | --------- | ------- | -------- | ------ |
+| `input`                      | Target assemblies listed in a CSV sheet                                                                  | `string`  |         | True     |        |
+| `strict_fasta_id_validation` | Only allow alphanumeric characters and underscore in assembly Fasta IDs                                  | `boolean` | True    |          |        |
+| `protein_evidence`           | Protein evidence provided as a fasta file or multiple fasta files listed in a plain txt file             | `string`  |         | True     |        |
+| `eggnogmapper_db_dir`        | Eggnogmapper database directory                                                                          | `string`  |         |          |        |
+| `eggnogmapper_tax_scope`     | Eggnogmapper taxonomy scopre. Eukaryota: 2759, Viridiplantae: 33090, Archaea: 2157, Bacteria: 2, root: 1 | `integer` | 1       |          |        |
+| `rna_evidence`               | FASTQ/BAM samples listed in a CSV sheet                                                                  | `string`  |         |          |        |
+| `liftoff_annotations`        | Reference annotations listed in a CSV sheet                                                              | `string`  |         |          |        |
+| `orthofinder_annotations`    | Additional annotations for orthology listed in a CSV sheet                                               | `string`  |         |          |        |
+| `outdir`                     | The output directory where the results will be saved                                                     | `string`  |         | True     |        |
+| `email`                      | Email address for completion summary.                                                                    | `string`  |         |          | True   |
+| `tags`                       | One or more comma separated tags for nf-shard                                                            | `string`  |         |          |        |
 
 ## Repeat annotation options
 

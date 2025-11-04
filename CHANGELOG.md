@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 1. Updated the nf-core template to `3.4.1`
 2. Update modules and sub-workflows from nf-core/modules and GallVp/nxf-components
 3. Add parameter `--tags` to support nf-shard tags
+4. Added parameter `--strict_fasta_id_validation` to disable strict Fasta ID validation for NCBI assemblies with Fasta IDs containing periods ('.')
 
 ### `Fixed`
 

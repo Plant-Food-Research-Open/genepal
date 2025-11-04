@@ -21,6 +21,12 @@
                     "description": "Target assemblies listed in a CSV sheet",
                     "fa_icon": "fas fa-file-csv"
                 },
+                "strict_fasta_id_validation": {
+                    "type": "boolean",
+                    "default": true,
+                    "fa_icon": "fas fa-question-circle",
+                    "description": "Only allow alphanumeric characters and underscore in assembly Fasta IDs"
+                },
                 "protein_evidence": {
                     "type": "string",
                     "description": "Protein evidence provided as a fasta file or multiple fasta files listed in a plain txt file",
