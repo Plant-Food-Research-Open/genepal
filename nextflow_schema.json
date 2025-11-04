@@ -80,6 +80,11 @@
                     "fa_icon": "fas fa-envelope",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
                     "hidden": true
+                },
+                "tags": {
+                    "type": "string",
+                    "fa_icon": "fas fa-tags",
+                    "description": "One or more comma separated tags for nf-shard"
                 }
             }
         },
@@ -277,7 +282,7 @@
                     "type": "integer",
                     "default": 24,
                     "fa_icon": "fas fa-hashtag",
-                    "description": "Filter genes with open reading frames shorter than the specified number of amino acids excluding the stop codon. If set to `null`, this filter step is skipped.",
+                    "description": "Filter genes with ORFs shorter than the specified number of AAs excluding the stop codon. If `null`, this filter is disabled.",
                     "minimum": 3
                 }
             }
@@ -427,7 +432,6 @@
                     "type": "string",
                     "description": "Incoming hook URL for messaging service",
                     "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 },
                 "validate_params": {

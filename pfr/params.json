@@ -8,6 +8,7 @@
     "orthofinder_annotations": null,
     "outdir": "results",
     "email": null,
+    "tags": "plant-food-research-open,genepal,pfr",
     "repeat_annotator": "repeatmodeler",
     "save_annotated_te_lib": false,
     "edta_is_sensitive": false,
