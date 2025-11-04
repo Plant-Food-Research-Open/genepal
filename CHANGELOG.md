@@ -3,12 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## v1.0.0 - [03-Nov-2025]
+## v1.0.0 - [05-Nov-2025]
 
 ### `Added`
 
 1. Updated the nf-core template to `3.4.1`
 2. Update modules and sub-workflows from nf-core/modules and GallVp/nxf-components
+3. Add parameter `--tags` to support nf-shard tags
 
 ### `Fixed`
 
