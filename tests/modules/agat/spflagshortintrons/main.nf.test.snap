@@ -1,0 +1,35 @@
+{
+    "Label 1bp intron with short_intron": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gff:md5,59037cf34b41c8cd452aa62a5c167ac6"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,dbe13b2cc503489d07de07573a86c2b8"
+                ],
+                "gff": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gff:md5,59037cf34b41c8cd452aa62a5c167ac6"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,dbe13b2cc503489d07de07573a86c2b8"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-29T09:58:17.926731"
+    }
+}

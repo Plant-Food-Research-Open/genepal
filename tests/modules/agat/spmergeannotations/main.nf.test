@@ -1,0 +1,47 @@
+nextflow_process {
+
+    name "Test Process AGAT_SPMERGEANNOTATIONS"
+    script "../../../../modules/nf-core/agat/spmergeannotations/main.nf"
+    process "AGAT_SPMERGEANNOTATIONS"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "agat"
+    tag "agat/spmergeannotations"
+
+    // Test to show that agat merge fuses two genes into one
+    //
+    // Issue #153: <https://github.com/Plant-Food-Research-Open/genepal/issues/153>
+    test("Merge two genes into one") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    [
+                        file("$baseDir" + '/tests/modules/agat/spmergeannotations/testdata/file1.gff', checkIfExists: true), // 10 genes
+                        file("$baseDir" + '/tests/modules/agat/spmergeannotations/testdata/file2.gff', checkIfExists: true) // 5 genes
+                    ]
+                ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+
+            def featureLines = file(process.out.gff[0][1]).text.readLines().findAll { ! it.startsWith('#') }
+            def geneLines = featureLines.collect { it.split('\t') }.findAll { it[2] == 'gene' }
+
+            with(geneLines) {
+                assert size() != 15 // 10 + 5
+                assert size() == 14 // 2 genes from file1 were fused into 1
+            }
+        }
+
+    }
+
+}

@@ -4,26 +4,28 @@ A Nextflow pipeline for consensus, phased and pan-genome annotation.
 
 ## Input/output options
 
-| Parameter                 | Description                                                                                              | Type      | Default | Required | Hidden |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- | --------- | ------- | -------- | ------ |
-| `input`                   | Target assemblies listed in a CSV sheet                                                                  | `string`  |         | True     |        |
-| `protein_evidence`        | Protein evidence provided as a fasta file or multiple fasta files listed in a plain txt file             | `string`  |         | True     |        |
-| `eggnogmapper_db_dir`     | Eggnogmapper database directory                                                                          | `string`  |         |          |        |
-| `eggnogmapper_tax_scope`  | Eggnogmapper taxonomy scopre. Eukaryota: 2759, Viridiplantae: 33090, Archaea: 2157, Bacteria: 2, root: 1 | `integer` | 1       |          |        |
-| `rna_evidence`            | FASTQ/BAM samples listed in a CSV sheet                                                                  | `string`  |         |          |        |
-| `liftoff_annotations`     | Reference annotations listed in a CSV sheet                                                              | `string`  |         |          |        |
-| `orthofinder_annotations` | Additional annotations for orthology listed in a CSV sheet                                               | `string`  |         |          |        |
-| `outdir`                  | The output directory where the results will be saved                                                     | `string`  |         | True     |        |
-| `email`                   | Email address for completion summary.                                                                    | `string`  |         |          | True   |
+| Parameter                    | Description                                                                                              | Type      | Default | Required | Hidden |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------- | --------- | ------- | -------- | ------ |
+| `input`                      | Target assemblies listed in a CSV sheet                                                                  | `string`  |         | True     |        |
+| `strict_fasta_id_validation` | Only allow alphanumeric characters and underscore in assembly Fasta IDs                                  | `boolean` | True    |          |        |
+| `protein_evidence`           | Protein evidence provided as a fasta file or multiple fasta files listed in a plain txt file             | `string`  |         | True     |        |
+| `eggnogmapper_db_dir`        | Eggnogmapper database directory                                                                          | `string`  |         |          |        |
+| `eggnogmapper_tax_scope`     | Eggnogmapper taxonomy scopre. Eukaryota: 2759, Viridiplantae: 33090, Archaea: 2157, Bacteria: 2, root: 1 | `integer` | 1       |          |        |
+| `rna_evidence`               | FASTQ/BAM samples listed in a CSV sheet                                                                  | `string`  |         |          |        |
+| `liftoff_annotations`        | Reference annotations listed in a CSV sheet                                                              | `string`  |         |          |        |
+| `orthofinder_annotations`    | Additional annotations for orthology listed in a CSV sheet                                               | `string`  |         |          |        |
+| `outdir`                     | The output directory where the results will be saved                                                     | `string`  |         | True     |        |
+| `email`                      | Email address for completion summary.                                                                    | `string`  |         |          | True   |
+| `tags`                       | One or more comma separated tags for nf-shard                                                            | `string`  |         |          |        |
 
 ## Repeat annotation options
 
-| Parameter                   | Description                                | Type      | Default       | Required | Hidden |
-| --------------------------- | ------------------------------------------ | --------- | ------------- | -------- | ------ |
-| `repeat_annotator`          | 'edta' or 'repeatmodeler'                  | `string`  | repeatmodeler |          |        |
-| `save_annotated_te_lib`     | Save annotated TE library or not?          | `boolean` |               |          |        |
-| `edta_is_sensitive`         | Use '--sensitive 1' flag with EDTA or not? | `boolean` |               |          |        |
-| `repeatmasker_save_outputs` | Save the repeat-masked genome or not?      | `boolean` |               |          |        |
+| Parameter                   | Description                                                   | Type      | Default       | Required | Hidden |
+| --------------------------- | ------------------------------------------------------------- | --------- | ------------- | -------- | ------ |
+| `repeat_annotator`          | 'edta' or 'repeatmodeler' (accepted: `edta`\|`repeatmodeler`) | `string`  | repeatmodeler |          |        |
+| `save_annotated_te_lib`     | Save annotated TE library or not?                             | `boolean` |               |          |        |
+| `edta_is_sensitive`         | Use '--sensitive 1' flag with EDTA or not?                    | `boolean` |               |          |        |
+| `repeatmasker_save_outputs` | Save the repeat-masked genome or not?                         | `boolean` |               |          |        |
 
 ## RNASeq pre-processing options
 
@@ -59,13 +61,13 @@ A Nextflow pipeline for consensus, phased and pan-genome annotation.
 
 ## Post-annotation filtering options
 
-| Parameter                     | Description                                                                                                                                                     | Type      | Default | Required | Hidden |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------- | -------- | ------ |
-| `allow_isoforms`              | Allow multiple isoforms for gene models                                                                                                                         | `boolean` | True    |          |        |
-| `enforce_full_intron_support` | Require every model to have external evidence for all its introns                                                                                               | `boolean` | True    |          |        |
-| `filter_liftoff_by_hints`     | Use BRAKER hints to filter Liftoff models                                                                                                                       | `boolean` | True    |          |        |
-| `eggnogmapper_purge_nohits`   | Purge transcripts which do not have a hit against eggnog                                                                                                        | `boolean` |         |          |        |
-| `filter_genes_by_aa_length`   | Filter genes with open reading frames shorter than the specified number of amino acids excluding the stop codon. If set to `null`, this filter step is skipped. | `integer` | 24      |          |        |
+| Parameter                     | Description                                                                                                                   | Type      | Default | Required | Hidden |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | --------- | ------- | -------- | ------ |
+| `allow_isoforms`              | Allow multiple isoforms for gene models                                                                                       | `boolean` | True    |          |        |
+| `enforce_full_intron_support` | Require every model to have external evidence for all its introns                                                             | `boolean` | True    |          |        |
+| `filter_liftoff_by_hints`     | Use BRAKER hints to filter Liftoff models                                                                                     | `boolean` | True    |          |        |
+| `eggnogmapper_purge_nohits`   | Purge transcripts which do not have a hit against eggnog                                                                      | `boolean` |         |          |        |
+| `filter_genes_by_aa_length`   | Filter genes with ORFs shorter than the specified number of AAs excluding the stop codon. If `null`, this filter is disabled. | `integer` | 24      |          |        |
 
 ## Annotation output options
 
@@ -99,15 +101,18 @@ Parameters used to describe centralised config profiles. These should not be edi
 
 Less common options for the pipeline, typically set in a config file.
 
-| Parameter                      | Description                                                                                                                                                                            | Type      | Default                                                  | Required | Hidden |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | -------------------------------------------------------- | -------- | ------ |
-| `version`                      | Display version and exit.                                                                                                                                                              | `boolean` |                                                          |          | True   |
-| `publish_dir_mode`             | Method used to save pipeline results to output directory.                                                                                                                              | `string`  | copy                                                     |          | True   |
-| `email_on_fail`                | Email address for completion summary, only when pipeline fails.                                                                                                                        | `string`  |                                                          |          | True   |
-| `plaintext_email`              | Send plain-text email instead of HTML.                                                                                                                                                 | `boolean` |                                                          |          | True   |
-| `max_multiqc_email_size`       | File size limit when attaching MultiQC reports to summary emails.                                                                                                                      | `string`  | 25.MB                                                    |          | True   |
-| `monochrome_logs`              | Do not use coloured log outputs.                                                                                                                                                       | `boolean` |                                                          |          | True   |
-| `hook_url`                     | Incoming hook URL for messaging service <details><summary>Help</summary><small>Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.</small></details> | `string`  |                                                          |          | True   |
-| `validate_params`              | Boolean whether to validate parameters against the schema at runtime                                                                                                                   | `boolean` | True                                                     |          | True   |
-| `pipelines_testdata_base_path` | Base URL or local path to location of pipeline test dataset files                                                                                                                      | `string`  | https://raw.githubusercontent.com/nf-core/test-datasets/ |          | True   |
-| `trace_report_suffix`          | Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.                                                                            | `string`  |                                                          |          | True   |
+| Parameter                      | Description                                                                                                                        | Type                    | Default                                                  | Required | Hidden |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------- | -------- | ------ |
+| `version`                      | Display version and exit.                                                                                                          | `boolean`               |                                                          |          | True   |
+| `publish_dir_mode`             | Method used to save pipeline results to output directory. (accepted: `symlink`\|`rellink`\|`link`\|`copy`\|`copyNoFollow`\|`move`) | `string`                | copy                                                     |          | True   |
+| `email_on_fail`                | Email address for completion summary, only when pipeline fails.                                                                    | `string`                |                                                          |          | True   |
+| `plaintext_email`              | Send plain-text email instead of HTML.                                                                                             | `boolean`               |                                                          |          | True   |
+| `max_multiqc_email_size`       | File size limit when attaching MultiQC reports to summary emails.                                                                  | `string`                | 25.MB                                                    |          | True   |
+| `monochrome_logs`              | Do not use coloured log outputs.                                                                                                   | `boolean`               |                                                          |          | True   |
+| `hook_url`                     | Incoming hook URL for messaging service                                                                                            | `string`                |                                                          |          | True   |
+| `validate_params`              | Boolean whether to validate parameters against the schema at runtime                                                               | `boolean`               | True                                                     |          | True   |
+| `pipelines_testdata_base_path` | Base URL or local path to location of pipeline test dataset files                                                                  | `string`                | https://raw.githubusercontent.com/nf-core/test-datasets/ |          | True   |
+| `trace_report_suffix`          | Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.                        | `string`                |                                                          |          | True   |
+| `help`                         | Display the help message.                                                                                                          | `['boolean', 'string']` |                                                          |          |        |
+| `help_full`                    | Display the full detailed help message.                                                                                            | `boolean`               |                                                          |          |        |
+| `show_hidden`                  | Display hidden parameters in the help message (only works when --help or --help_full are provided).                                | `boolean`               |                                                          |          |        |

@@ -1,0 +1,105 @@
+nextflow_workflow {
+
+    name "Test Subworkflow FASTA_LIFTOFF"
+    script "../../../subworkflows/local/fasta_liftoff/main.nf"
+    workflow "FASTA_LIFTOFF"
+    config './nextflow.config'
+
+    tag "subworkflows"
+    tag "subworkflows_gallvp"
+    tag "subworkflows/fasta_liftoff"
+    tag "subworkflows/gff_tsebra_spfilterfeaturefromkilllist"
+
+    tag "gunzip"
+    tag "gffread"
+    tag "liftoff"
+    tag "agat"
+    tag "agat/spmergeannotations"
+    tag "agat/spflagshortintrons"
+    tag "agat/spfilterfeaturefromkilllist"
+
+    setup {
+        run('GUNZIP', alias: 'GUNZIP_GENOME_FASTA') {
+            script "../../../modules/nf-core/gunzip"
+
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/actinidia_chinensis/genome/chr1/genome.fasta.gz', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        run('GUNZIP', alias: 'GUNZIP_BRAKER_HINTS') {
+            script "../../../modules/nf-core/gunzip"
+
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.modules_testdata_base_path + 'genomics/eukaryotes/actinidia_chinensis/genome/chr1/genome.hints.gff.gz', checkIfExists: true)
+                ]
+                """
+            }
+        }
+    }
+
+
+    test("liftoff - GCF_019202715 - to - actinidia_chinensis") {
+
+        when {
+            workflow {
+                """
+                input[0]    = GUNZIP_GENOME_FASTA.out.gunzip
+
+                input[1]    = Channel.of([
+                    [ id:'ref' ],
+                    file ( "${baseDir}/tests/subworkflows/fasta_liftoff/testdata/GCF_019202715.1.fna.gz", checkIfExists: true )
+                ])
+                input[2]    = Channel.of([
+                    [ id:'ref' ],
+                    file ( "${baseDir}/tests/subworkflows/fasta_liftoff/testdata/GCF_019202715.1.gff.gz", checkIfExists: true )
+                ])
+
+                input[3]    = true // val_filter_liftoff_by_hints
+
+                input[4]    = GUNZIP_BRAKER_HINTS.out.gunzip
+
+                input[5]    = Channel.of ( file("${baseDir}/assets/tsebra-template.cfg", checkIfExists: true) )
+                            | map { cfg ->
+                                def enforce_full_intron_support = true
+                                def param_intron_support = enforce_full_intron_support ? '1.0' : '0.0'
+
+                                def param_e1 = params.allow_isoforms ? '0.1'    : '0.0'
+                                def param_e2 = params.allow_isoforms ? '0.5'    : '0.0'
+                                def param_e3 = params.allow_isoforms ? '0.05'   : '0.0'
+                                def param_e4 = params.allow_isoforms ? '0.2'    : '0.0'
+
+                                [
+                                    'tsebra-config.cfg',
+                                    cfg
+                                    .text
+                                    .replace('PARAM_INTRON_SUPPORT', param_intron_support)
+                                    .replace('PARAM_E1', param_e1)
+                                    .replace('PARAM_E2', param_e2)
+                                    .replace('PARAM_E3', param_e3)
+                                    .replace('PARAM_E4', param_e4)
+                                ]
+                            }
+                            | collectFile
+
+                input[6]    = false // val_allow_isoforms
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(workflow.out).match()}
+            )
+        }
+    }
+}

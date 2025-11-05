@@ -4,13 +4,31 @@ repos:
     hooks:
       - id: prettier
         additional_dependencies:
-          - prettier@3.2.5
-
-  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: "3.1.2"
+          - prettier@3.6.2
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
     hooks:
-      - id: editorconfig-checker
-        alias: ec
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+        exclude: |
+          (?x)^(
+              .*ro-crate-metadata.json$|
+              modules/nf-core/.*|
+              modules/gallvp/.*|
+              subworkflows/nf-core/.*|
+              subworkflows/gallvp/.*|
+              .*\.snap$
+          )$
+      - id: end-of-file-fixer
+        exclude: |
+          (?x)^(
+              .*ro-crate-metadata.json$|
+              modules/nf-core/.*|
+              modules/gallvp/.*|
+              subworkflows/nf-core/.*|
+              subworkflows/gallvp/.*|
+              .*\.snap$
+          )$
   - repo: local
     hooks:
       - id: version_checks

@@ -7,82 +7,72 @@
                 "gallvp": {
                     "agat/spaddintrons": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["gxf_fasta_agat_spaddintrons_spextractsequences"]
                     },
                     "agat/spcomplementannotations": {
                         "branch": "main",
-                        "git_sha": "2a31a82b4d860637f21254471a2abb842410881c",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["modules"]
                     },
                     "agat/spextractsequences": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["gxf_fasta_agat_spaddintrons_spextractsequences"]
-                    },
-                    "agat/spflagshortintrons": {
-                        "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
-                        "installed_by": ["modules"]
-                    },
-                    "braker3": {
-                        "branch": "main",
-                        "git_sha": "0c2cfd1df81c748a3a07cd9279e1296a47b7fd9c",
-                        "installed_by": ["modules"]
                     },
                     "cat/cat": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["modules"]
                     },
                     "custom/restoregffids": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["fasta_edta_lai"]
                     },
                     "custom/rmouttogff3": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["modules"]
                     },
                     "custom/shortenfastaids": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["fasta_edta_lai"]
                     },
                     "edta/edta": {
                         "branch": "main",
-                        "git_sha": "a8939d36280e7d9037c7cf164eeede19e46546a4",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["fasta_edta_lai"]
                     },
                     "gunzip": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["modules"]
                     },
                     "ltrfinder": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["modules"]
                     },
                     "ltrharvest": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "61e6dea66709b1d55dfd89c2351d2fd44c09591d",
                         "installed_by": ["modules"]
                     },
                     "ltrretriever/lai": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["fasta_edta_lai"]
                     },
                     "ltrretriever/ltrretriever": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["modules"]
                     },
                     "repeatmasker/repeatmasker": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["modules"]
                     }
                 }
@@ -91,12 +81,12 @@
                 "gallvp": {
                     "fasta_edta_lai": {
                         "branch": "main",
-                        "git_sha": "7bf6fbca23edc94490ffa6709f52b2f71c6fb130",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["subworkflows"]
                     },
                     "gxf_fasta_agat_spaddintrons_spextractsequences": {
                         "branch": "main",
-                        "git_sha": "2af875f77d318445f12125e1a8aefdada60ecf6b",
+                        "git_sha": "e280f66c4701dcdfac1cd16539eac7304287ce50",
                         "installed_by": ["subworkflows"]
                     }
                 }
@@ -107,176 +97,184 @@
                 "nf-core": {
                     "agat/convertspgff2gtf": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "55ed5f4aabcdcd7a4cc44e1700f956756c7e8532",
                         "installed_by": ["modules"]
                     },
                     "agat/convertspgxf2gxf": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "55ed5f4aabcdcd7a4cc44e1700f956756c7e8532",
                         "installed_by": ["modules"]
                     },
                     "agat/spfilterbyorfsize": {
                         "branch": "master",
-                        "git_sha": "bbaee8e515e10d623cf255f04897c5d3696085da",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/agat/spfilterbyorfsize/agat-spfilterbyorfsize.diff"
+                        "git_sha": "55ed5f4aabcdcd7a4cc44e1700f956756c7e8532",
+                        "installed_by": ["modules"]
                     },
                     "agat/spfilterfeaturefromkilllist": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "55ed5f4aabcdcd7a4cc44e1700f956756c7e8532",
+                        "installed_by": ["modules"]
+                    },
+                    "agat/spflagshortintrons": {
+                        "branch": "master",
+                        "git_sha": "55ed5f4aabcdcd7a4cc44e1700f956756c7e8532",
                         "installed_by": ["modules"]
                     },
                     "agat/spmergeannotations": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "55ed5f4aabcdcd7a4cc44e1700f956756c7e8532",
+                        "installed_by": ["modules"]
+                    },
+                    "braker3": {
+                        "branch": "master",
+                        "git_sha": "3483424c15bb312d4be975df733522728736b374",
                         "installed_by": ["modules"]
                     },
                     "busco/busco": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["fasta_gxf_busco_plot"],
-                        "patch": "modules/nf-core/busco/busco/busco-busco.diff"
+                        "git_sha": "36c6c8445284e021d95ce30cdf743baef66b21aa",
+                        "installed_by": ["fasta_gxf_busco_plot"]
                     },
                     "busco/generateplot": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["fasta_gxf_busco_plot"],
-                        "patch": "modules/nf-core/busco/generateplot/busco-generateplot.diff"
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["fasta_gxf_busco_plot"]
                     },
                     "cat/cat": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "custom/sratoolsncbisettings": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["fastq_download_prefetch_fasterqdump_sratools"]
                     },
                     "diamond/makedb": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "c44e4bb090eb4c9136f6d3f786285e4a9000f38f",
                         "installed_by": ["modules"]
                     },
                     "eggnogmapper": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "c44e4bb090eb4c9136f6d3f786285e4a9000f38f",
                         "installed_by": ["modules"]
                     },
-                    "fastavalidator": {
+                    "falint": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "40d96d59355c30d2c48fb0b694946143c1bac24c",
                         "installed_by": ["modules"]
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "d082103d7976a2804f21225446cc110cbd822f4c",
+                        "git_sha": "d9ec4ef289ad39b8a662a7a12be50409b11df84b",
                         "installed_by": ["fastq_fastqc_umitools_fastp"]
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "b1966f36ec9de31927b2603d8f499960b2a4c294",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["fastq_fastqc_umitools_fastp", "modules"]
                     },
                     "gffcompare": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "gffread": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["fasta_gxf_busco_plot", "modules"]
                     },
                     "gt/gff3": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "gunzip": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "liftoff": {
                         "branch": "master",
-                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "7b50cb7be890e4b28cffb82e438cc6a8d7805d3f",
+                        "git_sha": "af27af1be706e6a2bb8fe454175b0cdf77f47b49",
                         "installed_by": ["modules"]
                     },
                     "orthofinder": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/orthofinder/orthofinder.diff"
                     },
                     "repeatmodeler/builddatabase": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "repeatmodeler/repeatmodeler": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "samtools/cat": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "c8be52dba1166c678e74cda9c3a3c221635c8bb1",
                         "installed_by": ["modules"]
                     },
                     "seqkit/rmdup": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "sortmerna": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "ddb0d667cf6cdee3bab9497241de4bbf6b88d8cc",
                         "installed_by": ["modules"]
                     },
                     "sratools/fasterqdump": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["fastq_download_prefetch_fasterqdump_sratools"]
                     },
                     "sratools/prefetch": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["fastq_download_prefetch_fasterqdump_sratools"]
                     },
                     "star/align": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
-                        "installed_by": ["modules"]
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/star/align/star-align.diff"
                     },
                     "star/genomegenerate": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "tsebra": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "umitools/extract": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "d855e94e07edc6460419e3e4a1ef0a85209ae596",
                         "installed_by": ["fastq_fastqc_umitools_fastp"]
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "05954dab2ff481bcb999f24455da29a5828af08d",
+                        "git_sha": "00ee87ebb541af0008596400ce6d5f66d79d5408",
                         "installed_by": ["modules"]
                     }
                 }
@@ -285,7 +283,7 @@
                 "nf-core": {
                     "fasta_gxf_busco_plot": {
                         "branch": "master",
-                        "git_sha": "ebfffb751c6c73b7a16afe7a1a35eb103f6a4563",
+                        "git_sha": "488a9646d5a33692d348066846e3b1f9347c4128",
                         "installed_by": ["subworkflows"]
                     },
                     "fastq_download_prefetch_fasterqdump_sratools": {
@@ -295,7 +293,7 @@
                     },
                     "fastq_fastqc_umitools_fastp": {
                         "branch": "master",
-                        "git_sha": "d082103d7976a2804f21225446cc110cbd822f4c",
+                        "git_sha": "d9ec4ef289ad39b8a662a7a12be50409b11df84b",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nextflow_pipeline": {
@@ -310,7 +308,7 @@
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "2fd2cd6d0e7b273747f32e465fdc6bcc3ae0814e",
+                        "git_sha": "4b406a74dc0449c0401ed87d5bfff4252fd277fd",
                         "installed_by": ["subworkflows"]
                     }
                 }

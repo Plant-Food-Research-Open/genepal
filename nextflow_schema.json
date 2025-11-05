@@ -21,6 +21,12 @@
                     "description": "Target assemblies listed in a CSV sheet",
                     "fa_icon": "fas fa-file-csv"
                 },
+                "strict_fasta_id_validation": {
+                    "type": "boolean",
+                    "default": true,
+                    "fa_icon": "fas fa-question-circle",
+                    "description": "Only allow alphanumeric characters and underscore in assembly Fasta IDs"
+                },
                 "protein_evidence": {
                     "type": "string",
                     "description": "Protein evidence provided as a fasta file or multiple fasta files listed in a plain txt file",
@@ -80,6 +86,11 @@
                     "fa_icon": "fas fa-envelope",
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
                     "hidden": true
+                },
+                "tags": {
+                    "type": "string",
+                    "fa_icon": "fas fa-tags",
+                    "description": "One or more comma separated tags for nf-shard"
                 }
             }
         },
@@ -277,7 +288,7 @@
                     "type": "integer",
                     "default": 24,
                     "fa_icon": "fas fa-hashtag",
-                    "description": "Filter genes with open reading frames shorter than the specified number of amino acids excluding the stop codon. If set to `null`, this filter step is skipped.",
+                    "description": "Filter genes with ORFs shorter than the specified number of AAs excluding the stop codon. If `null`, this filter is disabled.",
                     "minimum": 3
                 }
             }
@@ -427,7 +438,6 @@
                     "type": "string",
                     "description": "Incoming hook URL for messaging service",
                     "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 },
                 "validate_params": {
@@ -449,6 +459,18 @@
                     "fa_icon": "far calendar",
                     "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
                     "hidden": true
+                },
+                "help": {
+                    "type": ["boolean", "string"],
+                    "description": "Display the help message."
+                },
+                "help_full": {
+                    "type": "boolean",
+                    "description": "Display the full detailed help message."
+                },
+                "show_hidden": {
+                    "type": "boolean",
+                    "description": "Display hidden parameters in the help message (only works when --help or --help_full are provided)."
                 }
             }
         }

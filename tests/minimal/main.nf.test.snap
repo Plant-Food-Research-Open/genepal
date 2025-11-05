@@ -5,16 +5,16 @@
                 "successful tasks": 22,
                 "versions": {
                     "AGAT_CONVERTSPGFF2GTF": {
-                        "agat": "v1.4.1"
+                        "agat": "v1.5.1"
                     },
                     "AGAT_CONVERTSPGXF2GXF": {
-                        "agat": "v1.4.1"
+                        "agat": "v1.5.1"
                     },
                     "AGAT_SPADDINTRONS": {
-                        "agat": "v1.4.1"
+                        "agat": "v1.5.1"
                     },
                     "AGAT_SPEXTRACTSEQUENCES": {
-                        "agat": "v1.4.1"
+                        "agat": "v1.5.1"
                     },
                     "BRAKER3": {
                         "braker3": "3.0.8",
@@ -34,11 +34,11 @@
                     "EXTRACT_PROTEINS": {
                         "gffread": "0.12.7"
                     },
-                    "FASTAVALIDATOR": {
-                        "py_fasta_validator": 0.6
+                    "FALINT": {
+                        "fa-lint": "1.2.0"
                     },
                     "FILTER_BY_ORF_SIZE": {
-                        "agat": "v1.4.3"
+                        "agat": "v1.5.1"
                     },
                     "FILTER_INVALID_ORFS": {
                         "gffread": "0.12.7"
@@ -67,7 +67,7 @@
                         "tsebra": "1.1.2.5"
                     },
                     "Workflow": {
-                        "plant-food-research-open/genepal": "v0.7.2"
+                        "plant-food-research-open/genepal": "v1.0.0"
                     }
                 },
                 "stable paths": [
@@ -110,9 +110,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.6"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-05-02T18:34:00.928126"
+        "timestamp": "2025-10-28T10:29:20.229049"
     }
 }

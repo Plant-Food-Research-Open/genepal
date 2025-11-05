@@ -25,31 +25,36 @@ input:
         type: file
         description: Genome fasta file
         pattern: "*.{fsa,fa,fasta}"
-  - - cds:
-        type: file
-        description: |
-          A FASTA file containing the coding sequence (no introns, UTRs, nor TEs)
-          of this genome or its close relative
-        pattern: "*.{fsa,fa,fasta}"
-  - - curatedlib:
-        type: file
-        description: |
-          A curated library to keep consistent naming and classification for known TEs
-        pattern: "*.liban"
-  - - rmout:
-        type: file
-        description: |
-          Homology-based TE annotation instead of using the EDTA library for masking in
-          RepeatMasker .out format
-        pattern: "*.out"
-  - - exclude:
-        type: file
-        description: Exclude regions (bed format) from TE masking in the MAKER.masked
-          output
-        pattern: "*.bed"
+        ontologies: []
+  - cds:
+      type: file
+      description: |
+        A FASTA file containing the coding sequence (no introns, UTRs, nor TEs)
+        of this genome or its close relative
+      pattern: "*.{fsa,fa,fasta}"
+      ontologies: []
+  - curatedlib:
+      type: file
+      description: |
+        A curated library to keep consistent naming and classification for known TEs
+      pattern: "*.liban"
+      ontologies: []
+  - rmout:
+      type: file
+      description: |
+        Homology-based TE annotation instead of using the EDTA library for masking in
+        RepeatMasker .out format
+      pattern: "*.out"
+      ontologies: []
+  - exclude:
+      type: file
+      description: Exclude regions (bed format) from TE masking in the
+        MAKER.masked output
+      pattern: "*.bed"
+      ontologies: []
 output:
-  - log:
-      - meta:
+  log:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -58,8 +63,9 @@ output:
           type: file
           description: Log emitted by EDTA
           pattern: "*.log"
-  - te_lib_fasta:
-      - meta:
+          ontologies: []
+  te_lib_fasta:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -68,19 +74,21 @@ output:
           type: file
           description: A non-redundant TE library in fasta format
           pattern: "*.EDTA.TElib.fa"
-  - pass_list:
-      - meta:
+          ontologies: []
+  pass_list:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test' ]`
       - "*.EDTA.pass.list":
           type: file
-          description: A summary table of intact LTR-RTs with coordinate and structural
-            information
+          description: A summary table of intact LTR-RTs with coordinate and
+            structural information
           pattern: "*.EDTA.pass.list"
-  - out_file:
-      - meta:
+          ontologies: []
+  out_file:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -89,22 +97,26 @@ output:
           type: file
           description: RepeatMasker annotation of all LTR sequences in the genome
           pattern: "*.EDTA.out"
-  - te_anno_gff3:
-      - meta:
+          ontologies: []
+  te_anno_gff3:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test' ]`
       - "*.EDTA.TEanno.gff3":
           type: file
-          description: A gff3 file containing both structurally intact and fragmented
-            TE annotations
+          description: A gff3 file containing both structurally intact and
+            fragmented TE annotations
           pattern: "*.EDTA.TEanno.gff3"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@GallVp"
 maintainers:

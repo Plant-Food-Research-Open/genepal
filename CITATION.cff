@@ -31,7 +31,7 @@ authors:
   - family-names: "Thomson"
     given-names: "Susan"
 title: "genepal: A Nextflow pipeline for genome and pan-genome annotation"
-version: 0.7.2
+version: 1.0.0
 date-released: 2024-11-21
 url: "https://github.com/Plant-Food-Research-Open/genepal"
 doi: 10.5281/zenodo.14195006

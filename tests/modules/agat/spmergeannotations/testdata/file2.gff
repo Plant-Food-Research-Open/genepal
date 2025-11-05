@@ -1,0 +1,27 @@
+##gff-version 3
+Chr01	Liftoff	gene	14010	16004	.	+	0	ID=gene1
+Chr01	Liftoff	transcript	14010	16004	.	+	0	ID=transcript1;Parent=gene1;liftoffID=RED5V2.001266.1.1.PCt21885548.21887542
+Chr01	Liftoff	exon	14010	16004	.	+	0	ID=exon1;Parent=transcript1
+Chr01	Liftoff	CDS	14010	16004	.	+	0	ID=cds1;Parent=transcript1
+Chr01	Liftoff	gene	28327	28737	.	-	0	ID=gene2
+Chr01	Liftoff	transcript	28327	28737	.	-	0	ID=transcript2;Parent=gene2;liftoffID=RED5V2.054084.1.PCt21872815.21873225
+Chr01	Liftoff	exon	28327	28737	.	-	0	ID=exon2;Parent=transcript2
+Chr01	Liftoff	CDS	28327	28737	.	-	0	ID=cds2;Parent=transcript2
+Chr01	Liftoff	gene	32674	36047	.	+	0	ID=gene3
+Chr01	Liftoff	transcript	32674	36047	.	+	0	ID=transcript3;Parent=gene3;liftoffID=RED5V2.001264.1.1.PCt21865505.21868878
+Chr01	Liftoff	exon	32674	33048	.	+	0	ID=exon3;Parent=transcript3
+Chr01	Liftoff	exon	35594	35732	.	+	0	ID=exon4;Parent=transcript3
+Chr01	Liftoff	exon	35863	36047	.	+	0	ID=exon5;Parent=transcript3
+Chr01	Liftoff	CDS	32674	33048	.	+	0	ID=cds3;Parent=transcript3
+Chr01	Liftoff	CDS	35594	35732	.	+	0	ID=cds4;Parent=transcript3
+Chr01	Liftoff	CDS	35863	36047	.	+	2	ID=cds5;Parent=transcript3
+Chr01	Liftoff	intron	33049	35593	.	+	0	ID=intron1;Parent=transcript3
+Chr01	Liftoff	intron	35733	35862	.	+	2	ID=intron2;Parent=transcript3
+Chr01	Liftoff	gene	38278	39495	.	-	0	ID=gene4
+Chr01	Liftoff	transcript	38278	39495	.	-	0	ID=transcript4;Parent=gene4;liftoffID=RED5V2.001263.1.1.PCt21862057.21863274
+Chr01	Liftoff	exon	38278	39495	.	-	0	ID=exon6;Parent=transcript4
+Chr01	Liftoff	CDS	38278	39495	.	-	0	ID=cds6;Parent=transcript4
+Chr01	Liftoff	gene	89011	89469	.	+	0	ID=gene5
+Chr01	Liftoff	transcript	89011	89469	.	+	0	ID=transcript5;Parent=gene5;liftoffID=RED5V2.040264.1.1.HCt89052.89510
+Chr01	Liftoff	exon	89011	89469	.	+	0	ID=exon7;Parent=transcript5
+Chr01	Liftoff	CDS	89011	89469	.	+	0	ID=cds7;Parent=transcript5

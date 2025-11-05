@@ -1,0 +1,35 @@
+{
+    "Merge two genes into one": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gff:md5,7640b96cc77f9b192fc369b98fce0cbf"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,d7842af7728557bd978b64b3bc88c5c2"
+                ],
+                "gff": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gff:md5,7640b96cc77f9b192fc369b98fce0cbf"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,d7842af7728557bd978b64b3bc88c5c2"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-10-28T09:58:14.811448"
+    }
+}

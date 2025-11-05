@@ -1,0 +1,41 @@
+Changes in component 'nf-core/star/align'
+'modules/nf-core/star/align/environment.yml' is unchanged
+'modules/nf-core/star/align/meta.yml' is unchanged
+Changes in 'star/align/main.nf':
+--- modules/nf-core/star/align/main.nf
++++ modules/nf-core/star/align/main.nf
+@@ -50,6 +50,7 @@
+     attrRG          = args.contains("--outSAMattrRGline") ? "" : "--outSAMattrRGline 'ID:$prefix' $seq_center_arg 'SM:$prefix' $seq_platform_arg"
+     def out_sam_type    = (args.contains('--outSAMtype')) ? '' : '--outSAMtype BAM Unsorted'
+     mv_unsorted_bam = (args.contains('--outSAMtype BAM Unsorted SortedByCoordinate')) ? "mv ${prefix}.Aligned.out.bam ${prefix}.Aligned.unsort.out.bam" : ''
++    def memory_limit = args.contains('--limitBAMsortRAM') ? '' : "--limitBAMsortRAM ${ ( task.memory.bytes * 0.9 ).round() }"
+     """
+     STAR \\
+         --genomeDir $index \\
+@@ -59,7 +60,8 @@
+         $out_sam_type \\
+         $ignore_gtf \\
+         $attrRG \\
+-        $args
++        $args \\
++        $memory_limit
+ 
+     $mv_unsorted_bam
+ 
+@@ -82,7 +84,9 @@
+ 
+     stub:
+     prefix = task.ext.prefix ?: "${meta.id}"
++    def memory_limit = args.contains('--limitBAMsortRAM') ? '' : "--limitBAMsortRAM ${ ( task.memory.bytes * 0.9 ).round() }"
+     """
++    echo "limitBAMsortRAM: $memory_limit"
+     echo "" | gzip > ${prefix}.unmapped_1.fastq.gz
+     echo "" | gzip > ${prefix}.unmapped_2.fastq.gz
+     touch ${prefix}Xd.out.bam
+
+'modules/nf-core/star/align/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/star/align/tests/nextflow.arriba.config' is unchanged
+'modules/nf-core/star/align/tests/nextflow.starfusion.config' is unchanged
+'modules/nf-core/star/align/tests/nextflow.config' is unchanged
+'modules/nf-core/star/align/tests/main.nf.test' is unchanged
+************************************************************

@@ -3,6 +3,44 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0 - [05-Nov-2025]
+
+### `Added`
+
+1. Updated the nf-core template to `3.4.1`
+2. Update modules and sub-workflows from nf-core/modules and GallVp/nxf-components
+3. Add parameter `--tags` to support nf-shard tags
+4. Added parameter `--strict_fasta_id_validation` to disable strict Fasta ID validation for NCBI assemblies with Fasta IDs containing periods ('.')
+
+### `Fixed`
+
+1. Fixed an issue where some genes with introns shorter than 10bp were not marked for exclusion correctly [#89](https://github.com/Plant-Food-Research-Open/genepal/issues/89)
+2. Fixed an issue where Fasta IDs such as `>lcl|Lmh1Chr1` caused the pipeline to fail due to IDs being changed by BRAKER3 [#161](https://github.com/Plant-Food-Research-Open/genepal/issues/161)
+3. Fixed an issue which caused a pipeline crash where there were empty lines in the protein evidence file [#166](https://github.com/Plant-Food-Research-Open/genepal/issues/166)
+4. Fixed an issue where the pipeline failed when liftoff Fasta and Gff had the same file name and the Gff extension was `gff3` [#160](https://github.com/Plant-Food-Research-Open/genepal/issues/160)
+5. Fixed an issue where STAR_ALIGN failed on large genomes in sorting the output BAM [#163](https://github.com/Plant-Food-Research-Open/genepal/issues/163)
+
+### `Dependencies`
+
+1. Nextflow!>=25.04.0
+2. nf-schema@2.5.1
+
+### `Tool Updates`
+
+| Tool                 | Old Version | New Version |
+| -------------------- | ----------- | ----------- |
+| agat                 | 1.4.2       | 1.5.1       |
+| ltr_harvest_parallel | 1.1         | 1.2         |
+| braker3              | v3.0.7.6    | v3.0.7.5    |
+| busco                | 5.8.3       | 6.0.0       |
+| diamond              | 2.1.8       | 2.1.12      |
+| fastp                | 0.24.0      | 1.0.1       |
+| multiqc              | 1.28        | 1.32        |
+| htslib               | 1.21        | 1.22.1      |
+| samtools             | 1.21        | 1.22.1      |
+| sortmerna            | 4.3.6       | 4.3.7       |
+| umi_tools            | 1.1.5       | 1.1.6       |
+
 ## v0.7.2 - [06-May-2025]
 
 ### `Fixed`

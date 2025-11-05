@@ -1,0 +1,4 @@
+.DS_Store
+multiqc_report.html
+fastqc/*_fastqc.{html,zip}
+pipeline_info/*.{html,json,txt,yml}

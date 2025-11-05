@@ -1,0 +1,53 @@
+{
+    "scaffold_4 - fasta - gff3": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.motifs.tsv:md5,b0a99a7a7bf598bbf1e25ca3690567c6"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.marked.gff3:md5,f464b2e0dc24238e69c3e9e1419c1b3b"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,0f190206d305074e7a985f7128fa38ec",
+                    "versions.yml:md5,47293a69963095aca6f437ea378c475b"
+                ],
+                "marked_gff3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.marked.gff3:md5,f464b2e0dc24238e69c3e9e1419c1b3b"
+                    ]
+                ],
+                "motifs_tsv": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.motifs.tsv:md5,b0a99a7a7bf598bbf1e25ca3690567c6"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0f190206d305074e7a985f7128fa38ec",
+                    "versions.yml:md5,47293a69963095aca6f437ea378c475b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-28T10:08:34.240677"
+    }
+}

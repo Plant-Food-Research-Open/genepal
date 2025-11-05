@@ -19,7 +19,7 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,a3d1e735adde2ea534a2ca079be3c543"
+                    "versions.yml:md5,2e38ac0abb6444b112afc6a583fa1178"
                 ],
                 "failed_gff": [
                     [
@@ -38,15 +38,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,a3d1e735adde2ea534a2ca079be3c543"
+                    "versions.yml:md5,2e38ac0abb6444b112afc6a583fa1178"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-04-07T14:12:31.133476"
+        "timestamp": "2025-10-17T11:14:01.945623"
     },
     "sarscov2 - genome - gff": {
         "content": [
@@ -68,7 +68,7 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,a3d1e735adde2ea534a2ca079be3c543"
+                    "versions.yml:md5,2e38ac0abb6444b112afc6a583fa1178"
                 ],
                 "failed_gff": [
                     [
@@ -87,15 +87,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,a3d1e735adde2ea534a2ca079be3c543"
+                    "versions.yml:md5,2e38ac0abb6444b112afc6a583fa1178"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-04-07T14:12:35.527415"
+        "timestamp": "2025-10-17T11:14:09.544385"
     },
     "sarscov2 - genome - gff - stub": {
         "content": [
@@ -117,7 +117,7 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,a3d1e735adde2ea534a2ca079be3c543"
+                    "versions.yml:md5,2e38ac0abb6444b112afc6a583fa1178"
                 ],
                 "failed_gff": [
                     [
@@ -136,15 +136,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,a3d1e735adde2ea534a2ca079be3c543"
+                    "versions.yml:md5,2e38ac0abb6444b112afc6a583fa1178"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-04-07T14:12:39.094929"
+        "timestamp": "2025-10-17T11:14:15.484421"
     },
     "actinidia_chinensis - genome - gtf": {
         "content": [
@@ -166,7 +166,7 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,a3d1e735adde2ea534a2ca079be3c543"
+                    "versions.yml:md5,2e38ac0abb6444b112afc6a583fa1178"
                 ],
                 "failed_gff": [
                     [
@@ -185,14 +185,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,a3d1e735adde2ea534a2ca079be3c543"
+                    "versions.yml:md5,2e38ac0abb6444b112afc6a583fa1178"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.5"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-04-07T14:12:27.509769"
+        "timestamp": "2025-10-17T11:13:56.284076"
     }
 }

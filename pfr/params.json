@@ -1,5 +1,6 @@
 {
     "input": "/workspace/genepal/testdata/0.4.0/assemblysheet.csv",
+    "strict_fasta_id_validation": true,
     "protein_evidence": "/workspace/genepal/testdata/0.4.0/external-protein-fastas.txt",
     "eggnogmapper_db_dir": "/workspace/ComparativeDataSources/emapperdb/5.0.2",
     "eggnogmapper_tax_scope": 33090,
@@ -8,6 +9,7 @@
     "orthofinder_annotations": null,
     "outdir": "results",
     "email": null,
+    "tags": "plant-food-research-open,genepal,pfr",
     "repeat_annotator": "repeatmodeler",
     "save_annotated_te_lib": false,
     "edta_is_sensitive": false,

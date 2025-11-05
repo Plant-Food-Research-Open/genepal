@@ -1,0 +1,140 @@
+{
+    "liftoff - dummy - same input output name - stub": {
+        "content": [
+            {
+                "successful tasks": 27,
+                "versions": {
+                    "AGAT_CONVERTSPGFF2GTF": {
+                        "agat": "v1.5.1"
+                    },
+                    "AGAT_CONVERTSPGXF2GXF": {
+                        "agat": "v1.5.1"
+                    },
+                    "AGAT_SPADDINTRONS": {
+                        "agat": "v1.5.1"
+                    },
+                    "AGAT_SPEXTRACTSEQUENCES": {
+                        "agat": "v1.5.1"
+                    },
+                    "BRAKER3": {
+                        "braker3": "3.0.8",
+                        "augustus": "3.5.0",
+                        "genemark-etp": 1.02,
+                        "prothint": "2.6.0"
+                    },
+                    "CAT_PROTEIN_FASTAS": {
+                        "pigz": "2.3.4"
+                    },
+                    "EXTRACT_CDNA": {
+                        "gffread": "0.12.7"
+                    },
+                    "EXTRACT_CDS": {
+                        "gffread": "0.12.7"
+                    },
+                    "EXTRACT_PROTEINS": {
+                        "gffread": "0.12.7"
+                    },
+                    "FALINT": {
+                        "fa-lint": "1.2.0"
+                    },
+                    "FILTER_BY_ORF_SIZE": {
+                        "agat": "v1.5.1"
+                    },
+                    "FILTER_INVALID_ORFS": {
+                        "gffread": "0.12.7"
+                    },
+                    "FINAL_GFF_CHECK": {
+                        "genometools": "1.6.5"
+                    },
+                    "GFF2FASTA_FOR_EGGNOGMAPPER": {
+                        "gffread": "0.12.7"
+                    },
+                    "GFFREAD_BEFORE_LIFTOFF": {
+                        "gffread": "0.12.7"
+                    },
+                    "GT_GFF3": {
+                        "genometools": "1.6.5"
+                    },
+                    "LIFTOFF": {
+                        "liftoff": "v1.6.3"
+                    },
+                    "REPEATMASKER_REPEATMASKER": {
+                        "repeatmasker": "4.1.5"
+                    },
+                    "REPEATMODELER_BUILDDATABASE": {
+                        "repeatmodeler": "2.0.5"
+                    },
+                    "REPEATMODELER_REPEATMODELER": {
+                        "repeatmodeler": "2.0.5"
+                    },
+                    "SAVE_MARKED_GFF3": {
+                        "pigz": "2.3.4"
+                    },
+                    "SEQKIT_RMDUP": {
+                        "seqkit": "v2.9.0"
+                    },
+                    "STAR_GENOMEGENERATE": {
+                        "star": "2.7.11b",
+                        "samtools": 1.21,
+                        "gawk": "5.1.0"
+                    },
+                    "TSEBRA": {
+                        "tsebra": "1.1.2.5"
+                    },
+                    "Workflow": {
+                        "plant-food-research-open/genepal": "v1.0.0"
+                    }
+                },
+                "stable paths": [
+                    "dummy_genome.cdna.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "dummy_genome.cds.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "dummy_genome.gt.gff3:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "dummy_genome.pep.fasta:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "dummy_genome.gff3:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "summary_stats.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                    "genepal_report.html:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-11-03T08:45:01.990324"
+    },
+    "protein fasta contains spaces - ignore gracefully - fail at invalid Fasta": {
+        "content": [
+            {
+                "successful tasks": 6,
+                "versions": {
+                    "CAT_PROTEIN_FASTAS": {
+                        "pigz": "2.3.4"
+                    },
+                    "FALINT": {
+                        "fa-lint": "1.2.0"
+                    },
+                    "GUNZIP": {
+                        "gunzip": 1.13
+                    },
+                    "GUNZIP_TARGET_ASSEMBLY": {
+                        "gunzip": 1.13
+                    },
+                    "SEQKIT_RMDUP": {
+                        "seqkit": "v2.9.0"
+                    },
+                    "Workflow": {
+                        "plant-food-research-open/genepal": "v1.0.0"
+                    }
+                },
+                "stable paths": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-29T17:27:47.579396"
+    }
+}

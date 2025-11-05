@@ -1,0 +1,55 @@
+{
+    "liftoff - GCF_019202715 - to - actinidia_chinensis": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gff:md5,86ce2ad783ed91a718d006ec41b2989a"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,05b8b36cfde0ad081a15e0428adfc9c6",
+                    "versions.yml:md5,19d093420a74661d71e3690828949796",
+                    "versions.yml:md5,1cafcdb9de6b733da7979604133eae25",
+                    "versions.yml:md5,44aea1f941a16b30c8f54218de5eddc6",
+                    "versions.yml:md5,66060018c7adc7d9821771bde7f61bbd",
+                    "versions.yml:md5,6d166828b373bddcd19e2eb819302c68",
+                    "versions.yml:md5,7ce16ccb5b6a919500779dac3a3476cc",
+                    "versions.yml:md5,9fd15375f2d63a9dfa0f3602293e8040",
+                    "versions.yml:md5,b4c3516013c8dbc8d5419dccee1d83e0",
+                    "versions.yml:md5,e691ebeaa950855f70f50783856e29c1",
+                    "versions.yml:md5,ee651692163b338557acdd094a5d2bb8"
+                ],
+                "gff3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gff:md5,86ce2ad783ed91a718d006ec41b2989a"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,05b8b36cfde0ad081a15e0428adfc9c6",
+                    "versions.yml:md5,19d093420a74661d71e3690828949796",
+                    "versions.yml:md5,1cafcdb9de6b733da7979604133eae25",
+                    "versions.yml:md5,44aea1f941a16b30c8f54218de5eddc6",
+                    "versions.yml:md5,66060018c7adc7d9821771bde7f61bbd",
+                    "versions.yml:md5,6d166828b373bddcd19e2eb819302c68",
+                    "versions.yml:md5,7ce16ccb5b6a919500779dac3a3476cc",
+                    "versions.yml:md5,9fd15375f2d63a9dfa0f3602293e8040",
+                    "versions.yml:md5,b4c3516013c8dbc8d5419dccee1d83e0",
+                    "versions.yml:md5,e691ebeaa950855f70f50783856e29c1",
+                    "versions.yml:md5,ee651692163b338557acdd094a5d2bb8"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-28T11:10:22.84334"
+    }
+}

@@ -1,26 +1,29 @@
 bump_version: null
 lint:
-  actions_ci: false
-  multiqc_config: false
-  included_configs: false
-  nextflow_config:
-    - manifest.name
-    - manifest.homePage
-    - config_defaults:
-        - params.ribo_database_manifest
   files_exist:
     - CODE_OF_CONDUCT.md
     - .github/ISSUE_TEMPLATE/config.yml
     - assets/nf-core-genepal_logo_light.png
     - docs/images/nf-core-genepal_logo_light.png
     - docs/images/nf-core-genepal_logo_dark.png
+    - tests/default.nf.test
   files_unchanged:
     - .gitignore
     - LICENSE
     - .github/workflows/branch.yml
     - .github/workflows/linting.yml
     - docs/README.md
-nf_core_version: 3.2.0
+  included_configs: false
+  multiqc_config: false
+  nextflow_config:
+    - manifest.name
+    - manifest.homePage
+    - config_defaults:
+        - params.ribo_database_manifest
+  nf_test_content:
+    - tests/default.nf.test
+    - tests/nextflow.config
+nf_core_version: 3.4.1
 repository_type: pipeline
 template:
   author: Usman Rashid, Jason Shiller
@@ -32,4 +35,4 @@ template:
   outdir: .
   skip_features:
     - igenomes
-  version: 0.7.2
+  version: 1.0.0

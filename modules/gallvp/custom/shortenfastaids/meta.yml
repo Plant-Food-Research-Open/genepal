@@ -32,9 +32,10 @@ input:
         type: file
         description: Input fasta file
         pattern: "*.{fsa,fa,fasta}"
+        ontologies: []
 output:
-  - short_ids_fasta:
-      - meta:
+  short_ids_fasta:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -43,8 +44,9 @@ output:
           type: file
           description: Fasta file with shortened ids if id change is required
           pattern: "*.{fsa,fa,fasta}"
-  - short_ids_tsv:
-      - meta:
+          ontologies: []
+  short_ids_tsv:
+    - - meta:
           type: map
           description: |
             Groovy Map containing sample information
@@ -55,11 +57,15 @@ output:
             A TSV file with original (first column) and new ids (second column)
             if id change is required
           pattern: "*.tsv"
-  - versions:
-      - versions.yml:
-          type: file
-          description: File containing software versions
-          pattern: "versions.yml"
+          ontologies:
+            - edam: http://edamontology.org/format_3475 # TSV
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
 authors:
   - "@GallVp"
 maintainers:

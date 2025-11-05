@@ -1,0 +1,35 @@
+{
+    "Should not fuse two genes into one": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gff:md5,1d42a1519c1faf86188f64b0504d289d"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,cb53265f543102e814d555c8c382cdfe"
+                ],
+                "gff": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gff:md5,1d42a1519c1faf86188f64b0504d289d"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,cb53265f543102e814d555c8c382cdfe"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-10-28T09:57:53.431035"
+    }
+}
