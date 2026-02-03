@@ -3,6 +3,17 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.1 - [03-Feb-2026]
+
+### `Fixed`
+
+1. Fixed malformed STAR ALIGN command which caused the pipeline to fail when RNASeq data was provided [#185](https://github.com/Plant-Food-Research-Open/genepal/issues/185)
+
+### `Dependencies`
+
+1. Nextflow!>=25.04.0
+2. nf-schema@2.5.1
+
 ## v1.0.0 - [05-Nov-2025]
 
 ### `Added`
